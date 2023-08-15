@@ -98,7 +98,7 @@ public class Creator {
                 ItemStack is = event.getItem();
 
                 for (Structure structureList : plugin.getStructureManager().getStructures()) {
-                    if ((is.getType() == structureList.getMaterial().getMaterial()) && (is.hasItemMeta())
+                    if ((structureList.getMaterial().isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
                             .equals(ChatColor.translateAlternateColorCodes('&', configLoad
                                     .getString("Menu.Creator.Selector.Item.Island.Displayname")
@@ -252,7 +252,7 @@ public class Creator {
                 }
             }
 
-            nInv.addItem(nInv.createItem(structure.getMaterial().getItem(),
+            nInv.addItem(nInv.createItem(structure.getMaterial().parseItem(),
                     ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Creator.Selector.Item.Island.Displayname")
                                     .replace("%displayname", structure.getDisplayname())),

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.generator;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.island.IslandWorld;
 
 import java.util.List;
@@ -8,12 +8,12 @@ import java.util.List;
 public class Generator {
     private final String name;
     private final IslandWorld isWorld;
-    private final CompatibleMaterial materials;
+    private final XMaterial materials;
     private final List<GeneratorMaterial> generatorMaterials;
     private final long level;
     private boolean permission;
 
-    public Generator(String name, IslandWorld isWorld, CompatibleMaterial materials, List<GeneratorMaterial> generatorMaterials, long level, boolean permission) {
+    public Generator(String name, IslandWorld isWorld, XMaterial materials, List<GeneratorMaterial> generatorMaterials, long level, boolean permission) {
         this.name = name;
         this.isWorld = isWorld;
         this.materials = materials;
@@ -30,7 +30,7 @@ public class Generator {
         return this.isWorld;
     }
 
-    public CompatibleMaterial getMaterials() {
+    public XMaterial getMaterials() {
         return this.materials;
     }
 

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.placeholder;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -25,6 +26,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlaceholderProcessor {
@@ -479,12 +481,12 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_count_", "").toUpperCase();
-                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
-                    if (materials == null) {
+                    Optional<XMaterial> materials = CompatibleMaterial.getMaterial(materialName);
+                    if (!materials.isPresent()) {
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Invalid"));
                     } else {
-                        long blockCount = island.getLevel().getMaterialAmount(materials.name());
+                        long blockCount = island.getLevel().getMaterialAmount(materials.get().name());
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_count.Non-empty")
                                         .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockCount)));
@@ -496,12 +498,12 @@ public class PlaceholderProcessor {
                             placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Empty"));
                 } else {
                     String materialName = placeholder.replace("fabledskyblock_island_level_block_points_", "").toUpperCase();
-                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
-                    if (materials == null) {
+                    Optional<XMaterial> materials = CompatibleMaterial.getMaterial(materialName);
+                    if (!materials.isPresent()) {
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Invalid"));
                     } else {
-                        long blockPoints = island.getLevel().getMaterialPoints(materials.name());
+                        long blockPoints = island.getLevel().getMaterialPoints(materials.get().name());
                         returnValue = TextUtils.formatText(
                                 placeholdersLoad.getString("Placeholders.fabledskyblock_island_level_block_points.Non-empty")
                                         .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockPoints)));
@@ -509,12 +511,12 @@ public class PlaceholderProcessor {
                 }
             } else if (placeholder.toLowerCase().startsWith("fabledskyblock_level_block_value_")) {
                 String materialName = placeholder.replace("fabledskyblock_level_block_value_", "").toUpperCase();
-                CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
-                if (materials == null) {
+                Optional<XMaterial> materials = CompatibleMaterial.getMaterial(materialName);
+                if (!materials.isPresent()) {
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_level_block_value.Invalid"));
                 } else {
-                    double blockValue = levellingManager.getWorth(materials);
+                    double blockValue = levellingManager.getWorth(materials.get());
                     returnValue = TextUtils.formatText(
                             placeholdersLoad.getString("Placeholders.fabledskyblock_level_block_value.Non-empty")
                                     .replace("{PLACEHOLDER}", NumberUtils.formatNumber(blockValue)));

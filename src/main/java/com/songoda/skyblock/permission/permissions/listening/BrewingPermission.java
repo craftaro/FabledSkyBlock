@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +17,7 @@ public class BrewingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public BrewingPermission(SkyBlock plugin) {
-        super("Brewing", CompatibleMaterial.BREWING_STAND, PermissionType.GENERIC);
+        super("Brewing", XMaterial.BREWING_STAND, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,7 +31,7 @@ public class BrewingPermission extends ListeningPermission {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.BREWING_STAND) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.BREWING_STAND) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +16,7 @@ public class MilkingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public MilkingPermission(SkyBlock plugin) {
-        super("Milking", CompatibleMaterial.MILK_BUCKET, PermissionType.GENERIC);
+        super("Milking", XMaterial.MILK_BUCKET, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -29,12 +29,12 @@ public class MilkingPermission extends ListeningPermission {
         Entity entity = event.getRightClicked();
 
         if (entity.getType() == EntityType.COW) {
-            if (CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BUCKET) {
+            if (XMaterial.BUCKET.isSimilar(player.getItemInHand())) {
                 cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         } else if (entity.getType() == EntityType.MUSHROOM_COW) {
-            if (CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BUCKET
-                    || CompatibleMaterial.getMaterial(player.getItemInHand()) == CompatibleMaterial.BOWL) {
+            if (XMaterial.BUCKET.isSimilar(player.getItemInHand())
+                    || XMaterial.BOWL.isSimilar(player.getItemInHand())) {
                 cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         }

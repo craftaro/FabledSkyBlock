@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +17,7 @@ public class EnchantPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public EnchantPermission(SkyBlock plugin) {
-        super("Enchant", CompatibleMaterial.ENCHANTING_TABLE, PermissionType.GENERIC);
+        super("Enchant", XMaterial.ENCHANTING_TABLE, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,7 +31,7 @@ public class EnchantPermission extends ListeningPermission {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.ENCHANTING_TABLE) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.ENCHANTING_TABLE) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

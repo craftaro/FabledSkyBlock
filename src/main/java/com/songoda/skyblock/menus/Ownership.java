@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -74,18 +74,18 @@ public class Ownership {
 
                     ItemStack is = event.getItem();
 
-                    if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                    if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
-                    } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())
+                    } else if ((XMaterial.PLAYER_HEAD.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Original.Displayname"))))) {
                         soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                    } else if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is))
                             && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Barrier.Displayname"))))) {
@@ -93,7 +93,7 @@ public class Ownership {
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.WRITABLE_BOOK.getMaterial()) && (is.hasItemMeta())
+                    } else if ((XMaterial.WRITABLE_BOOK.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Assign.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
@@ -132,7 +132,7 @@ public class Ownership {
                             gui.setInput(is);
                             plugin.getGuiManager().showGUI(player, gui);
                         }, 1L);
-                    } else if ((is.getType() == CompatibleMaterial.MAP.getMaterial()) && (is.hasItemMeta())
+                    } else if ((XMaterial.MAP.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Ownership.Item.Password.Displayname"))))) {
                         if (island.hasPassword()) {
@@ -225,28 +225,28 @@ public class Ownership {
                 playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
             }
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
             nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(playerTexture[0], playerTexture[1]),
                     configLoad.getString("Menu.Ownership.Item.Original.Displayname"),
                     configLoad.getStringList("Menu.Ownership.Item.Original.Lore"),
                     new Placeholder[]{new Placeholder("%player", originalOwnerName)}, null, null), 1);
             nInv.addItem(
-                    nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             configLoad.getString("Menu.Ownership.Item.Barrier.Displayname"), null, null, null, null),
                     2);
-            nInv.addItem(nInv.createItem(CompatibleMaterial.WRITABLE_BOOK.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.WRITABLE_BOOK.parseItem(),
                     configLoad.getString("Menu.Ownership.Item.Assign.Displayname"),
                     configLoad.getStringList("Menu.Ownership.Item.Assign.Lore"), null, null, null), 3);
 
             if (island.hasPassword()) {
                 if (playerDataManager.getPlayerData(player).getType() == Ownership.Visibility.HIDDEN) {
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.MAP.parseItem(),
                             configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
                             configLoad.getStringList("Menu.Ownership.Item.Password.Hidden.Lore"), null, null, null), 4);
                 } else {
                     nInv.addItem(
-                            nInv.createItem(CompatibleMaterial.MAP.getItem(),
+                            nInv.createItem(XMaterial.MAP.parseItem(),
                                     configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
                                     configLoad.getStringList("Menu.Ownership.Item.Password.Visible.Lore"),
                                     new Placeholder[]{new Placeholder("%password", ownershipPassword)}, null, null),
@@ -254,7 +254,7 @@ public class Ownership {
                 }
             } else {
                 nInv.addItem(
-                        nInv.createItem(CompatibleMaterial.MAP.getItem(),
+                        nInv.createItem(XMaterial.MAP.parseItem(),
                                 configLoad.getString("Menu.Ownership.Item.Password.Displayname"),
                                 configLoad.getStringList("Menu.Ownership.Item.Password.Unset.Lore"), null, null, null),
                         4);

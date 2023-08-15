@@ -6,6 +6,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.world.SWorldBorder;
 import com.eatthepath.uuid.FastUUID;
@@ -1403,13 +1404,13 @@ public class IslandManager {
     public void removeSpawnProtection(org.bukkit.Location location) {
         Block block = location.getBlock();
 
-        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
 
         block = location.clone().add(0.0D, 1.0D, 0.0D).getBlock();
 
-        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.MOVING_PISTON) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.MOVING_PISTON) {
             block.setType(Material.AIR);
         }
     }

@@ -1,7 +1,7 @@
 package com.songoda.skyblock.utils.version;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.utils.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -15,44 +15,44 @@ import java.util.Arrays;
 
 //TODO: Use CompatibleBiome
 public enum SBiome {
-    BADLANDS(true, CompatibleMaterial.DEAD_BUSH),
-    COLD_OCEAN(true, CompatibleMaterial.ICE),
-    DARK_FOREST("ROOFED_FOREST", CompatibleMaterial.DARK_OAK_SAPLING),
-    DESERT(CompatibleMaterial.SAND),
-    FOREST(CompatibleMaterial.FERN),
-    JUNGLE(CompatibleMaterial.VINE),
-    MOUNTAINS("EXTREME_HILLS", CompatibleMaterial.EMERALD_ORE),
-    MUSHROOM_FIELDS("MUSHROOM_ISLAND", CompatibleMaterial.RED_MUSHROOM),
-    NETHER("HELL", CompatibleMaterial.NETHERRACK),
-    PLAINS(CompatibleMaterial.SUNFLOWER),
-    RIVER(CompatibleMaterial.COD),
-    SAVANNA(CompatibleMaterial.ACACIA_SAPLING),
-    SNOWY_BEACH("COLD_BEACH", CompatibleMaterial.SNOWBALL),
-    SWAMP("SWAMPLAND", CompatibleMaterial.SLIME_BALL),
-    TAIGA(CompatibleMaterial.SPRUCE_SAPLING),
-    THE_END(true, CompatibleMaterial.END_STONE),
-    THE_VOID("SKY", CompatibleMaterial.OBSIDIAN),
-    WARM_OCEAN(true, CompatibleMaterial.TROPICAL_FISH);
+    BADLANDS(true, XMaterial.DEAD_BUSH),
+    COLD_OCEAN(true, XMaterial.ICE),
+    DARK_FOREST("ROOFED_FOREST", XMaterial.DARK_OAK_SAPLING),
+    DESERT(XMaterial.SAND),
+    FOREST(XMaterial.FERN),
+    JUNGLE(XMaterial.VINE),
+    MOUNTAINS("EXTREME_HILLS", XMaterial.EMERALD_ORE),
+    MUSHROOM_FIELDS("MUSHROOM_ISLAND", XMaterial.RED_MUSHROOM),
+    NETHER("HELL", XMaterial.NETHERRACK),
+    PLAINS(XMaterial.SUNFLOWER),
+    RIVER(XMaterial.COD),
+    SAVANNA(XMaterial.ACACIA_SAPLING),
+    SNOWY_BEACH("COLD_BEACH", XMaterial.SNOWBALL),
+    SWAMP("SWAMPLAND", XMaterial.SLIME_BALL),
+    TAIGA(XMaterial.SPRUCE_SAPLING),
+    THE_END(true, XMaterial.END_STONE),
+    THE_VOID("SKY", XMaterial.OBSIDIAN),
+    WARM_OCEAN(true, XMaterial.TROPICAL_FISH);
 
     private static final boolean isPostVersion = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13);
 
     private final String legacyName;
     private final boolean isPost13;
-    private final CompatibleMaterial guiIcon;
+    private final XMaterial guiIcon;
 
-    SBiome(CompatibleMaterial guiIcon) {
+    SBiome(XMaterial guiIcon) {
         this(null, false, guiIcon);
     }
 
-    SBiome(String legacyName, CompatibleMaterial guiIcon) {
+    SBiome(String legacyName, XMaterial guiIcon) {
         this(legacyName, false, guiIcon);
     }
 
-    SBiome(boolean isPost13, CompatibleMaterial guiIcon) {
+    SBiome(boolean isPost13, XMaterial guiIcon) {
         this(null, isPost13, guiIcon);
     }
 
-    SBiome(String legacyName, boolean is13only, CompatibleMaterial guiIcon) {
+    SBiome(String legacyName, boolean is13only, XMaterial guiIcon) {
         this.legacyName = legacyName;
         this.isPost13 = is13only;
         this.guiIcon = guiIcon;
@@ -105,6 +105,6 @@ public enum SBiome {
      * @return The Gui icon that represents this Biome
      */
     public ItemStack getGuiIcon() {
-        return !this.isAvailable() ? null : this.guiIcon.getItem();
+        return !this.isAvailable() ? null : this.guiIcon.parseItem();
     }
 }

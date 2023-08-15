@@ -1,6 +1,7 @@
 package com.songoda.skyblock.api.island;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Preconditions;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Location;
@@ -46,7 +47,7 @@ public class IslandLevel {
      */
     public void setMaterialAmount(Material material, int amount) {
         Preconditions.checkArgument(material != null, "Cannot set material amount to null material");
-        this.handle.getIsland().getLevel().setMaterialAmount(CompatibleMaterial.getMaterial(material.name()).name(), amount);
+        this.handle.getIsland().getLevel().setMaterialAmount(CompatibleMaterial.getMaterial(material.name()).get().name(), amount);
     }
 
     /**
@@ -55,7 +56,7 @@ public class IslandLevel {
     public void setMaterialAmount(Material material, byte data, int amount) {
         Preconditions.checkArgument(material != null, "Cannot set material amount to null material");
         //TODO: Add data support
-        this.handle.getIsland().getLevel().setMaterialAmount(CompatibleMaterial.getMaterial(material.name()).name(),
+        this.handle.getIsland().getLevel().setMaterialAmount(CompatibleMaterial.getMaterial(material.name()).get().name(),
                 amount);
     }
 
@@ -65,7 +66,7 @@ public class IslandLevel {
     public long getMaterialAmount(Material material) {
         Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
-        CompatibleMaterial materials = CompatibleMaterial.getMaterial(material.name());
+        XMaterial materials = CompatibleMaterial.getMaterial(material.name()).get();
         com.songoda.skyblock.island.IslandLevel level = this.handle.getIsland().getLevel();
 
         if (level.getMaterials().containsKey(materials.name())) {
@@ -81,7 +82,7 @@ public class IslandLevel {
     public long getMaterialAmount(Material material, byte data) {
         Preconditions.checkArgument(material != null, "Cannot get material amount to null material");
 
-        CompatibleMaterial materials = CompatibleMaterial.getMaterial(material.name());
+        XMaterial materials = CompatibleMaterial.getMaterial(material.name()).get();
         //TODO: data support
         com.songoda.skyblock.island.IslandLevel level = this.handle.getIsland().getLevel();
 
@@ -97,7 +98,7 @@ public class IslandLevel {
      */
     public long getMaterialPoints(Material material) {
         Preconditions.checkArgument(material != null, "Cannot get material points to null material");
-        return this.handle.getIsland().getLevel().getMaterialPoints(CompatibleMaterial.getMaterial(material.name()).name());
+        return this.handle.getIsland().getLevel().getMaterialPoints(CompatibleMaterial.getMaterial(material.name()).get().name());
     }
 
     /**
@@ -105,8 +106,7 @@ public class IslandLevel {
      */
     public long getMaterialPoints(Material material, byte data) {
         Preconditions.checkArgument(material != null, "Cannot get material points to null material");
-        return this.handle.getIsland().getLevel()
-                .getMaterialPoints(CompatibleMaterial.getMaterial(material.name()).name());
+        return this.handle.getIsland().getLevel().getMaterialPoints(CompatibleMaterial.getMaterial(material.name()).get().name());
         //TODO: add data support
     }
 

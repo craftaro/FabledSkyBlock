@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -16,6 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Optional;
 
 public class ValueCommand extends SubCommand {
     public ValueCommand(SkyBlock plugin) {
@@ -37,14 +39,14 @@ public class ValueCommand extends SubCommand {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Value.Hand.Message"));
             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else {
-            CompatibleMaterial materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
+            Optional<XMaterial> materials = CompatibleMaterial.getMaterial(player.getItemInHand().getType().name());
 
-            if (materials != null && levellingManager.hasWorth(materials)) {
-                double worth = levellingManager.getWorth(materials);
+            if (materials.isPresent() && levellingManager.hasWorth(materials.get())) {
+                double worth = levellingManager.getWorth(materials.get());
                 double level = worth / (double) this.plugin.getConfiguration().getInt("Island.Levelling.Division");
 
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.name().toLowerCase().replace("_", " ")))
+                        configLoad.getString("Command.Island.Value.Value.Message").replace("%material", WordUtils.capitalizeFully(materials.get().name().toLowerCase().replace("_", " ")))
                                 .replace("%points", "" + worth).replace("%level", NumberUtils.formatNumber(level)));
                 soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
             } else {

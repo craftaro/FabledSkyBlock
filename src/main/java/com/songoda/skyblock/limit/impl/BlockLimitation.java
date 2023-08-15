@@ -2,6 +2,7 @@ package com.songoda.skyblock.limit.impl;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -15,12 +16,13 @@ import org.bukkit.entity.Player;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 
-public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
+public final class BlockLimitation extends EnumLimitation<XMaterial> {
     public BlockLimitation() {
-        super(CompatibleMaterial.class);
+        super(XMaterial.class);
     }
 
     @Override
@@ -29,7 +31,7 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     @Override
-    public boolean hasTooMuch(long currentAmount, Enum<CompatibleMaterial> type) {
+    public boolean hasTooMuch(long currentAmount, Enum<XMaterial> type) {
         throw new UnsupportedOperationException("Not implemented. Use getBlockLimit and isBlockLimitExceeded instead.");
     }
 
@@ -46,13 +48,13 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
 
         for (String key : keys) {
             final String enumName = key.toUpperCase(Locale.ENGLISH);
-            CompatibleMaterial type = CompatibleMaterial.getMaterial(enumName);
+            Optional<XMaterial> type = CompatibleMaterial.getMaterial(enumName);
 
-            if (type == null) {
+            if (!type.isPresent()) {
                 throw new IllegalArgumentException("Unable to parse Materials from '" + enumName + "' in the Section '" + loadFrom.getCurrentPath() + "'");
             }
 
-            getMap().put(type, loadFrom.getLong(key));
+            getMap().put(type.get(), loadFrom.getLong(key));
         }
     }
 
@@ -70,21 +72,21 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
             return -1;
         }
 
-        CompatibleMaterial material = null;
+        XMaterial material = null;
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (type.toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER;
+                    material = XMaterial.REPEATER;
                     break;
             }
         }
         if (material == null) {
-            material = CompatibleMaterial.getMaterial(type);
-        }
-
-        if (material == null) {
-            return -1;
+            Optional<XMaterial> material1 = CompatibleMaterial.getMaterial(type);
+            if (!material1.isPresent()) {
+                return -1;
+            }
+            material = material1.get();
         }
 
         final String name = material.name().toLowerCase();
@@ -93,10 +95,10 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
     }
 
     public boolean isBlockLimitExceeded(Block block, long limit) {
-        return this.isBlockLimitExceeded(CompatibleMaterial.getMaterial(block), block.getLocation(), limit);
+        return this.isBlockLimitExceeded(CompatibleMaterial.getMaterial(block.getType()).get(), block.getLocation(), limit);
     }
 
-    public boolean isBlockLimitExceeded(CompatibleMaterial type, Location loc, long limit) {
+    public boolean isBlockLimitExceeded(XMaterial type, Location loc, long limit) {
         if (limit == -1) {
             return false;
         }
@@ -105,15 +107,15 @@ public final class BlockLimitation extends EnumLimitation<CompatibleMaterial> {
         final Island island = islandManager.getIslandAtLocation(loc);
         final long totalPlaced;
 
-        if (type == CompatibleMaterial.SPAWNER) {
+        if (type == XMaterial.SPAWNER) {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
-            CompatibleMaterial material = null;
+            XMaterial material = null;
             if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                 switch (type.toString().toUpperCase()) {
                     case "DIODE_BLOCK_OFF":
                     case "DIODE_BLOCK_ON":
-                        material = CompatibleMaterial.REPEATER;
+                        material = XMaterial.REPEATER;
                         break;
                 }
             }

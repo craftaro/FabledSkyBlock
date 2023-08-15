@@ -29,6 +29,10 @@ public class SoundManager {
         }
     }
 
+    public void playSound(Location location, XSound sound) {
+        playSound(location, sound, 1, 1);
+    }
+
     public void playSound(Location location, XSound sound, float volume, float pitch) {
         if (this.plugin.getConfiguration().getBoolean("Sound.Enable")) {
             sound.play(location, volume, pitch);

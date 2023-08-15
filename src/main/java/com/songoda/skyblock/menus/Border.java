@@ -1,6 +1,6 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.world.SWorldBorder;
 import com.songoda.skyblock.SkyBlock;
@@ -64,7 +64,7 @@ public class Border {
 
             ItemStack is = event.getItem();
 
-            if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+            if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Border.Item.Exit.Displayname"))))) {
                 soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -77,7 +77,7 @@ public class Border {
                 soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                 Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
-            } else if ((is.getType() == CompatibleMaterial.LIGHT_BLUE_DYE.getMaterial()) && (is.hasItemMeta())
+            } else if ((XMaterial.LIGHT_BLUE_DYE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -95,7 +95,7 @@ public class Border {
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
-            } else if ((is.getType() == CompatibleMaterial.LIME_DYE.getMaterial()) && (is.hasItemMeta())
+            } else if ((XMaterial.LIME_DYE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -113,7 +113,7 @@ public class Border {
 
                     Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
                 }
-            } else if ((is.getType() == CompatibleMaterial.RED_DYE.getMaterial()) && (is.hasItemMeta())
+            } else if ((XMaterial.RED_DYE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
@@ -136,7 +136,7 @@ public class Border {
 
         Island island = islandManager.getIsland(player);
 
-        nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+        nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                 configLoad.getString("Menu.Border.Item.Exit.Displayname"), null, null, null, null), 0);
 
         SWorldBorder.Color borderColor = island.getBorderColor();
@@ -155,14 +155,14 @@ public class Border {
 
         if (player.hasPermission("fabledskyblock.island.border.blue")) {
             if (borderColor == SWorldBorder.Color.Blue) {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.LIGHT_BLUE_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.LIGHT_BLUE_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Blue")),
                         configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
                         new Placeholder[]{new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Blue"))},
                         null, null), 2);
             } else {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.LIGHT_BLUE_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.LIGHT_BLUE_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Blue")),
                         configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
@@ -170,12 +170,12 @@ public class Border {
                         null, null), 2);
             }
         } else {
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                     "", null, null, null, null), 2);
         }
         if (player.hasPermission("fabledskyblock.island.border.green")) {
             if (borderColor == SWorldBorder.Color.Green) {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.LIME_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.LIME_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Green")),
                         configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
@@ -183,7 +183,7 @@ public class Border {
                                 new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Green"))},
                         null, null), 3);
             } else {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.LIME_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.LIME_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Green")),
                         configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
@@ -192,19 +192,19 @@ public class Border {
                         null, null), 3);
             }
         } else {
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                     "", null, null, null, null), 3);
         }
         if (player.hasPermission("fabledskyblock.island.border.red")) {
             if (borderColor == SWorldBorder.Color.Red) {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.RED_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.RED_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Red")),
                         configLoad.getStringList("Menu.Border.Item.Color.Selected.Lore"),
                         new Placeholder[]{new Placeholder("%color", configLoad.getString("Menu.Border.Item.Word.Red"))},
                         null, null), 4);
             } else {
-                nInv.addItem(nInv.createItem(CompatibleMaterial.RED_DYE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.RED_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Red")),
                         configLoad.getStringList("Menu.Border.Item.Color.Unselected.Lore"),
@@ -212,7 +212,7 @@ public class Border {
                         null, null), 4);
             }
         } else {
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                     "", null, null, null, null), 4);
         }
 

@@ -2,6 +2,7 @@ package com.songoda.skyblock.gui.biome;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,6 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Optional;
 
 public class BiomeIcon {
     public final CompatibleBiome biome;
@@ -21,17 +24,16 @@ public class BiomeIcon {
     public BiomeIcon(SkyBlock plugin, CompatibleBiome biome) {
         this.biome = biome;
         FileConfiguration biomeConfig = plugin.getBiomes();
-        CompatibleMaterial tempMat = CompatibleMaterial.getMaterial(biomeConfig.getString("Biomes." + biome.name() + ".DisplayItem.Material"));
-        if (tempMat == null) {
-            tempMat = CompatibleMaterial.STONE;
+        Optional<XMaterial> tempMat = CompatibleMaterial.getMaterial(biomeConfig.getString("Biomes." + biome.name() + ".DisplayItem.Material"));
+        if (!tempMat.isPresent()) {
+            tempMat = Optional.of(XMaterial.STONE);
         }
         byte tempData = (byte) biomeConfig.getInt("Biomes." + biome.name() + ".DisplayItem.Data", 0);
 
-        CompatibleMaterial displayMaterial = CompatibleMaterial.getMaterial(tempMat.getMaterial(), tempData);
-        if (displayMaterial == null) {
-            displayMaterial = CompatibleMaterial.STONE;
+        if (!tempMat.isPresent()) {
+            tempMat = Optional.ofNullable(XMaterial.STONE);
         }
-        this.displayItem = displayMaterial.getItem();
+        this.displayItem = tempMat.get().parseItem();
         ItemMeta im = this.displayItem.getItemMeta();
         if (im != null) {
             im.setDisplayName(ChatColor.translateAlternateColorCodes('&', biomeConfig.getString("Biomes." + biome.name() + ".DisplayName", biome.name())));

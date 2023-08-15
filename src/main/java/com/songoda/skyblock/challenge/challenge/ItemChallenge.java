@@ -1,6 +1,6 @@
 package com.songoda.skyblock.challenge.challenge;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -14,13 +14,13 @@ public class ItemChallenge {
     private final boolean show;
     private final int row;
     private final int col;
-    private final CompatibleMaterial type;
+    private final XMaterial type;
     private final int amount;
     private final List<String> lore;
 
     private final String itemTitle;
 
-    public ItemChallenge(boolean show, int row, int col, CompatibleMaterial type, int amount, List<String> lore) {
+    public ItemChallenge(boolean show, int row, int col, XMaterial type, int amount, List<String> lore) {
         this.show = show;
         this.row = row;
         this.col = col;
@@ -34,7 +34,7 @@ public class ItemChallenge {
     public ItemStack createItem(UUID player, int amount) {
         FileConfiguration langConfigLoad = SkyBlock.getPlugin(SkyBlock.class).getLanguage();
 
-        ItemStack is = this.type.getItem();
+        ItemStack is = this.type.parseItem();
         is.setAmount(this.amount);
         // Air
         ItemMeta im = is.getItemMeta();
@@ -73,7 +73,7 @@ public class ItemChallenge {
         return this.col;
     }
 
-    public CompatibleMaterial getType() {
+    public XMaterial getType() {
         return this.type;
     }
 

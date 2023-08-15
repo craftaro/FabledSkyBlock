@@ -1,12 +1,12 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
 import com.songoda.skyblock.permission.PermissionType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -15,7 +15,7 @@ public class AnvilPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public AnvilPermission(SkyBlock plugin) {
-        super("Anvil", CompatibleMaterial.ANVIL, PermissionType.GENERIC);
+        super("Anvil", XMaterial.ANVIL, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -26,11 +26,9 @@ public class AnvilPermission extends ListeningPermission {
             return;
         }
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        Player player = event.getPlayer();
-
-        if (material == CompatibleMaterial.ANVIL) {
-            cancelAndMessage(event, player, this.plugin, this.messageManager);
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
+        if (material == XMaterial.ANVIL) {
+            cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
         }
     }
 }

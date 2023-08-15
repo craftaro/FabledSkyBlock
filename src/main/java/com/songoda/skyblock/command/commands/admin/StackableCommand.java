@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.admin;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
 import com.songoda.skyblock.message.MessageManager;
@@ -55,7 +56,7 @@ public class StackableCommand extends SubCommand {
             }
 
             final StackableManager stackableManager = this.plugin.getStackableManager();
-            final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
+            final XMaterial type = CompatibleMaterial.getMaterial(block.getType()).get();
 
             if (!stackableManager.isStackableMaterial(type)) {
                 messageManager.sendMessage(player, messageConfig.getString("Command.Island.Admin.Stackable.Target.Unstackable"));

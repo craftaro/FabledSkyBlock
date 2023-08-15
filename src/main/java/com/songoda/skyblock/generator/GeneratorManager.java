@@ -2,6 +2,8 @@ package com.songoda.skyblock.generator;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
@@ -15,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class GeneratorManager {
@@ -40,20 +43,20 @@ public class GeneratorManager {
             List<GeneratorMaterial> generatorMaterials = new ArrayList<>();
             if (configLoad.getString("Generators." + generatorList + ".Materials") != null) {
                 for (String materialList : configLoad.getConfigurationSection("Generators." + generatorList + ".Materials").getKeys(false)) {
-                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialList);
-                    if (materials != null) {
-                        generatorMaterials.add(new GeneratorMaterial(materials, configLoad.getDouble(
+                    Optional<XMaterial> materials = CompatibleMaterial.getMaterial(materialList);
+                    if (materials.isPresent()) {
+                        generatorMaterials.add(new GeneratorMaterial(materials.get(), configLoad.getDouble(
                                 "Generators." + generatorList + ".Materials." + materialList + ".Chance")));
                     }
                 }
             }
 
             Random rnd = new Random();
-            CompatibleMaterial icon;
+            XMaterial icon;
             if (!generatorMaterials.isEmpty()) {
                 icon = generatorMaterials.get(rnd.nextInt(generatorMaterials.size())).getMaterials();
             } else {
-                icon = CompatibleMaterial.STONE;
+                icon = XMaterial.STONE;
             }
 
             this.generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
@@ -120,7 +123,7 @@ public class GeneratorManager {
 
     @SuppressWarnings("deprecation")
     public BlockState generateBlock(Generator generator, Block block) {
-        CompatibleMaterial materials = getRandomMaterials(generator);
+        XMaterial materials = getRandomMaterials(generator);
         if (materials == null) {
             return block.getState();
         }
@@ -129,9 +132,9 @@ public class GeneratorManager {
 
 
         if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
-            block.setType(materials.getMaterial());
+            XBlock.setType(block, materials);
         } else {
-            ItemStack is = materials.getItem();
+            ItemStack is = materials.parseItem();
             block.setType(is.getType());
 
             try {
@@ -145,9 +148,9 @@ public class GeneratorManager {
         return block.getState();
     }
 
-    public CompatibleMaterial getRandomMaterials(Generator generator) {
+    public XMaterial getRandomMaterials(Generator generator) {
         if (generator.getGeneratorMaterials() != null && generator.getGeneratorMaterials().stream().anyMatch(x -> x.getChance() > 0)) {
-            List<CompatibleMaterial> weightedList = new ArrayList<>();
+            List<XMaterial> weightedList = new ArrayList<>();
             for (GeneratorMaterial generatorMaterial : generator.getGeneratorMaterials()) {
                 for (int i = 0; i < generatorMaterial.getChance() * 30; i++) {
                     weightedList.add(generatorMaterial.getMaterials());
@@ -158,12 +161,12 @@ public class GeneratorManager {
             return weightedList.get(choice);
         }
 
-        return CompatibleMaterial.COBBLESTONE;
+        return XMaterial.COBBLESTONE;
     }
 
     public void addGenerator(String name, IslandWorld isWorld, List<GeneratorMaterial> generatorMaterials, int level, boolean permission) {
-        CompatibleMaterial[] oreMaterials = new CompatibleMaterial[]{CompatibleMaterial.COAL, CompatibleMaterial.CHARCOAL, CompatibleMaterial.DIAMOND,
-                CompatibleMaterial.IRON_INGOT, CompatibleMaterial.GOLD_INGOT, CompatibleMaterial.EMERALD};
+        XMaterial[] oreMaterials = new XMaterial[]{XMaterial.COAL, XMaterial.CHARCOAL, XMaterial.DIAMOND,
+                XMaterial.IRON_INGOT, XMaterial.GOLD_INGOT, XMaterial.EMERALD};
         this.generatorStorage.add(new Generator(name, isWorld, oreMaterials[new Random().nextInt(oreMaterials.length)],
                 generatorMaterials, level, permission));
     }

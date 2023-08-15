@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +17,7 @@ public class CauldronPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public CauldronPermission(SkyBlock plugin) {
-        super("Cauldron", CompatibleMaterial.CAULDRON, PermissionType.GENERIC);
+        super("Cauldron", XMaterial.CAULDRON, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -29,7 +30,7 @@ public class CauldronPermission extends ListeningPermission {
                 Block block = event.getClickedBlock();
 
 
-                if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.CAULDRON) {
+                if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.CAULDRON) {
                     cancelAndMessage(event, player, this.plugin, this.messageManager);
                 }
             }

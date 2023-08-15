@@ -2,6 +2,7 @@ package com.songoda.skyblock.challenge.challenge;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.bank.BankManager;
 import com.songoda.skyblock.config.FileManager;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Challenge {
@@ -196,9 +198,9 @@ public class Challenge {
                 // The id
                 String id = index == -1 ? value : value.substring(0, index);
                 // Check if it's a Minecraft item
-                CompatibleMaterial m = CompatibleMaterial.getMaterial(id);
+                Optional<XMaterial> m = CompatibleMaterial.getMaterial(id);
                 //Material m = Material.matchMaterial(id);
-                if (m == null) {
+                if (!m.isPresent()) {
                     throw new IllegalArgumentException("\"" + id + "\" isn't a correct Minecraft Material (value = \"" + value + "\")");
                 }
                 int amount = 1;
@@ -211,7 +213,7 @@ public class Challenge {
                                 "\"" + strAmount + "\" isn't a correct number (value = \"" + value + "\")");
                     }
                 }
-                ItemStack item = m.getItem();
+                ItemStack item = m.get().parseItem();
                 item.setAmount(amount);
                 return item;
             }
@@ -222,7 +224,7 @@ public class Challenge {
                 if (obj instanceof ItemStack) {
                     // Check if player has specific item in his inventory
                     ItemStack is = (ItemStack) obj;
-                    CompatibleMaterial material = CompatibleMaterial.getMaterial(is);
+                    XMaterial material = CompatibleMaterial.getMaterial(is.getType()).get();
                     if (ignoreLore) {
                         return findSimilar(p, material) >= is.getAmount();
                     }
@@ -231,10 +233,10 @@ public class Challenge {
                 return false;
             }
 
-            private int findSimilar(Player p, CompatibleMaterial material) {
+            private int findSimilar(Player p, XMaterial material) {
                 int amountFound = 0;
                 for (ItemStack item : p.getInventory().getContents()) {
-                    if (CompatibleMaterial.getMaterial(item) == material) {
+                    if (material.isSimilar(item)) {
                         amountFound += item.getAmount();
                     }
                 }
@@ -253,7 +255,7 @@ public class Challenge {
                         if (jis == null) {
                             continue;
                         }
-                        if (ignoreLore ? CompatibleMaterial.getMaterial(jis) == CompatibleMaterial.getMaterial(is) : jis.isSimilar(is)) {
+                        if (ignoreLore ? CompatibleMaterial.getMaterial(is.getType()).get().isSimilar(jis) : jis.isSimilar(is)) {
                             if (jis.getAmount() <= toRemove) {
                                 toRemove -= jis.getAmount();
                                 p.getInventory().removeItem(jis);

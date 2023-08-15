@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class RedstonePermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public RedstonePermission(SkyBlock plugin) {
-        super("Redstone", CompatibleMaterial.REDSTONE, PermissionType.GENERIC);
+        super("Redstone", XMaterial.REDSTONE, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -23,14 +24,14 @@ public class RedstonePermission extends ListeningPermission {
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if (material == CompatibleMaterial.COMPARATOR || material == CompatibleMaterial.REPEATER) {
+            if (material == XMaterial.COMPARATOR || material == XMaterial.REPEATER) {
                 cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         } else if (event.getAction() == Action.PHYSICAL) {
-            if (material == CompatibleMaterial.TRIPWIRE) {
+            if (material == XMaterial.TRIPWIRE) {
                 cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         }

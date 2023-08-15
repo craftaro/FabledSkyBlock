@@ -1,6 +1,7 @@
 package com.songoda.skyblock.command.commands.island;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.command.SubCommand;
@@ -19,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Optional;
 
 public class SetSpawnCommand extends SubCommand {
     public SetSpawnCommand(SkyBlock plugin) {
@@ -100,12 +102,12 @@ public class SetSpawnCommand extends SubCommand {
                     if (fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                             .getFileConfiguration().getBoolean("Island.Spawn.Protection")) {
 
-                        CompatibleMaterial toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());
+                        Optional<XMaterial> toCompare = CompatibleMaterial.getMaterial(location.clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType());
 
-                        if (toCompare == CompatibleMaterial.AIR
-                                || toCompare == CompatibleMaterial.MOVING_PISTON
-                                || toCompare == CompatibleMaterial.ICE
-                                || toCompare == CompatibleMaterial.PISTON_HEAD) {
+                        if (toCompare.isPresent() && CompatibleMaterial.isAir(toCompare.get())
+                                || toCompare.get() == XMaterial.MOVING_PISTON
+                                || toCompare.get() == XMaterial.ICE
+                                || toCompare.get() == XMaterial.PISTON_HEAD) {
 
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Block.Message"));
@@ -125,22 +127,22 @@ public class SetSpawnCommand extends SubCommand {
                             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
-                        } else if (CompatibleMaterial.getMaterial(location.getBlock().getType()) == CompatibleMaterial.NETHER_PORTAL
+                        } else if (CompatibleMaterial.getMaterial(location.getBlock().getType()).get() == XMaterial.NETHER_PORTAL
                                 || CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock()
-                                .getType()) == CompatibleMaterial.NETHER_PORTAL) {
+                                .getType()).get() == XMaterial.NETHER_PORTAL) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.SetSpawn.Protection.Portal.Message"));
                             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
                             return;
                         } else {
-                            CompatibleMaterial type = CompatibleMaterial.getMaterial(location.getBlock().getType());
-                            if (type.isSolid() && type.isOccluding()) {
+                            Optional<XMaterial> type = CompatibleMaterial.getMaterial(location.getBlock().getType());
+                            if (type.isPresent() && type.get().parseMaterial().isSolid() && type.get().parseMaterial().isOccluding()) {
                                 location.getBlock().breakNaturally();
                             }
 
-                            CompatibleMaterial typeBelow = CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType());
-                            if (typeBelow.isSolid() && type.isOccluding()) {
+                            Optional<XMaterial> typeBelow = CompatibleMaterial.getMaterial(location.clone().add(0.0D, 1.0D, 0.0D).getBlock().getType());
+                            if (typeBelow.isPresent() && typeBelow.get().parseMaterial().isSolid() && type.get().parseMaterial().isOccluding()) {
                                 location.clone().add(0.0D, 1.0D, 0.0D).getBlock().breakNaturally();
                             }
 

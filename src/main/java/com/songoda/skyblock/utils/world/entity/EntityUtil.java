@@ -172,7 +172,7 @@ public final class EntityUtil {
                     String[] materialData = entityData.getCarryBlock().split(":");
 
                     byte data = Byte.parseByte(materialData[1]);
-                    Material material = CompatibleMaterial.getMaterial(materialData[0].toUpperCase()).getMaterial();
+                    Material material = CompatibleMaterial.getMaterial(materialData[0].toUpperCase()).get().parseMaterial();
 
                     if (material != null) {
                         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {

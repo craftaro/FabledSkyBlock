@@ -1,9 +1,9 @@
 package com.songoda.skyblock.gui.biome;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -63,13 +63,13 @@ public class GuiBiome extends Gui {
         }
         setActionForRange(0, 0, 5, 9, null);
 
-        setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(0, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
-        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
@@ -80,11 +80,11 @@ public class GuiBiome extends Gui {
             i.set(TextUtils.formatText(i.next().replace("%biome_type", this.island.getBiomeName())));
         }
 
-        setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Info
+        setItem(4, GuiUtils.createButtonItem(XMaterial.PAINTING, // Info
                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Info.Displayname")), lore));
 
         for (int i = 9; i < 18; i++) {
-            setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+            setItem(i, XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
         }
 
         List<BiomeIcon> biomes = new ArrayList<>();
@@ -121,7 +121,7 @@ public class GuiBiome extends Gui {
             this.pages = (int) Math.max(1, Math.ceil((double) biomes.size() / 27d));
 
             if (this.page != 1) {
-                setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                setButton(5, 2, GuiUtils.createButtonItem(XMaterial.ARROW,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Last.Displayname"))),
                         (event) -> {
                             this.page--;
@@ -130,7 +130,7 @@ public class GuiBiome extends Gui {
             }
 
             if (this.page != this.pages) {
-                setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                setButton(5, 6, GuiUtils.createButtonItem(XMaterial.ARROW,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Biome.Item.Next.Displayname"))),
                         (event) -> {
                             this.page++;
@@ -201,7 +201,7 @@ public class GuiBiome extends Gui {
                 });
             }
         } else {
-            setItem(31, CompatibleMaterial.BARRIER.getItem()); // TODO
+            setItem(31, XMaterial.BARRIER.parseItem()); // TODO
         }
     }
 }

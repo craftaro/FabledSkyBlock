@@ -1,8 +1,8 @@
 package com.songoda.skyblock.world.generator;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.IslandWorld;
 import org.bukkit.Material;
@@ -66,9 +66,9 @@ public class VoidGenerator extends ChunkGenerator {
 
         if (section.getBoolean("Liquid.Enable")) {
             if (section.getBoolean("Liquid.Lava")) {
-                setBlock(chunkData, CompatibleMaterial.LAVA.getBlockMaterial(), section.getInt("Liquid.Height"));
+                setBlock(chunkData, XMaterial.LAVA.parseMaterial(), section.getInt("Liquid.Height"));
             } else {
-                setBlock(chunkData, CompatibleMaterial.WATER.getBlockMaterial(), section.getInt("Liquid.Height"));
+                setBlock(chunkData, XMaterial.WATER.parseMaterial(), section.getInt("Liquid.Height"));
             }
         }
 

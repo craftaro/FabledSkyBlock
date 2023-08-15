@@ -1,6 +1,7 @@
 package com.songoda.skyblock.island.removal;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
@@ -42,7 +43,7 @@ public class ChunkDeleteSplitter extends BukkitRunnable {
             final BlockInfo pair = it.next();
             final Block block = pair.getWorld().getBlockAt(pair.getX(), pair.getY(), pair.getZ());
 
-            block.setType(CompatibleMaterial.AIR.getBlockMaterial());
+            XBlock.setType(block, XMaterial.AIR);
 
             deleteAmount++;
             it.remove();

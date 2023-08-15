@@ -2,6 +2,7 @@ package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
@@ -26,7 +27,7 @@ public class PortalPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public PortalPermission(SkyBlock plugin) {
-        super("Portal", CompatibleMaterial.ENDER_PEARL, PermissionType.GENERIC);
+        super("Portal", XMaterial.ENDER_PEARL, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -43,9 +44,9 @@ public class PortalPermission extends ListeningPermission {
     @PermissionHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getTo() != null) {
-            CompatibleMaterial toMaterial = CompatibleMaterial.getMaterial(event.getTo().getBlock().getType());
+            XMaterial toMaterial = CompatibleMaterial.getMaterial(event.getTo().getBlock().getType()).orElse(null);
 
-            if (toMaterial == CompatibleMaterial.NETHER_PORTAL || toMaterial == CompatibleMaterial.END_PORTAL) {
+            if (toMaterial == XMaterial.NETHER_PORTAL || toMaterial == XMaterial.END_PORTAL) {
                 //event.setTo(LocationUtil.getRandomLocation(event.getFrom().getWorld(), 5000, 5000, true, true));
                 cancelAndMessage(event, event.getPlayer(), this.plugin, this.messageManager);
             }

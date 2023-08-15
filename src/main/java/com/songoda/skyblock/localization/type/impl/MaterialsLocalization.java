@@ -1,19 +1,20 @@
 package com.songoda.skyblock.localization.type.impl;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 
-public class MaterialsLocalization extends EnumLocalization<CompatibleMaterial> {
+public class MaterialsLocalization extends EnumLocalization<XMaterial> {
     public MaterialsLocalization(String keysPath) {
-        super(keysPath, CompatibleMaterial.class);
+        super(keysPath, XMaterial.class);
     }
 
     @Override
-    public CompatibleMaterial parseEnum(String input) {
-        return CompatibleMaterial.getMaterial(input);
+    public XMaterial parseEnum(String input) {
+        return CompatibleMaterial.getMaterial(input).get();
     }
 
     @Override
-    public String getDefaultLocaleFor(CompatibleMaterial obj) {
+    public String getDefaultLocaleFor(XMaterial obj) {
         return super.getDefaultLocaleFor(obj).replace("_", " ");
     }
 }

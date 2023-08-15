@@ -2,6 +2,8 @@ package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandEnvironment;
@@ -70,6 +72,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -355,10 +358,10 @@ public class EntityListeners implements Listener {
                 || LocationUtil.isLocationLocation(block.getLocation(),
                 island.getLocation(world, IslandEnvironment.VISITOR).clone().subtract(0, 1, 0)))
                 && this.plugin.getConfiguration().getBoolean("Island.Spawn.Protection")) {
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+            Optional<XMaterial> material = CompatibleMaterial.getMaterial(block.getType());
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
                 event.getEntity().remove();
-                event.getBlock().setType(material.getBlockMaterial());
+                XBlock.setType(event.getBlock(), material.get());
             }, 1L);
             return;
         }
@@ -407,20 +410,20 @@ public class EntityListeners implements Listener {
         }
 
         removeBlockFromLevel(island, block);
-        CompatibleMaterial materials;
+        Optional<XMaterial> materials;
 
         if (event.getTo() != Material.AIR) {
-            materials = CompatibleMaterial.getBlockMaterial(event.getTo());
+            materials = CompatibleMaterial.getMaterial(event.getTo());
 
-            if (materials != null) {
+            if (materials.isPresent()) {
                 long materialAmount = 0;
                 IslandLevel level = island.getLevel();
 
-                if (level.hasMaterial(materials.name())) {
-                    materialAmount = level.getMaterialAmount(materials.name());
+                if (level.hasMaterial(materials.get().name())) {
+                    materialAmount = level.getMaterialAmount(materials.get().name());
                 }
 
-                level.setMaterialAmount(materials.name(), materialAmount + 1);
+                level.setMaterialAmount(materials.get().name(), materialAmount + 1);
             }
         }
 
@@ -459,16 +462,16 @@ public class EntityListeners implements Listener {
                     Location blockLocation = block.getLocation();
 
                     if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-                        Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
+                        Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block.getType()).get());
                         if (stackable != null) {
-                            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+                            Optional<XMaterial> material = CompatibleMaterial.getMaterial(block.getType());
                             byte data = block.getData();
 
                             int removedAmount = (int) (Math.random() * Math.min(64, stackable.getSize() - 1));
                             stackable.take(removedAmount);
                             Bukkit.getScheduler().runTask(this.plugin, () -> {
                                 block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5),
-                                        new ItemStack(material.getMaterial(), (int) (Math.random() * removedAmount), data));
+                                        new ItemStack(material.get().parseMaterial(), (int) (Math.random() * removedAmount), data));
                             });
 
                             if (stackable.getSize() <= 1) {
@@ -499,7 +502,7 @@ public class EntityListeners implements Listener {
         }
     }
 
-    private void removeBlockFromLevel(Island island, CompatibleMaterial material) {
+    private void removeBlockFromLevel(Island island, XMaterial material) {
         if (material == null) {
             return;
         }
@@ -517,7 +520,7 @@ public class EntityListeners implements Listener {
     }
 
     private void removeBlockFromLevel(Island island, Block block) {
-        removeBlockFromLevel(island, CompatibleMaterial.getBlockMaterial(block.getType()));
+        removeBlockFromLevel(island, CompatibleMaterial.getMaterial(block.getType()).get());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -590,14 +593,14 @@ public class EntityListeners implements Listener {
                     if (livingEntity instanceof Steerable) {
                         Steerable steerable = (Steerable) livingEntity;
                         if (steerable.hasSaddle()) {
-                            dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                            dontMultiply.add(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1));
                         }
                     }
                 } else {
                     if (livingEntity instanceof Pig) {
                         Pig pig = (Pig) livingEntity;
                         if (pig.hasSaddle()) {
-                            dontMultiply.add(new ItemStack(CompatibleMaterial.SADDLE.getMaterial(), 1));
+                            dontMultiply.add(new ItemStack(XMaterial.SADDLE.parseMaterial(), 1));
                         }
                     }
                 }

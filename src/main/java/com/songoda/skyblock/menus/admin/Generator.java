@@ -3,6 +3,7 @@ package com.songoda.skyblock.menus.admin;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -61,16 +62,16 @@ public class Generator implements Listener {
         if (playerData.getViewer() == null) {
             List<com.songoda.skyblock.generator.Generator> generators = generatorManager.getGenerators();
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
             nInv.addItem(
-                    nInv.createItem(new ItemStack(CompatibleMaterial.OAK_SIGN.getMaterial()),
+                    nInv.createItem(new ItemStack(XMaterial.OAK_SIGN.parseMaterial()),
                             configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"),
                             configLoad.getStringList("Menu.Admin.Generator.Browse.Item.Information.Lore"),
                             new Placeholder[]{new Placeholder("%generators", "" + generators.size())}, null, null),
                     4);
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Barrier.Displayname"), null, null, null,
                     null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -105,7 +106,7 @@ public class Generator implements Listener {
                         inventorySlot++;
 
                         com.songoda.skyblock.generator.Generator generator = generators.get(index);
-                        nInv.addItem(nInv.createItem(generator.getMaterials().getItem(),
+                        nInv.addItem(nInv.createItem(generator.getMaterials().parseItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Admin.Generator.Browse.Item.Generator.Displayname")
                                                 .replace("%generator", generator.getName())),
@@ -128,16 +129,16 @@ public class Generator implements Listener {
                         .getStringList("Menu.Admin.Generator.Generator.Item.Information.Permission.Enable.Lore");
             }
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.MAP.parseItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Information.Displayname"), permissionLore,
                     new Placeholder[]{new Placeholder("%name", generator.getName()),
                             new Placeholder("%materials", "" + generator.getGeneratorMaterials().size()),
                             new Placeholder("%permission", generator.getPermission())},
                     null, null), 4);
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Return.Displayname"), null, null, null,
                     null), 0, 8);
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Barrier.Displayname"), null, null, null,
                     null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -159,7 +160,7 @@ public class Generator implements Listener {
                     inventorySlot++;
 
                     GeneratorMaterial generatorMaterial = generatorMaterials.get(index);
-                    nInv.addItem(nInv.createItem(generatorMaterial.getMaterials().getItem(),
+                    nInv.addItem(nInv.createItem(generatorMaterial.getMaterials().parseItem(),
                             ChatColor.translateAlternateColorCodes('&',
                                     configLoad.getString("Menu.Admin.Generator.Generator.Item.Material.Displayname")
                                             .replace("%material", generatorMaterial.getMaterials().name())),
@@ -228,7 +229,7 @@ public class Generator implements Listener {
             return;
         }
 
-        if ((event.getCurrentItem().getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+        if ((event.getCurrentItem().getType() == XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial())
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName()
                     .equals(ChatColor.translateAlternateColorCodes('&',
@@ -239,7 +240,7 @@ public class Generator implements Listener {
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial())
+        } else if ((event.getCurrentItem().getType() == XMaterial.OAK_FENCE_GATE.parseMaterial())
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Exit.Displayname")))) {
@@ -258,7 +259,7 @@ public class Generator implements Listener {
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.OAK_SIGN.getMaterial()) && (is.hasItemMeta())
+        } else if ((event.getCurrentItem().getType() == XMaterial.OAK_SIGN.parseMaterial()) && (is.hasItemMeta())
                 && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                 configLoad.getString("Menu.Admin.Generator.Browse.Item.Information.Displayname"))))) {
             soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
@@ -317,7 +318,7 @@ public class Generator implements Listener {
             plugin.getGuiManager().showGUI(player, gui);
 
             return;
-        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.MAP.getMaterial())
+        } else if ((event.getCurrentItem().getType() == XMaterial.MAP.parseMaterial())
                 && (is.hasItemMeta())
                 && (is.getItemMeta().getDisplayName()
                 .equals(ChatColor.translateAlternateColorCodes('&', configLoad
@@ -377,7 +378,7 @@ public class Generator implements Listener {
 
                 return;
             }
-        } else if ((event.getCurrentItem().getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial())
+        } else if ((event.getCurrentItem().getType() == XMaterial.PLAYER_HEAD.parseMaterial())
                 && (is.hasItemMeta())) {
             if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                     configLoad.getString("Menu.Admin.Generator.Browse.Item.Previous.Displayname")))) {
@@ -411,7 +412,7 @@ public class Generator implements Listener {
 
                 if (generator.getGeneratorMaterials() != null) {
                     for (GeneratorMaterial generatorMaterialList : generator.getGeneratorMaterials()) {
-                        if ((event.getCurrentItem().getType() == generatorMaterialList.getMaterials().getMaterial())
+                        if ((generatorMaterialList.getMaterials().isSimilar(event.getCurrentItem()))
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName().equals(
                                 ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -542,8 +543,8 @@ public class Generator implements Listener {
                             configLoad.getString("Island.Admin.Generator.Material.Limit.Message"));
                     soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 } else {
-                    CompatibleMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType());
-                    materials.getItem().setData(event.getCurrentItem().getData());
+                    XMaterial materials = CompatibleMaterial.getMaterial(event.getCurrentItem().getType()).get();
+                    materials.parseItem().setData(event.getCurrentItem().getData());
 
                     for (GeneratorMaterial generatorMaterialList : generator.getGeneratorMaterials()) {
                         if (generatorMaterialList.getMaterials() == materials) {
@@ -601,7 +602,7 @@ public class Generator implements Listener {
 
         if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
             for (com.songoda.skyblock.generator.Generator generatorList : generatorManager.getGenerators()) {
-                if (event.getCurrentItem().getType() == generatorList.getMaterials().getMaterial()
+                if (generatorList.getMaterials().isSimilar(event.getCurrentItem())
                         && ChatColor.stripColor(is.getItemMeta().getDisplayName())
                         .equals(generatorList.getName())) {
                     if (event.getClick() == ClickType.LEFT) {

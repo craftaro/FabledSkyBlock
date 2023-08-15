@@ -1,9 +1,9 @@
 package com.songoda.skyblock.utils.item;
 
 import com.craftaro.core.compatibility.ClassMapping;
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.MethodMapping;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -55,9 +55,9 @@ public class ItemStackUtil {
             // Other structures people make NEED to be saved from the version that they will be using so everything loads properly
             if (itemStack.getType() == Material.AIR) {
                 if (NBTTagCompound.toString().equals("{id:\"minecraft:sugar_cane\",Count:1b}")) {
-                    itemStack = new ItemStack(CompatibleMaterial.SUGAR_CANE.getMaterial(), 1);
+                    itemStack = XMaterial.SUGAR_CANE.parseItem();
                 } else if (NBTTagCompound.toString().equals("{id:\"minecraft:melon_slice\",Count:1b}")) {
-                    itemStack = new ItemStack(CompatibleMaterial.MELON_SLICE.getMaterial(), 1);
+                    itemStack = XMaterial.MELON_SLICE.parseItem();
                 }
             }
         } catch (Exception ex) {

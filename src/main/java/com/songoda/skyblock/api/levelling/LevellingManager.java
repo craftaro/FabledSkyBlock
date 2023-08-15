@@ -29,6 +29,6 @@ public class LevellingManager {
     public void registerCalculator(Calculator calculator, Material material) {
         Preconditions.checkArgument(calculator != null, "Cannot use a null calculator");
         Preconditions.checkArgument(material != null, "Cannot use a null material");
-        CalculatorRegistry.registerCalculator(calculator, CompatibleMaterial.getMaterial(material));
+        CalculatorRegistry.registerCalculator(calculator, CompatibleMaterial.getMaterial(material).get());
     }
 }

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.challenge.challenge;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ChallengeCategory {
@@ -61,11 +63,11 @@ public class ChallengeCategory {
             List<String> lore = show ? toColor(config.getStringList(key + ".item.lore")) : new ArrayList<>();
             try {
                 // If an Exception occurs, we don't handle it here but in parent class
-                CompatibleMaterial compatibleMaterial = CompatibleMaterial.getMaterial(strItem);
-                if (compatibleMaterial == null) {
+                Optional<XMaterial> compatibleMaterial = CompatibleMaterial.getMaterial(strItem);
+                if (!compatibleMaterial.isPresent()) {
                     throw new IllegalArgumentException("Item " + strItem + " isn't a correct material");
                 }
-                ItemChallenge ic = new ItemChallenge(show, row, col, compatibleMaterial, amount, lore);
+                ItemChallenge ic = new ItemChallenge(show, row, col, compatibleMaterial.get(), amount, lore);
                 Challenge c = new Challenge(this, id, name, maxTimes, showInChat, require, reward, ic);
                 this.challenges.put(id, c);
             } catch (IllegalArgumentException ex) {

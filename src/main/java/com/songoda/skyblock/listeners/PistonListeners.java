@@ -1,6 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -11,6 +12,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+
+import java.util.Optional;
 
 public class PistonListeners implements Listener {
     private final SkyBlock plugin;
@@ -31,7 +34,7 @@ public class PistonListeners implements Listener {
         }
 
         Island island = islandManager.getIslandAtLocation(block.getLocation());
-        if (island == null || CompatibleMaterial.getMaterial(block) != CompatibleMaterial.DRAGON_EGG) {
+        if (island == null || CompatibleMaterial.getMaterial(block.getType()).get() != XMaterial.DRAGON_EGG) {
             return;
         }
 
@@ -40,21 +43,21 @@ public class PistonListeners implements Listener {
             return;
         }
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
-        if (material == null) {
+        Optional<XMaterial> material = CompatibleMaterial.getMaterial(block.getType());
+        if (!material.isPresent()) {
             return;
         }
 
         IslandLevel level = island.getLevel();
-        if (!level.hasMaterial(material.name())) {
+        if (!level.hasMaterial(material.get().name())) {
             return;
         }
 
-        long materialAmount = level.getMaterialAmount(material.name());
+        long materialAmount = level.getMaterialAmount(material.get().name());
         if (materialAmount <= 1) {
-            level.removeMaterial(material.name());
+            level.removeMaterial(material.get().name());
         } else {
-            level.setMaterialAmount(material.name(), materialAmount - 1);
+            level.setMaterialAmount(material.get().name(), materialAmount - 1);
         }
     }
 }

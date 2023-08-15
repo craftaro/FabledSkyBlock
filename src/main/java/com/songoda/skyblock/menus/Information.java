@@ -1,6 +1,6 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -111,17 +111,17 @@ public class Information {
                             PlayerData playerData13 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 
-                            if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                            if (XMaterial.OAK_FENCE_GATE.isSimilar(is) && is.hasItemMeta()
                                     && (is.getItemMeta().getDisplayName().equals(plugin.formatText(configLoad.getString("Menu.Information.Categories.Item.Exit.Displayname"))))) {
                                 soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
-                            } else if ((is.getType() == CompatibleMaterial.ITEM_FRAME.getMaterial()) && (is.hasItemMeta())
+                            } else if ((XMaterial.ITEM_FRAME.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(plugin.formatText(configLoad.getString("Menu.Information.Categories.Item.Members.Displayname"))))) {
                                 playerData13.setViewer(new Viewer(((Viewer) playerData13.getViewer()).getOwner(), Viewer.Type.MEMBERS));
                                 soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
-                            } else if ((is.getType() == CompatibleMaterial.MAP.getMaterial())
+                            } else if ((XMaterial.MAP.isSimilar(is))
                                     && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     plugin.formatText(configLoad.getString(
@@ -130,7 +130,7 @@ public class Information {
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
-                            } else if ((is.getType() == CompatibleMaterial.PAINTING.getMaterial()) && (is.hasItemMeta())
+                            } else if ((XMaterial.PAINTING.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     plugin.formatText(configLoad.getString(
                                             "Menu.Information.Categories.Item.Visitors.Displayname"))))) {
@@ -145,14 +145,14 @@ public class Information {
                         }
                     });
 
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Information.Categories.Item.Exit.Displayname"), null, null, null,
                             null), 0, 4);
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.ITEM_FRAME.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.ITEM_FRAME.parseItem(),
                             configLoad.getString("Menu.Information.Categories.Item.Members.Displayname"),
                             configLoad.getStringList("Menu.Information.Categories.Item.Members.Lore"), null, null,
                             null), 1);
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.PAINTING.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.PAINTING.parseItem(),
                             configLoad.getString("Menu.Information.Categories.Item.Visitors.Displayname"),
                             configLoad.getStringList("Menu.Information.Categories.Item.Visitors.Lore"), null, null,
                             null), 3);
@@ -188,7 +188,7 @@ public class Information {
                                     "Menu.Information.Categories.Item.Information.Vote.Enabled.Signature.Disabled.Lore"));
                         }
 
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
+                        nInv.addItem(nInv.createItem(XMaterial.MAP.parseItem(),
                                 configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"),
                                 itemLore,
                                 new Placeholder[]{new Placeholder("%level", "" + visit.getLevel().getLevel()),
@@ -227,7 +227,7 @@ public class Information {
                                     "Menu.Information.Categories.Item.Information.Vote.Disabled.Signature.Disabled.Lore"));
                         }
 
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.MAP.getItem(),
+                        nInv.addItem(nInv.createItem(XMaterial.MAP.parseItem(),
                                 configLoad.getString("Menu.Information.Categories.Item.Information.Displayname"),
                                 itemLore,
                                 new Placeholder[]{new Placeholder("%level", "" + visit.getLevel().getLevel()),
@@ -254,7 +254,7 @@ public class Information {
                             PlayerData playerData1 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 
-                            if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                            if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Members.Item.Return.Displayname"))))) {
@@ -263,7 +263,7 @@ public class Information {
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
-                            } else if ((is.getType() == CompatibleMaterial.PAINTING.getMaterial()) && (is.hasItemMeta())
+                            } else if ((XMaterial.PAINTING.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Members.Item.Statistics.Displayname"))))) {
@@ -271,7 +271,7 @@ public class Information {
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
-                            } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                            } else if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is))
                                     && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -280,7 +280,7 @@ public class Information {
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
-                            } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial())
+                            } else if ((XMaterial.PLAYER_HEAD.isSimilar(is))
                                     && (is.hasItemMeta())) {
                                 if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -317,7 +317,7 @@ public class Information {
                     displayedMembers.addAll(islandOperators);
                     displayedMembers.addAll(islandMembers);
 
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Information.Members.Item.Return.Displayname"), null, null, null,
                             null), 0, 8);
                     nInv.addItem(
@@ -333,7 +333,7 @@ public class Information {
                                             new Placeholder("%operators", "" + islandOperators.size())},
                                     null, null),
                             4);
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             configLoad.getString("Menu.Information.Members.Item.Barrier.Displayname"), null, null, null,
                             null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
@@ -410,7 +410,7 @@ public class Information {
                             PlayerData playerData12 = playerDataManager.getPlayerData(player);
                             ItemStack is = event.getItem();
 
-                            if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                            if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Visitors.Item.Return.Displayname"))))) {
@@ -421,7 +421,7 @@ public class Information {
 
                                 Bukkit.getServer().getScheduler().runTaskLater(plugin,
                                         () -> open(player), 1L);
-                            } else if ((is.getType() == CompatibleMaterial.PAINTING.getMaterial()) && (is.hasItemMeta())
+                            } else if ((XMaterial.PAINTING.isSimilar(is)) && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
                                             "Menu.Information.Visitors.Item.Statistics.Displayname"))))) {
@@ -429,7 +429,7 @@ public class Information {
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
-                            } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                            } else if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is))
                                     && (is.hasItemMeta())
                                     && (is.getItemMeta().getDisplayName().equals(
                                     ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -438,7 +438,7 @@ public class Information {
 
                                 event.setWillClose(false);
                                 event.setWillDestroy(false);
-                            } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial())
+                            } else if ((XMaterial.PLAYER_HEAD.isSimilar(is))
                                     && (is.hasItemMeta())) {
                                 if (is.getItemMeta().getDisplayName()
                                         .equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString(
@@ -468,7 +468,7 @@ public class Information {
 
                     List<UUID> displayedVisitors = new ArrayList<>(islandManager.getVisitorsAtIsland(island));
 
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Information.Visitors.Item.Return.Displayname"), null, null, null,
                             null), 0, 8);
                     nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
@@ -476,7 +476,7 @@ public class Information {
                             configLoad.getStringList("Menu.Information.Visitors.Item.Statistics.Lore"),
                             new Placeholder[]{new Placeholder("%island_visitors", "" + displayedVisitors.size())},
                             null, null), 4);
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             configLoad.getString("Menu.Information.Visitors.Item.Barrier.Displayname"), null, null,
                             null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 

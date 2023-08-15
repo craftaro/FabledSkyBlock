@@ -1,10 +1,10 @@
 package com.songoda.skyblock.gui.bank;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.TextUtils;
@@ -42,7 +42,7 @@ public class GuiBankSelector extends Gui {
         this.returnGui = returnGui;
         this.admin = admin;
         this.languageLoad = this.plugin.getLanguage();
-        setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+        setDefaultItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
         setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Input.Title")));
         paint();
     }
@@ -53,16 +53,16 @@ public class GuiBankSelector extends Gui {
             this.inventory.clear();
         }
 
-        setDefaultItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+        setDefaultItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
         setActionForRange(0, 0, 1, 8, null);
 
-        setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(0, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
-        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
@@ -81,7 +81,7 @@ public class GuiBankSelector extends Gui {
         }
         final String finalAction = action;
 
-        setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.GOLD_BLOCK, // All
+        setButton(2, GuiUtils.createButtonItem(XMaterial.GOLD_BLOCK, // All
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.All.Displayname")),
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.All.Lore")
                         .replace("%action%", this.languageLoad.getString("Menu.Bank.Words." + action)))), (event -> {
@@ -131,7 +131,7 @@ public class GuiBankSelector extends Gui {
             this.guiManager.showGUI(event.player, this.returnGui);
         }));
 
-        setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.PAPER, // Custom
+        setButton(6, GuiUtils.createButtonItem(XMaterial.PAPER, // Custom
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Custom.Displayname")),
                 TextUtils.formatText(this.languageLoad.getString("Menu.Input.Item.Custom.Lore")
                         .replace("%action%", this.languageLoad.getString("Menu.Bank.Words." + action)))), (event) -> {

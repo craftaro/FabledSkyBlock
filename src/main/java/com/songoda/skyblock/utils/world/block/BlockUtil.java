@@ -1,9 +1,9 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.craftaro.core.compatibility.ClassMapping;
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.MethodMapping;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.BlockUtils;
 import com.craftaro.core.utils.NMSUtils;
 import com.songoda.skyblock.utils.item.ItemStackUtil;
@@ -90,7 +90,7 @@ public final class BlockUtil extends BlockUtils {
             for (int i = 0; i < furnace.getInventory().getSize(); i++) {
                 ItemStack is = furnace.getInventory().getItem(i);
 
-                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -102,7 +102,7 @@ public final class BlockUtil extends BlockUtils {
             for (int i = 0; i < chest.getInventory().getSize(); i++) {
                 ItemStack is = chest.getInventory().getItem(i);
 
-                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -114,7 +114,7 @@ public final class BlockUtil extends BlockUtils {
             for (int i = 0; i < dispenser.getInventory().getSize(); i++) {
                 ItemStack is = dispenser.getInventory().getItem(i);
 
-                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -126,7 +126,7 @@ public final class BlockUtil extends BlockUtils {
             for (int i = 0; i < dropper.getInventory().getSize(); i++) {
                 ItemStack is = dropper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -138,7 +138,7 @@ public final class BlockUtil extends BlockUtils {
             for (int i = 0; i < hopper.getInventory().getSize(); i++) {
                 ItemStack is = hopper.getInventory().getItem(i);
 
-                if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                     blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                 }
             }
@@ -208,7 +208,7 @@ public final class BlockUtil extends BlockUtils {
                         for (int i = 0; i < shulkerBox.getInventory().getSize(); i++) {
                             ItemStack is = shulkerBox.getInventory().getItem(i);
 
-                            if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                            if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                                 blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                             }
                         }
@@ -224,7 +224,7 @@ public final class BlockUtil extends BlockUtils {
                         for (int i = 0; i < barrel.getInventory().getSize(); i++) {
                             ItemStack is = barrel.getInventory().getItem(i);
 
-                            if (is != null && is.getType() != CompatibleMaterial.AIR.getMaterial()) {
+                            if (is != null && is.getType() != XMaterial.AIR.parseMaterial()) {
                                 blockData.addItem(i, ItemStackUtil.serializeItemStack(is));
                             }
                         }
@@ -280,7 +280,7 @@ public final class BlockUtil extends BlockUtils {
             } else {
                 org.bukkit.material.FlowerPot flowerPot = (org.bukkit.material.FlowerPot) materialData;
 
-                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != CompatibleMaterial.AIR.getMaterial()) {
+                if (flowerPot.getContents() != null && flowerPot.getContents().getItemType() != XMaterial.AIR.parseMaterial()) {
                     blockData.setFlower(flowerPot.getContents().getItemType().toString() + ":" + flowerPot.getContents().getData());
                 }
             }
@@ -487,10 +487,10 @@ public final class BlockUtil extends BlockUtils {
             stairs.setFacingDirection(BlockFace.valueOf(blockData.getFacing()));
             state.setData(stairs);
         } else if (blockDataType == BlockDataType.FLOWERPOT) {
-            setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
+            setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), XMaterial.STONE, (byte) 0);
             if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8) && ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
                 if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
-                    setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), CompatibleMaterial.STONE, (byte) 0);
+                    setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), XMaterial.STONE, (byte) 0);
                 }
 
                 if (blockData.getFlower() != null && !blockData.getFlower().isEmpty()) {
@@ -556,7 +556,7 @@ public final class BlockUtil extends BlockUtils {
             Block bottomBlock = block.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock();
 
             if (bottomBlock.getType() == Material.AIR && !topBlock.getType().name().equals("DOUBLE_PLANT")) {
-                bottomBlock.setType(CompatibleMaterial.LARGE_FERN.getMaterial());
+                bottomBlock.setType(XMaterial.LARGE_FERN.parseMaterial());
 
                 if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
                     try {

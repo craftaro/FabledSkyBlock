@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -72,14 +72,14 @@ public class Bans {
 
                     ItemStack is = event.getItem();
 
-                    if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
+                    if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                    } else if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Bans.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -113,7 +113,7 @@ public class Bans {
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())) {
+                    } else if ((XMaterial.PLAYER_HEAD.isSimilar(is)) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                 configLoad.getString("Menu.Bans.Item.Previous.Displayname")))) {
                             playerData1.setPage(MenuType.BANS, playerData1.getPage(MenuType.BANS) - 1);
@@ -149,14 +149,14 @@ public class Bans {
 
             Set<UUID> islandBans = island.getBan().getBans();
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Bans.Item.Exit.Displayname"), null, null, null, null), 0, 8);
             nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                     configLoad.getString("Menu.Bans.Item.Information.Displayname"),
                     configLoad.getStringList("Menu.Bans.Item.Information.Lore"),
                     new Placeholder[]{new Placeholder("%bans", "" + islandBans.size())}, null, null), 4);
             nInv.addItem(
-                    nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             configLoad.getString("Menu.Bans.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 

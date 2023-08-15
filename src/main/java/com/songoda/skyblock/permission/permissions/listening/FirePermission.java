@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -12,12 +13,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Optional;
+
 public class FirePermission extends ListeningPermission {
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
     public FirePermission(SkyBlock plugin) {
-        super("Fire", CompatibleMaterial.FLINT_AND_STEEL, PermissionType.GENERIC);
+        super("Fire", XMaterial.FLINT_AND_STEEL, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,8 +33,8 @@ public class FirePermission extends ListeningPermission {
 
         Player player = event.getPlayer();
 
-        CompatibleMaterial targetMaterial = CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5));
-        if (targetMaterial == CompatibleMaterial.FIRE) {
+        Optional<XMaterial> targetMaterial = CompatibleMaterial.getMaterial(player.getTargetBlock(null, 5).getType());
+        if (targetMaterial.orElse(null) == XMaterial.FIRE) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

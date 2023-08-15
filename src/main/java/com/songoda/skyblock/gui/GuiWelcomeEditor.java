@@ -1,9 +1,9 @@
 package com.songoda.skyblock.gui;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -45,14 +45,14 @@ public class GuiWelcomeEditor extends Gui {
 
     public void paint() {
         List<String> welcomeMessage = this.island.getMessage(IslandMessage.WELCOME);
-        setButton(2, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(2, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                         TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
                 (event) -> this.guiManager.showGUI(event.player, this.returnGui));
-        setButton(6, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(6, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                         TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Return.Displayname"))),
                 (event) -> this.guiManager.showGUI(event.player, this.returnGui));
 
-        setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+        setButton(3, GuiUtils.createButtonItem(XMaterial.ARROW,
                         TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Add.Displayname")),
                         TextUtils.formatText(this.configLoad.getStringList(
                                 welcomeMessage.size() == this.mainConfig.getFileConfiguration().getInt("Island.Visitor.Welcome.Lines")
@@ -84,11 +84,11 @@ public class GuiWelcomeEditor extends Gui {
 
         List<String> itemLore = new ArrayList<>();
         itemLore.add(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Word.Empty"));
-        setItem(4, GuiUtils.createButtonItem(CompatibleMaterial.OAK_SIGN,
+        setItem(4, GuiUtils.createButtonItem(XMaterial.OAK_SIGN,
                 TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Message.Displayname")),
                 TextUtils.formatText(welcomeMessage.isEmpty() ? itemLore : welcomeMessage)));
 
-        setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+        setButton(5, GuiUtils.createButtonItem(XMaterial.ARROW,
                         TextUtils.formatText(this.configLoad.getString("Menu.Settings.Visitor.Panel.Welcome.Item.Line.Remove.Displayname")),
                         TextUtils.formatText(this.configLoad.getStringList(
                                 welcomeMessage.isEmpty()

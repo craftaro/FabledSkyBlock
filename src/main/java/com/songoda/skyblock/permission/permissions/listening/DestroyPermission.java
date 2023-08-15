@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -19,7 +20,7 @@ public class DestroyPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public DestroyPermission(SkyBlock plugin) {
-        super("Destroy", CompatibleMaterial.DIAMOND_PICKAXE, PermissionType.GENERIC);
+        super("Destroy", XMaterial.DIAMOND_PICKAXE, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,11 +31,10 @@ public class DestroyPermission extends ListeningPermission {
             return;
         }
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
         Player player = event.getPlayer();
 
-        if (material == CompatibleMaterial.SWEET_BERRY_BUSH || material == CompatibleMaterial.TNT
-                || material == CompatibleMaterial.END_PORTAL_FRAME) {
+        if (material == XMaterial.SWEET_BERRY_BUSH || material == XMaterial.TNT || material == XMaterial.END_PORTAL_FRAME) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

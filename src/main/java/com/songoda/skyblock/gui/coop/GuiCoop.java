@@ -1,9 +1,9 @@
 package com.songoda.skyblock.gui.coop;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.TextUtils;
@@ -57,16 +57,16 @@ public class GuiCoop extends Gui {
         }
         setActionForRange(0, 0, 1, 8, null);
 
-        setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(0, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
-            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE.);
+            soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
         List<String> addButtonLore = this.languageLoad.getStringList("Menu.Coop.Item.Information.Lore");
         Collections.replaceAll(addButtonLore, "%coops", "" + coopPlayers.size());
 
-        setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING, // Add new
+        setButton(4, GuiUtils.createButtonItem(XMaterial.PAINTING, // Add new
                         TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Information.Displayname")),
                         TextUtils.formatText(addButtonLore)),
                 (event) -> {
@@ -89,18 +89,18 @@ public class GuiCoop extends Gui {
                     }
                 });
 
-        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE, // Exit
+        setButton(8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE, // Exit
                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Exit.Displayname"))), (event) -> {
             soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             event.player.closeInventory();
         });
 
         for (int i = 9; i < 18; ++i) {
-            setItem(i, CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem());
+            setItem(i, XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
         }
 
         if (coopPlayers.isEmpty()) {
-            ItemStack empty = CompatibleMaterial.BARRIER.getItem();
+            ItemStack empty = XMaterial.BARRIER.parseItem();
             ItemMeta emptyMeta = empty.getItemMeta();
             emptyMeta.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Nothing.Displayname")));
             empty.setItemMeta(emptyMeta);
@@ -110,7 +110,7 @@ public class GuiCoop extends Gui {
             this.pages = (int) Math.max(1, Math.ceil((double) coopPlayers.size() / 36d));
 
             if (this.page != 1) {
-                setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                setButton(5, 2, GuiUtils.createButtonItem(XMaterial.ARROW,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Previous.Displayname"))),
                         (event) -> {
                             this.page--;
@@ -119,7 +119,7 @@ public class GuiCoop extends Gui {
             }
 
             if (this.page != this.pages) {
-                setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                setButton(5, 6, GuiUtils.createButtonItem(XMaterial.ARROW,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Next.Displayname"))),
                         (event) -> {
                             this.page++;

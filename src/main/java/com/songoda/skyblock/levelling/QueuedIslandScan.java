@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.island.IslandLevelChangeEvent;
 import com.songoda.skyblock.island.Island;
@@ -30,7 +30,7 @@ public class QueuedIslandScan {
 
     private int executions;
     private final int runEveryX;
-    private final Map<CompatibleMaterial, BlockAmount> amounts = new EnumMap<>(CompatibleMaterial.class);
+    private final Map<XMaterial, BlockAmount> amounts = new EnumMap<>(XMaterial.class);
     private int totalScanned;
     private int blocksSize;
 
@@ -50,7 +50,7 @@ public class QueuedIslandScan {
         this.totalScanned += this.currentScan.getTotalScanned();
         this.blocksSize += this.currentScan.getBlocksSize();
 
-        for (Map.Entry<CompatibleMaterial, BlockAmount> entry : this.currentScan.getAmounts().entrySet()) {
+        for (Map.Entry<XMaterial, BlockAmount> entry : this.currentScan.getAmounts().entrySet()) {
             if (this.amounts.containsKey(entry.getKey())) {
                 this.amounts.get(entry.getKey()).increaseAmount(entry.getValue().getAmount());
             } else {
@@ -76,7 +76,7 @@ public class QueuedIslandScan {
     public void finalizeScan() {
         final Map<String, Long> materials = new HashMap<>(this.amounts.size());
 
-        for (Map.Entry<CompatibleMaterial, BlockAmount> entry : this.amounts.entrySet()) {
+        for (Map.Entry<XMaterial, BlockAmount> entry : this.amounts.entrySet()) {
             materials.put(entry.getKey().name(), entry.getValue().getAmount());
         }
 

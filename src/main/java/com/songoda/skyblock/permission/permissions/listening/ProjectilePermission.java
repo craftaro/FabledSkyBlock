@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -17,7 +17,7 @@ public class ProjectilePermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public ProjectilePermission(SkyBlock plugin) {
-        super("Projectile", CompatibleMaterial.ARROW, PermissionType.GENERIC);
+        super("Projectile", XMaterial.ARROW, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -29,7 +29,7 @@ public class ProjectilePermission extends ListeningPermission {
         }
 
         Player player = event.getPlayer();
-        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.EGG) {
+        if (event.getItem() != null && XMaterial.EGG.isSimilar(event.getItem())) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

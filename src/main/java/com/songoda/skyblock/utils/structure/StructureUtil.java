@@ -4,6 +4,7 @@ import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.nms.NmsManager;
 import com.craftaro.core.nms.nbt.NBTEntity;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -55,17 +57,17 @@ public final class StructureUtil {
 
         for (Block block : blocks.keySet()) {
             Location location = blocks.get(block);
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+            Optional<XMaterial> material = CompatibleMaterial.getMaterial(block.getType());
 
             if (location.isOriginLocation()) {
                 originBlockLocation = location.getX() + ":" + location.getY() + ":" + location.getZ() + ":" + positions[0].getWorld().getName();
 
-                if (material == CompatibleMaterial.AIR) {
+                if (CompatibleMaterial.isAir(material.orElse(XMaterial.STONE))) {
                     blockData.add(BlockUtil.convertBlockToBlockData(block, location.getX(), location.getY(), location.getZ()));
                 }
             }
 
-            if (material == CompatibleMaterial.AIR) {
+            if (CompatibleMaterial.isAir(material.orElse(XMaterial.STONE))) {
                 continue;
             }
 

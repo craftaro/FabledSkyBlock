@@ -1,7 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -18,7 +18,7 @@ public class AnimalBreedingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public AnimalBreedingPermission(SkyBlock plugin) {
-        super("AnimalBreeding", CompatibleMaterial.WHEAT, PermissionType.GENERIC);
+        super("AnimalBreeding", XMaterial.WHEAT, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,27 +30,27 @@ public class AnimalBreedingPermission extends ListeningPermission {
         Entity entity = event.getRightClicked();
 
         if (entity.getType() == EntityType.HORSE) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_APPLE
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_CARROT
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SUGAR
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.APPLE
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.HAY_BLOCK)) {
+            if (!(XMaterial.GOLDEN_APPLE.isSimilar(is)
+                    || XMaterial.GOLDEN_CARROT.isSimilar(is)
+                    || XMaterial.SUGAR.isSimilar(is)
+                    || XMaterial.WHEAT.isSimilar(is)
+                    || XMaterial.APPLE.isSimilar(is)
+                    || XMaterial.HAY_BLOCK.isSimilar(is))) {
                 return;
             }
         } else if (entity.getType() == EntityType.SHEEP || entity.getType() == EntityType.COW || entity.getType() == EntityType.MUSHROOM_COW) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT)) {
+            if (!(XMaterial.WHEAT.isSimilar(is))) {
                 return;
             }
         } else if (entity.getType() == EntityType.PIG) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CARROT || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.POTATO)) {
+            if (!(XMaterial.CARROT.isSimilar(is) || XMaterial.POTATO.isSimilar(is))) {
                 return;
             }
         } else if (entity.getType() == EntityType.CHICKEN) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.WHEAT_SEEDS
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PUMPKIN_SEEDS || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.MELON_SEEDS)) {
+            if (!(XMaterial.WHEAT_SEEDS.isSimilar(is)
+                    || XMaterial.PUMPKIN_SEEDS.isSimilar(is) || XMaterial.MELON_SEEDS.isSimilar(is))) {
                 if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                    if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BEETROOT_SEEDS)) {
+                    if (!(XMaterial.BEETROOT_SEEDS.isSimilar(is))) {
                         return;
                     }
                 } else {
@@ -58,42 +58,42 @@ public class AnimalBreedingPermission extends ListeningPermission {
                 }
             }
         } else if (entity.getType() == EntityType.WOLF) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BONE
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PORKCHOP
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.BEEF
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CHICKEN
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.RABBIT
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.MUTTON
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.ROTTEN_FLESH
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_PORKCHOP
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_BEEF
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_CHICKEN
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_RABBIT
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COOKED_MUTTON)) {
+            if (!(XMaterial.BONE.isSimilar(is)
+                    || XMaterial.PORKCHOP.isSimilar(is)
+                    || XMaterial.BEEF.isSimilar(is)
+                    || XMaterial.CHICKEN.isSimilar(is)
+                    || XMaterial.RABBIT.isSimilar(is)
+                    || XMaterial.MUTTON.isSimilar(is)
+                    || XMaterial.ROTTEN_FLESH.isSimilar(is)
+                    || XMaterial.COOKED_PORKCHOP.isSimilar(is)
+                    || XMaterial.COOKED_BEEF.isSimilar(is)
+                    || XMaterial.COOKED_CHICKEN.isSimilar(is)
+                    || XMaterial.COOKED_RABBIT.isSimilar(is)
+                    || XMaterial.COOKED_MUTTON.isSimilar(is))) {
                 return;
             }
         } else if (entity.getType() == EntityType.OCELOT) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.COD
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SALMON
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.TROPICAL_FISH
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.PUFFERFISH)) {
+            if (!(XMaterial.COD.isSimilar(is)
+                    || XMaterial.SALMON.isSimilar(is)
+                    || XMaterial.TROPICAL_FISH.isSimilar(is)
+                    || XMaterial.PUFFERFISH.isSimilar(is))) {
                 return;
             }
         } else if (entity.getType() == EntityType.RABBIT) {
-            if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.DANDELION
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.CARROTS
-                    || CompatibleMaterial.getMaterial(is) == CompatibleMaterial.GOLDEN_CARROT)) {
+            if (!(XMaterial.DANDELION.isSimilar(is)
+                    || XMaterial.CARROTS.isSimilar(is)
+                    || XMaterial.GOLDEN_CARROT.isSimilar(is))) {
                 return;
             }
         } else {
             if (ServerVersion.isServerVersionAbove(ServerVersion.V1_10)) {
                 if (entity.getType() == EntityType.LLAMA) {
-                    if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.HAY_BLOCK)) {
+                    if (!(XMaterial.HAY_BLOCK.isSimilar(is))) {
                         return;
                     }
                 } else if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
                     if (entity.getType() == EntityType.TURTLE) {
-                        if (!(CompatibleMaterial.getMaterial(is) == CompatibleMaterial.SEAGRASS)) {
+                        if (!(XMaterial.SEAGRASS.isSimilar(is))) {
                             return;
                         }
                     } else {

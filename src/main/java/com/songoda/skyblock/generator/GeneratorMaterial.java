@@ -1,17 +1,17 @@
 package com.songoda.skyblock.generator;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 
 public class GeneratorMaterial {
-    private final CompatibleMaterial materials;
+    private final XMaterial materials;
     private double chance;
 
-    public GeneratorMaterial(CompatibleMaterial materials, double chance) {
+    public GeneratorMaterial(XMaterial materials, double chance) {
         this.materials = materials;
         this.chance = chance;
     }
 
-    public CompatibleMaterial getMaterials() {
+    public XMaterial getMaterials() {
         return this.materials;
     }
 

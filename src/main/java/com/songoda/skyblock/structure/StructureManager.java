@@ -1,6 +1,7 @@
 package com.songoda.skyblock.structure;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,14 +19,14 @@ public class StructureManager {
 
         if (configLoad.getString("Structures") != null) {
             for (String structureList : configLoad.getConfigurationSection("Structures").getKeys(false)) {
-                CompatibleMaterial materials;
+                XMaterial materials;
 
                 if (configLoad.getString("Structures." + structureList + ".Item.Material") == null) {
-                    materials = CompatibleMaterial.GRASS_BLOCK;
+                    materials = XMaterial.GRASS_BLOCK;
                 } else {
-                    materials = CompatibleMaterial.getMaterial(configLoad.getString("Structures." + structureList + ".Item.Material"));
+                    materials = CompatibleMaterial.getMaterial(configLoad.getString("Structures." + structureList + ".Item.Material")).orElse(null);
                     if (materials == null) {
-                        materials = CompatibleMaterial.GRASS_BLOCK;
+                        materials = XMaterial.GRASS_BLOCK;
                     }
                 }
 
@@ -88,7 +89,7 @@ public class StructureManager {
     public void loadStructures() {
     }
 
-    public void addStructure(String name, CompatibleMaterial materials, String overworldFile, String netherFile, String endFile,
+    public void addStructure(String name, XMaterial materials, String overworldFile, String netherFile, String endFile,
                              String displayName, boolean permission, List<String> description, List<String> commands,
                              double deletionCost) {
         this.structureStorage.add(new Structure(name, materials, overworldFile, netherFile, endFile, displayName, permission,

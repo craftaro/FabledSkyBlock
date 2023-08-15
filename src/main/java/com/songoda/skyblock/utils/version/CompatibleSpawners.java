@@ -1,7 +1,7 @@
 package com.songoda.skyblock.utils.version;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -241,7 +241,7 @@ public enum CompatibleSpawners {
         }
 
         if (this.isSpawner() && this != CompatibleSpawners.SPAWNER) {
-            this.cachedMaterial = CompatibleMaterial.SPAWNER.getMaterial();
+            this.cachedMaterial = XMaterial.SPAWNER.parseMaterial();
             return this.cachedMaterial;
         }
 

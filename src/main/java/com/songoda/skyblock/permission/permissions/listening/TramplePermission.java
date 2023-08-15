@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class TramplePermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public TramplePermission(SkyBlock plugin) {
-        super("Trample", CompatibleMaterial.WHEAT_SEEDS, PermissionType.GENERIC);
+        super("Trample", XMaterial.WHEAT_SEEDS, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -27,9 +28,9 @@ public class TramplePermission extends ListeningPermission {
         }
 
         Player player = event.getPlayer();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
 
-        if (material == CompatibleMaterial.TURTLE_EGG || material == CompatibleMaterial.FARMLAND) {
+        if (material == XMaterial.TURTLE_EGG || material == XMaterial.FARMLAND) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

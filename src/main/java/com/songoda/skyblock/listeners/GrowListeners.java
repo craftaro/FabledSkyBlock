@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandManager;
@@ -25,6 +26,7 @@ import org.bukkit.material.Crops;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("deprecation")
 public class GrowListeners implements Listener {
@@ -116,9 +118,9 @@ public class GrowListeners implements Listener {
                 ex.printStackTrace();
             }
         } else {
-            CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(block.getType());
-            if (block.getState().getData() instanceof Crops || type.name().equals("BEETROOT_BLOCK") || type.name().equals("CARROT") || type.name().equals("POTATO")
-                    || type.name().equals("WHEAT") || type.name().equals("CROPS")) {
+            Optional<XMaterial> type = CompatibleMaterial.getMaterial(block.getType());
+            if (block.getState().getData() instanceof Crops || type.get().name().equals("BEETROOT_BLOCK") || type.get().name().equals("CARROT") || type.get().name().equals("POTATO")
+                    || type.get().name().equals("WHEAT") || type.get().name().equals("CROPS")) {
                 try {
                     block.getClass().getMethod("setData", byte.class).invoke(block, (byte) (block.getData() + 1));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |

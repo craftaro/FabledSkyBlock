@@ -1,6 +1,6 @@
 package com.songoda.skyblock.levelling;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.blockscanner.BlockScanner;
@@ -30,7 +30,7 @@ public final class IslandScan extends BukkitRunnable {
     private final Set<Location> doubleBlocks;
     private final Island island;
     private final IslandWorld world;
-    private final Map<CompatibleMaterial, BlockAmount> amounts;
+    private final Map<XMaterial, BlockAmount> amounts;
     private final SkyBlock plugin;
 
     private int totalScanned;
@@ -45,7 +45,7 @@ public final class IslandScan extends BukkitRunnable {
         this.plugin = plugin;
         this.island = island;
         this.world = world;
-        this.amounts = new EnumMap<>(CompatibleMaterial.class);
+        this.amounts = new EnumMap<>(XMaterial.class);
         this.doubleBlocks = new HashSet<>();
     }
 
@@ -130,7 +130,7 @@ public final class IslandScan extends BukkitRunnable {
         return this.doubleBlocks;
     }
 
-    public Map<CompatibleMaterial, BlockAmount> getAmounts() {
+    public Map<XMaterial, BlockAmount> getAmounts() {
         return Collections.unmodifiableMap(this.amounts);
     }
 

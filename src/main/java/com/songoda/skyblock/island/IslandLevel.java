@@ -1,7 +1,7 @@
 package com.songoda.skyblock.island;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Strings;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -108,7 +108,7 @@ public class IslandLevel {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER.name();
+                    material = XMaterial.REPEATER.name();
                     break;
             }
         }
@@ -220,7 +220,7 @@ public class IslandLevel {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER.name();
+                    material = XMaterial.REPEATER.name();
                     break;
             }
         }
@@ -236,7 +236,7 @@ public class IslandLevel {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER.name();
+                    material = XMaterial.REPEATER.name();
                     break;
             }
         }
@@ -248,7 +248,7 @@ public class IslandLevel {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER.name();
+                    material = XMaterial.REPEATER.name();
                     break;
             }
         }

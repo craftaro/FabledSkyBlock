@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.api.event.player.PlayerIslandEnterEvent;
@@ -58,8 +58,8 @@ public class TeleportListeners implements Listener {
         // Fix for bug that tp you in the real Nether/End when entering in a portal in an island // TODO Simplify
         if (event.getTo() != null && (worldManager.isIslandWorld(event.getFrom().getWorld())
                 && !worldManager.isIslandWorld(event.getTo().getWorld())
-                && (event.getFrom().getBlock().getType() == CompatibleMaterial.END_PORTAL.getMaterial()
-                || event.getFrom().getBlock().getType() == CompatibleMaterial.NETHER_PORTAL.getMaterial())
+                && (event.getFrom().getBlock().getType() == XMaterial.END_PORTAL.parseMaterial()
+                || event.getFrom().getBlock().getType() == XMaterial.NETHER_PORTAL.parseMaterial())
                 && (event.getTo().getWorld() != null
                 && event.getTo().getWorld().getEnvironment() == World.Environment.NETHER
                 || event.getTo().getWorld().getEnvironment() == World.Environment.THE_END))

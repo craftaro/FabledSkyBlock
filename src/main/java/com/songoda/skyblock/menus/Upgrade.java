@@ -1,8 +1,8 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.economies.Economy;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -195,7 +195,7 @@ public class Upgrade {
                                 }
                             }
                         }
-                    } else if ((is.getType() == CompatibleMaterial.WHEAT_SEEDS.getMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == XMaterial.WHEAT_SEEDS.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.CROP)) {
@@ -435,7 +435,7 @@ public class Upgrade {
                             event.setWillClose(false);
                             event.setWillDestroy(false);
                         }
-                    } else if ((is.getType() == CompatibleMaterial.SPAWNER.getMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == XMaterial.SPAWNER.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname"))))) {
                         if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.SPAWNER)) {
@@ -601,7 +601,7 @@ public class Upgrade {
                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
                     if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.CROP)) {
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                        nInv.addItem(nInv.createItem(XMaterial.WHEAT_SEEDS.parseItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimed.Lore"),
@@ -612,7 +612,7 @@ public class Upgrade {
                                 null, null), 3);
                     } else {
                         if (economy.hasBalance(player, upgrade.getCost())) {
-                            nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                            nInv.addItem(nInv.createItem(XMaterial.WHEAT_SEEDS.parseItem(),
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Crop.Claimable.Lore"),
@@ -620,7 +620,7 @@ public class Upgrade {
                                             new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 3);
                         } else {
-                            nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                            nInv.addItem(nInv.createItem(XMaterial.WHEAT_SEEDS.parseItem(),
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Upgrade.Item.Crop.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Crop.Unclaimable.Lore"),
@@ -839,7 +839,7 @@ public class Upgrade {
                     com.songoda.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
                     if (island.hasUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.SPAWNER)) {
-                        nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                        nInv.addItem(nInv.createItem(XMaterial.SPAWNER.parseItem(),
                                 ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                 configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimed.Lore"),
@@ -850,7 +850,7 @@ public class Upgrade {
                                 null, null), 8);
                     } else {
                         if (economy.hasBalance(player, upgrade.getCost())) {
-                            nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                            nInv.addItem(nInv.createItem(XMaterial.SPAWNER.parseItem(),
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Spawner.Claimable.Lore"),
@@ -858,7 +858,7 @@ public class Upgrade {
                                             new Placeholder("%cost", NumberUtils.formatNumber(upgrade.getCost()))},
                                     null, null), 8);
                         } else {
-                            nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                            nInv.addItem(nInv.createItem(XMaterial.SPAWNER.parseItem(),
                                     ChatColor.translateAlternateColorCodes('&',
                                             configLoad.getString("Menu.Upgrade.Item.Spawner.Displayname")),
                                     configLoad.getStringList("Menu.Upgrade.Item.Spawner.Unclaimable.Lore"),

@@ -1,15 +1,15 @@
 package com.songoda.skyblock.api.structure;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 
 import java.util.List;
 
 public interface Structure {
     String getName();
 
-    CompatibleMaterial getMaterial();
+    XMaterial getMaterial();
 
-    void setMaterial(CompatibleMaterial material);
+    void setMaterial(XMaterial material);
 
     String getOverworldFile();
 

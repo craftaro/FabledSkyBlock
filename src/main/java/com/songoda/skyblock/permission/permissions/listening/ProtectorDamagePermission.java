@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
@@ -11,9 +11,8 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class ProtectorDamagePermission extends ListeningPermission {
-
     public ProtectorDamagePermission(SkyBlock plugin) {
-        super("ProtectorDamage", CompatibleMaterial.CARVED_PUMPKIN, PermissionType.ISLAND);
+        super("ProtectorDamage", XMaterial.CARVED_PUMPKIN, PermissionType.ISLAND);
     }
 
     @PermissionHandler

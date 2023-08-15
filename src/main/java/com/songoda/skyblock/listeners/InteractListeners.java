@@ -3,6 +3,8 @@ package com.songoda.skyblock.listeners;
 import com.craftaro.core.compatibility.CompatibleHand;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
@@ -42,6 +44,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class InteractListeners implements Listener {
     private final SkyBlock plugin;
@@ -58,7 +61,7 @@ public class InteractListeners implements Listener {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        Optional<XMaterial> material = CompatibleMaterial.getMaterial(block.getType());
         IslandManager islandManager = this.plugin.getIslandManager();
         WorldManager worldManager = this.plugin.getWorldManager();
         IslandLevelManager levellingManager = this.plugin.getLevellingManager();
@@ -66,14 +69,13 @@ public class InteractListeners implements Listener {
             return;
         }
 
-        CompatibleMaterial itemMaterial = CompatibleMaterial.getMaterial(event.getItem());
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && worldManager.getIslandWorld(block.getWorld()) == IslandWorld.NETHER
-                && (itemMaterial == CompatibleMaterial.WATER_BUCKET
-                || itemMaterial == CompatibleMaterial.TROPICAL_FISH_BUCKET
-                || itemMaterial == CompatibleMaterial.COD_BUCKET
-                || itemMaterial == CompatibleMaterial.SALMON_BUCKET
-                || itemMaterial == CompatibleMaterial.PUFFERFISH_BUCKET)) {
+                && (XMaterial.WATER_BUCKET.isSimilar(event.getItem())
+                || XMaterial.TROPICAL_FISH_BUCKET.isSimilar(event.getItem())
+                || XMaterial.COD_BUCKET.isSimilar(event.getItem())
+                || XMaterial.SALMON_BUCKET.isSimilar(event.getItem())
+                || XMaterial.PUFFERFISH_BUCKET.isSimilar(event.getItem()))) {
             Location blockLoc = block.getLocation();
 
             Island island = islandManager.getIslandAtLocation(blockLoc);
@@ -95,16 +97,16 @@ public class InteractListeners implements Listener {
                 return;
             }
 
-            CompatibleMaterial type = CompatibleMaterial.getMaterial(block);
+            Optional<XMaterial> type = CompatibleMaterial.getMaterial(block.getType());
 
-            if (type.name().contains("SLAB")
-                    || type == CompatibleMaterial.BROWN_MUSHROOM
-                    || type == CompatibleMaterial.RED_MUSHROOM
-                    || type == CompatibleMaterial.CHEST
-                    || type == CompatibleMaterial.ENDER_CHEST
-                    || type == CompatibleMaterial.TRAPPED_CHEST
-                    || type == CompatibleMaterial.END_PORTAL
-                    || type == CompatibleMaterial.ENCHANTING_TABLE) {
+            if (type.get().name().contains("SLAB")
+                    || type.get() == XMaterial.BROWN_MUSHROOM
+                    || type.get() == XMaterial.RED_MUSHROOM
+                    || type.get() == XMaterial.CHEST
+                    || type.get() == XMaterial.ENDER_CHEST
+                    || type.get() == XMaterial.TRAPPED_CHEST
+                    || type.get() == XMaterial.END_PORTAL
+                    || type.get() == XMaterial.ENCHANTING_TABLE) {
                 event.setCancelled(true);
                 return;
             }
@@ -130,10 +132,10 @@ public class InteractListeners implements Listener {
 
             long limit = limits.getBlockLimit(player, Material.WATER);
 
-            if (limits.isBlockLimitExceeded(itemMaterial, block.getLocation(), limit)) {
+            if (limits.isBlockLimitExceeded(CompatibleMaterial.getMaterial(event.getItem().getType()).get(), block.getLocation(), limit)) {
 
                 this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
-                        .replace("%type", WordUtils.capitalizeFully(itemMaterial.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
+                        .replace("%type", WordUtils.capitalizeFully(event.getItem().getType().name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
                 this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                 event.setCancelled(true);
@@ -168,7 +170,7 @@ public class InteractListeners implements Listener {
             return;
         }
 
-        CompatibleMaterial material = block == null ? null : CompatibleMaterial.getMaterial(block.getType());
+        Optional<XMaterial> material = block == null ? Optional.empty() : CompatibleMaterial.getMaterial(block.getType());
 
         // Check permissions.
         if (!this.plugin.getPermissionManager().processPermission(event, player, island)) {
@@ -176,23 +178,23 @@ public class InteractListeners implements Listener {
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            final CompatibleMaterial blockType = CompatibleMaterial.getBlockMaterial(event.getClickedBlock().getType());
-            final CompatibleMaterial heldType;
+            final Optional<XMaterial> blockType = CompatibleMaterial.getMaterial(event.getClickedBlock().getType());
+            final XMaterial heldType;
             final ItemStack item = event.getItem();
 
-            if (item != null && CompatibleMaterial.getMaterial(item.getType()) != CompatibleMaterial.AIR) {
-                heldType = CompatibleMaterial.getMaterial(event.getItem());
+            if (item != null && !XMaterial.AIR.isSimilar(item)) {
+                heldType = CompatibleMaterial.getMaterial(event.getItem().getType()).get();
             } else {
-                heldType = CompatibleMaterial.AIR;
+                heldType = XMaterial.AIR;
             }
 
             if (stackableManager != null && block != null && stackableManager.isStacked(block.getLocation())) {
-                if (blockType == CompatibleMaterial.DRAGON_EGG) {
+                if (blockType.get() == XMaterial.DRAGON_EGG) {
                     event.setCancelled(true);
                 }
             }
 
-            if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType == heldType
+            if (stackableManager != null && stackableManager.isStackableMaterial(heldType) && blockType.get() == heldType
                     && !player.isSneaking() && this.plugin.getPermissionManager().hasPermission(player, island, "Place")
                     && (!this.plugin.getConfiguration().getBoolean("Island.Stackable.RequirePermission")
                     || player.hasPermission("fabledskyblock.stackable"))) {
@@ -211,7 +213,7 @@ public class InteractListeners implements Listener {
                 if (limits.isBlockLimitExceeded(block, limit)) {
                     this.plugin.getMessageManager().sendMessage(player,
                             this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "language.yml")).getFileConfiguration().getString("Island.Limit.Block.Exceeded.Message")
-                                    .replace("%type", WordUtils.capitalizeFully(material.name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
+                                    .replace("%type", WordUtils.capitalizeFully(material.get().name().replace("_", " "))).replace("%limit", NumberUtils.formatNumber(limit)));
                     this.plugin.getSoundManager().playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                     event.setCancelled(true);
@@ -219,7 +221,7 @@ public class InteractListeners implements Listener {
                 }
 
                 Location location = event.getClickedBlock().getLocation();
-                Stackable stackable = stackableManager.getStack(location, blockType);
+                Stackable stackable = stackableManager.getStack(location, blockType.get());
                 int itemAmount = event.getItem().getAmount();
 
                 FileManager.Config config = this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml"));
@@ -227,10 +229,10 @@ public class InteractListeners implements Listener {
 
                 if (configLoad.getBoolean("Island.Stackable.Limit.Enable")) {
                     // Add block to stackable
-                    int maxStackSize = getStackLimit(player, material);
+                    int maxStackSize = getStackLimit(player, material.get());
 
                     if (stackable == null) {
-                        stackableManager.addStack(stackable = new Stackable(location, blockType, maxStackSize));
+                        stackableManager.addStack(stackable = new Stackable(location, blockType.get(), maxStackSize));
                         stackable.setSize(itemAmount + 1);
                         if (stackable.isMaxSize()) {
                             stackable.setSize(stackable.getMaxSize());
@@ -252,7 +254,7 @@ public class InteractListeners implements Listener {
 
                 } else {
                     if (stackable == null) {
-                        stackableManager.addStack(stackable = new Stackable(location, blockType));
+                        stackableManager.addStack(stackable = new Stackable(location, blockType.get()));
                         stackable.setSize(itemAmount + 1);
                     } else {
                         stackable.setSize(stackable.getSize() + itemAmount);
@@ -280,11 +282,11 @@ public class InteractListeners implements Listener {
                     return;
                 }
 
-                if (level.hasMaterial(material.name())) {
-                    materialAmmount = level.getMaterialAmount(material.name());
+                if (level.hasMaterial(material.get().name())) {
+                    materialAmmount = level.getMaterialAmount(material.get().name());
                 }
 
-                level.setMaterialAmount(material.name(), materialAmmount + itemAmount);
+                level.setMaterialAmount(material.get().name(), materialAmmount + itemAmount);
                 return;
 
             }
@@ -299,18 +301,18 @@ public class InteractListeners implements Listener {
             }
 
             if (player.getGameMode() == GameMode.SURVIVAL
-                    && material == CompatibleMaterial.OBSIDIAN
+                    && material.get() == XMaterial.OBSIDIAN
                     && event.getItem() != null
-                    && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR
-                    && CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.BUCKET) {
+                    && !XMaterial.AIR.isSimilar(event.getItem())
+                    && XMaterial.BUCKET.isSimilar(event.getItem())) {
                 if (this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.Obsidian.Enable")) {
 
                     this.plugin.getSoundManager().playSound(block.getLocation(), XSound.BLOCK_FIRE_EXTINGUISH);
-                    block.setType(CompatibleMaterial.AIR.getBlockMaterial());
+                    XBlock.setType(block, XMaterial.AIR);
 
                     ItemUtils.takeActiveItem(player, CompatibleHand.getHand(event));
-                    HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(CompatibleMaterial.LAVA_BUCKET.getItem());
+                    HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(XMaterial.LAVA_BUCKET.parseItem());
                     for (ItemStack i : overflow.values()) {
                         block.getWorld().dropItemNaturally(block.getLocation(), i);
                     }
@@ -318,7 +320,7 @@ public class InteractListeners implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-            } else if (material == CompatibleMaterial.END_PORTAL_FRAME) {
+            } else if (material.get() == XMaterial.END_PORTAL_FRAME) {
                 if (this.plugin.getFileManager().getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                         .getFileConfiguration().getBoolean("Island.Block.EndFrame.Enable")) {
 
@@ -329,11 +331,11 @@ public class InteractListeners implements Listener {
                     ItemStack is = event.getPlayer().getItemInHand();
                     boolean hasEye = ((block.getData() >> 2) & 1) == 1;
 
-                    if (CompatibleMaterial.getMaterial(is.getType()) == CompatibleMaterial.AIR) {
+                    if (XMaterial.AIR.isSimilar(is)) {
                         int size = 1;
 
                         if (stackableManager != null && stackableManager.isStacked(block.getLocation())) {
-                            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.END_PORTAL_FRAME);
+                            Stackable stackable = stackableManager.getStack(block.getLocation(), XMaterial.END_PORTAL_FRAME);
                             stackable.takeOne();
 
                             if (stackable.getSize() <= 1) {
@@ -342,12 +344,12 @@ public class InteractListeners implements Listener {
 
                             size = stackable.getSize();
                         } else {
-                            block.setType(CompatibleMaterial.AIR.getBlockMaterial());
+                            XBlock.setType(block, XMaterial.AIR);
                         }
 
-                        player.getInventory().addItem(new ItemStack(CompatibleMaterial.END_PORTAL_FRAME.getMaterial(), 1));
+                        player.getInventory().addItem(new ItemStack(XMaterial.END_PORTAL_FRAME.parseMaterial(), 1));
                         if (hasEye && size == 1) {
-                            player.getInventory().addItem(new ItemStack(CompatibleMaterial.ENDER_EYE.getMaterial(), 1));
+                            player.getInventory().addItem(new ItemStack(XMaterial.ENDER_EYE.parseMaterial(), 1));
                         }
                         player.updateInventory();
 
@@ -355,7 +357,7 @@ public class InteractListeners implements Listener {
                         FileConfiguration configLoad = config.getFileConfiguration();
 
                         if (configLoad.getBoolean("Island.Block.Level.Enable")) {
-                            CompatibleMaterial materials = CompatibleMaterial.END_PORTAL_FRAME;
+                            XMaterial materials = XMaterial.END_PORTAL_FRAME;
                             IslandLevel level = island.getLevel();
 
                             if (level.hasMaterial(materials.name())) {
@@ -378,7 +380,7 @@ public class InteractListeners implements Listener {
         }
     }
 
-    private int getStackLimit(Player player, CompatibleMaterial materials) {
+    private int getStackLimit(Player player, XMaterial materials) {
         String maxSizePermission = "fabledskyblock.stackable." + materials.name().toLowerCase() + ".maxsize.";
         for (PermissionAttachmentInfo attachmentInfo : player.getEffectivePermissions()) {
             if (attachmentInfo.getPermission().startsWith(maxSizePermission)) {

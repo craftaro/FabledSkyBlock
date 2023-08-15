@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -19,7 +19,7 @@ public class HangingDestroyPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public HangingDestroyPermission(SkyBlock plugin) {
-        super("HangingDestroy", CompatibleMaterial.ITEM_FRAME, PermissionType.GENERIC);
+        super("HangingDestroy", XMaterial.ITEM_FRAME, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }

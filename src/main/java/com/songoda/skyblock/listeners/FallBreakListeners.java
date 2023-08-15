@@ -2,6 +2,7 @@ package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 public class FallBreakListeners implements Listener {
@@ -43,7 +45,7 @@ public class FallBreakListeners implements Listener {
                             Island island = islandManager.getIslandAtLocation(ent.getLocation());
 
                             if (island != null) {
-                                CompatibleMaterial material = null;
+                                Optional<XMaterial> material = Optional.empty();
                                 if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                                     material = CompatibleMaterial.getMaterial(ent.getBlockData().getMaterial());
                                 } else {
@@ -55,16 +57,16 @@ public class FallBreakListeners implements Listener {
                                     }
                                 }
 
-                                if (material != null) {
+                                if (material.isPresent()) {
                                     IslandLevel level = island.getLevel();
 
-                                    if (level.hasMaterial(material.name())) {
-                                        long materialAmount = level.getMaterialAmount(material.name());
+                                    if (level.hasMaterial(material.get().name())) {
+                                        long materialAmount = level.getMaterialAmount(material.get().name());
 
                                         if (materialAmount <= 1) {
-                                            level.removeMaterial(material.name());
+                                            level.removeMaterial(material.get().name());
                                         } else {
-                                            level.setMaterialAmount(material.name(), materialAmount - 1);
+                                            level.setMaterialAmount(material.get().name(), materialAmount - 1);
                                         }
                                     }
                                 }
@@ -85,7 +87,7 @@ public class FallBreakListeners implements Listener {
         if (event.getEntity() instanceof FallingBlock) {
             WorldManager worldManager = this.plugin.getWorldManager();
             if (worldManager.isIslandWorld(event.getEntity().getLocation().getWorld())) {
-                if (event.getTo() != CompatibleMaterial.AIR.getMaterial()) {
+                if (!CompatibleMaterial.isAir(CompatibleMaterial.getMaterial(event.getTo()).orElse(XMaterial.STONE))) {
                     this.fallingBlocks.remove(event.getEntity());
                 } else if (!event.isCancelled()) {
                     this.fallingBlocks.add((FallingBlock) event.getEntity());

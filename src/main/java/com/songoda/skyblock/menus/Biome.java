@@ -1,7 +1,7 @@
 package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.biome.BiomeManager;
@@ -86,7 +86,7 @@ public class Biome {
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                } else if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is))
                         && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Barrier.Displayname"))))) {
@@ -94,7 +94,7 @@ public class Biome {
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
-                } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                } else if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                         && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                         langConfig.getString("Menu.Biome.Item.Exit.Displayname"))))) {
                     soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -163,11 +163,11 @@ public class Biome {
                     langConfig.getStringList("Menu.Biome.Item.Info.Lore"),
                     new Placeholder[]{new Placeholder("%biome_type", islandBiomeName)}, null, null), 4);
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             langConfig.getString("Menu.Biome.Item.Exit.Displayname"), null, null, null, null),
                     0, 8);
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             plugin.formatText(langConfig.getString("Menu.Biome.Item.Barrier.Displayname")),
                             null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);

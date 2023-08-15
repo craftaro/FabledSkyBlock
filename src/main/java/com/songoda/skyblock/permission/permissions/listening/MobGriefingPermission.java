@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
@@ -21,7 +21,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 public class MobGriefingPermission extends ListeningPermission {
     public MobGriefingPermission(SkyBlock plugin) {
-        super("MobGriefing", CompatibleMaterial.IRON_SHOVEL, PermissionType.ISLAND);
+        super("MobGriefing", XMaterial.IRON_SHOVEL, PermissionType.ISLAND);
     }
 
     @PermissionHandler

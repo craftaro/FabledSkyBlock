@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class BedPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public BedPermission(SkyBlock plugin) {
-        super("Bed", CompatibleMaterial.RED_BED, PermissionType.GENERIC);
+        super("Bed", XMaterial.RED_BED, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -26,17 +27,17 @@ public class BedPermission extends ListeningPermission {
             return;
         }
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
         Player player = event.getPlayer();
 
-        if (material == CompatibleMaterial.WHITE_BED || material == CompatibleMaterial.ORANGE_BED
-                || material == CompatibleMaterial.MAGENTA_BED || material == CompatibleMaterial.LIGHT_BLUE_BED
-                || material == CompatibleMaterial.YELLOW_BED || material == CompatibleMaterial.LIME_BED
-                || material == CompatibleMaterial.PINK_BED || material == CompatibleMaterial.GRAY_BED
-                || material == CompatibleMaterial.LIGHT_GRAY_BED || material == CompatibleMaterial.CYAN_BED
-                || material == CompatibleMaterial.PURPLE_BED || material == CompatibleMaterial.BLUE_BED
-                || material == CompatibleMaterial.BROWN_BED || material == CompatibleMaterial.GREEN_BED
-                || material == CompatibleMaterial.RED_BED || material == CompatibleMaterial.BLACK_BED) {
+        if (material == XMaterial.WHITE_BED || material == XMaterial.ORANGE_BED
+                || material == XMaterial.MAGENTA_BED || material == XMaterial.LIGHT_BLUE_BED
+                || material == XMaterial.YELLOW_BED || material == XMaterial.LIME_BED
+                || material == XMaterial.PINK_BED || material == XMaterial.GRAY_BED
+                || material == XMaterial.LIGHT_GRAY_BED || material == XMaterial.CYAN_BED
+                || material == XMaterial.PURPLE_BED || material == XMaterial.BLUE_BED
+                || material == XMaterial.BROWN_BED || material == XMaterial.GREEN_BED
+                || material == XMaterial.RED_BED || material == XMaterial.BLACK_BED) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

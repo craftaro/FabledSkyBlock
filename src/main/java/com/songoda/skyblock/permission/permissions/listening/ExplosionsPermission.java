@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.permission.ListeningPermission;
 import com.songoda.skyblock.permission.PermissionHandler;
@@ -22,7 +23,7 @@ public class ExplosionsPermission extends ListeningPermission {
     private final SkyBlock plugin;
 
     public ExplosionsPermission(SkyBlock plugin) {
-        super("Explosions", CompatibleMaterial.GUNPOWDER, PermissionType.ISLAND);
+        super("Explosions", XMaterial.GUNPOWDER, PermissionType.ISLAND);
         this.plugin = plugin;
     }
 
@@ -81,8 +82,8 @@ public class ExplosionsPermission extends ListeningPermission {
 
     @PermissionHandler
     public void onTNTInteract(PlayerInteractEvent event) {
-        if (event.getItem() != null && event.getItem().getType() == CompatibleMaterial.FLINT_AND_STEEL.getMaterial()
-                && event.getClickedBlock().getType() == CompatibleMaterial.TNT.getBlockMaterial()) {
+        if (event.getItem() != null && event.getItem().getType() == XMaterial.FLINT_AND_STEEL.parseMaterial()
+                && CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null) == XMaterial.TNT) {
             cancelAndMessage(event, event.getPlayer(), this.plugin, this.plugin.getMessageManager());
         }
     }

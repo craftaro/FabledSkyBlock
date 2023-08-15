@@ -3,6 +3,7 @@ package com.songoda.skyblock.island.reward;
 import com.craftaro.core.hooks.economies.Economy;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class LevelReward {
                         .replace("%player%", player.getName())
                         .trim();
 
-                plugin.getServer().dispatchCommand(plugin.getConsole(), cmd);
+                plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmd);
             }
         }
     }

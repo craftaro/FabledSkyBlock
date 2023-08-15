@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class DropperDispenserPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public DropperDispenserPermission(SkyBlock plugin) {
-        super("DropperDispenser", CompatibleMaterial.DROPPER, PermissionType.GENERIC);
+        super("DropperDispenser", XMaterial.DROPPER, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -27,9 +28,9 @@ public class DropperDispenserPermission extends ListeningPermission {
         }
 
         Player player = event.getPlayer();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
 
-        if (material == CompatibleMaterial.DROPPER || material == CompatibleMaterial.DISPENSER) {
+        if (material == XMaterial.DROPPER || material == XMaterial.DISPENSER) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

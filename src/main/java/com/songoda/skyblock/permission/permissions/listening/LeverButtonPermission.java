@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class LeverButtonPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public LeverButtonPermission(SkyBlock plugin) {
-        super("LeverButton", CompatibleMaterial.LEVER, PermissionType.GENERIC);
+        super("LeverButton", XMaterial.LEVER, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -26,13 +27,13 @@ public class LeverButtonPermission extends ListeningPermission {
             return;
         }
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
         Player player = event.getPlayer();
 
-        if (material == CompatibleMaterial.STONE_BUTTON || material == CompatibleMaterial.OAK_BUTTON
-                || material == CompatibleMaterial.SPRUCE_BUTTON || material == CompatibleMaterial.BIRCH_BUTTON
-                || material == CompatibleMaterial.JUNGLE_BUTTON || material == CompatibleMaterial.ACACIA_BUTTON
-                || material == CompatibleMaterial.DARK_OAK_BUTTON || material == CompatibleMaterial.LEVER) {
+        if (material == XMaterial.STONE_BUTTON || material == XMaterial.OAK_BUTTON
+                || material == XMaterial.SPRUCE_BUTTON || material == XMaterial.BIRCH_BUTTON
+                || material == XMaterial.JUNGLE_BUTTON || material == XMaterial.ACACIA_BUTTON
+                || material == XMaterial.DARK_OAK_BUTTON || material == XMaterial.LEVER) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

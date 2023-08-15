@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +16,7 @@ public class ArmorStandUsePermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public ArmorStandUsePermission(SkyBlock plugin) {
-        super("ArmorStandUse", CompatibleMaterial.ARMOR_STAND, PermissionType.GENERIC);
+        super("ArmorStandUse", XMaterial.ARMOR_STAND, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -25,8 +25,9 @@ public class ArmorStandUsePermission extends ListeningPermission {
     public void onInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getRightClicked() instanceof ArmorStand)
+        if (event.getRightClicked() instanceof ArmorStand) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
+        }
     }
 
     @PermissionHandler

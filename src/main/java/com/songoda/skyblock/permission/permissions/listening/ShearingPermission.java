@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -14,7 +14,7 @@ public class ShearingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public ShearingPermission(SkyBlock plugin) {
-        super("Shearing", CompatibleMaterial.SHEARS, PermissionType.GENERIC);
+        super("Shearing", XMaterial.SHEARS, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }

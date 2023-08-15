@@ -1,11 +1,11 @@
 package com.songoda.skyblock.structure;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 
 import java.util.List;
 
 public class Structure implements com.songoda.skyblock.api.structure.Structure {
-    private CompatibleMaterial material;
+    private XMaterial material;
 
     private final String name;
     private String overworldFile;
@@ -20,7 +20,7 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
 
     private double deletionCost;
 
-    public Structure(String name, CompatibleMaterial material, String overworldFile, String netherFile, String endFile,
+    public Structure(String name, XMaterial material, String overworldFile, String netherFile, String endFile,
                      String displayName, boolean permission, List<String> description, List<String> commands,
                      double deletionCost) {
         this.name = name;
@@ -39,11 +39,11 @@ public class Structure implements com.songoda.skyblock.api.structure.Structure {
         return this.name;
     }
 
-    public CompatibleMaterial getMaterial() {
+    public XMaterial getMaterial() {
         return this.material;
     }
 
-    public void setMaterial(CompatibleMaterial material) {
+    public void setMaterial(XMaterial material) {
         this.material = material;
     }
 

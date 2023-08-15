@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
@@ -35,7 +35,7 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 public abstract class ListeningPermission extends BasicPermission {
-    protected ListeningPermission(String name, CompatibleMaterial icon, PermissionType type) {
+    protected ListeningPermission(String name, XMaterial icon, PermissionType type) {
         super(name, icon, type);
     }
 

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -13,12 +14,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Optional;
+
 public class StoragePermission extends ListeningPermission {
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
     public StoragePermission(SkyBlock plugin) {
-        super("Storage", CompatibleMaterial.CHEST, PermissionType.GENERIC);
+        super("Storage", XMaterial.CHEST, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -26,11 +29,11 @@ public class StoragePermission extends ListeningPermission {
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
+            Optional<XMaterial> material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType());
             Player player = event.getPlayer();
 
-            if (material != null) {
-                switch (material) {
+            if (material.isPresent()) {
+                switch (material.get()) {
                     case CHEST:
                     case TRAPPED_CHEST:
                     case DROPPER:

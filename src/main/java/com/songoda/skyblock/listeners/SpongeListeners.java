@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
 import com.songoda.skyblock.island.IslandLevel;
@@ -39,7 +39,7 @@ public class SpongeListeners implements Listener {
                     if (stackableManager == null || !stackableManager.isStacked(blockLocation)) {
                         IslandLevel level = island.getLevel();
 
-                        CompatibleMaterial material = CompatibleMaterial.SPONGE;
+                        XMaterial material = XMaterial.SPONGE;
                         if (level.hasMaterial(material.name())) {
                             long materialAmount = level.getMaterialAmount(material.name());
 

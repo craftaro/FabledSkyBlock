@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +15,7 @@ public class PvpPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public PvpPermission(SkyBlock plugin) {
-        super("PvP", CompatibleMaterial.DIAMOND_SWORD, PermissionType.GENERIC);
+        super("PvP", XMaterial.DIAMOND_SWORD, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }

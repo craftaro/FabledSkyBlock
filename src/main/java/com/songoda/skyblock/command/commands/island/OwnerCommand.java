@@ -56,21 +56,20 @@ public class OwnerCommand extends SubCommand {
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Owner.Message"));
-            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         } else if (args.length == 0) {
             if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 playerData.setType(Ownership.Visibility.HIDDEN);
                 Ownership.getInstance().open(player);
-                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN.getSound(), 1.0F, 1.0F);
+                soundManager.playSound(player, XSound.BLOCK_CHEST_OPEN);
 
                 return;
             }
         } else if (args.length == 1) {
             if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 if (playerData.getConfirmationTime() > 0) {
-                    messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.Ownership.Confirmation.Pending.Message"));
-                    soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK.getSound(), 1.0F, 1.0F);
+                    messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Confirmation.Pending.Message"));
+                    soundManager.playSound(player, XSound.ENTITY_IRON_GOLEM_ATTACK);
                 } else {
                     UUID targetPlayerUUID;
                     String targetPlayerName;
@@ -89,17 +88,13 @@ public class OwnerCommand extends SubCommand {
                     if (targetPlayerUUID == null || (!island.hasRole(IslandRole.MEMBER, targetPlayerUUID)
                             && !island.hasRole(IslandRole.OPERATOR, targetPlayerUUID)
                             && !island.hasRole(IslandRole.OWNER, targetPlayerUUID))) {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Ownership.Member.Message"));
-                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Member.Message"));
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else if (targetPlayerUUID.equals(player.getUniqueId())) {
-                        messageManager.sendMessage(player,
-                                configLoad.getString("Command.Island.Ownership.Yourself.Message"));
-                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
-                    } else if (cooldownManager.hasPlayer(CooldownType.OWNERSHIP,
-                            Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()))) {
-                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.OWNERSHIP,
-                                Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Yourself.Message"));
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
+                    } else if (cooldownManager.hasPlayer(CooldownType.OWNERSHIP, Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()))) {
+                        CooldownPlayer cooldownPlayer = cooldownManager.getCooldownPlayer(CooldownType.OWNERSHIP, Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                         Cooldown cooldown = cooldownPlayer.getCooldown();
                         long[] durationTime = NumberUtil.getDuration(cooldown.getTime());
 
@@ -126,7 +121,7 @@ public class OwnerCommand extends SubCommand {
                                             + configLoad.getString("Command.Island.Ownership.Cooldown.Word.Second")));
                         }
 
-                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
 
                         return;
                     } else {
@@ -203,7 +198,7 @@ public class OwnerCommand extends SubCommand {
                                     .replace("%time", "" + confirmationTime));
                         }
 
-                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.ENTITY_VILLAGER_YES);
                     }
                 }
             } else {
@@ -217,13 +212,13 @@ public class OwnerCommand extends SubCommand {
                                 all.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         configLoad.getString("Command.Island.Ownership.Assigned.Broadcast.Message")
                                                 .replace("%player", player.getName())));
-                                soundManager.playSound(all, XSound.BLOCK_ANVIL_USE.getSound(), 1.0F, 1.0F);
+                                soundManager.playSound(all, XSound.BLOCK_ANVIL_USE);
                             }
                         }
 
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Assigned.Sender.Message"));
-                        soundManager.playSound(player, XSound.BLOCK_ANVIL_USE.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_USE);
 
                         islandManager.giveOwnership(island, player);
 
@@ -232,19 +227,19 @@ public class OwnerCommand extends SubCommand {
                     } else {
                         messageManager.sendMessage(player,
                                 configLoad.getString("Command.Island.Ownership.Password.Incorrect.Message"));
-                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                        soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     }
                 } else {
                     messageManager.sendMessage(player,
                             configLoad.getString("Command.Island.Ownership.Password.Unset.Message"));
-                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+                    soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                 }
             }
 
             return;
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Ownership.Invalid.Message"));
-            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND.getSound(), 1.0F, 1.0F);
+            soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
 

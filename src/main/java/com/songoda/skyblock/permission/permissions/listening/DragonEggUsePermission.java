@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +17,7 @@ public class DragonEggUsePermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public DragonEggUsePermission(SkyBlock plugin) {
-        super("DragonEggUse", CompatibleMaterial.DRAGON_EGG, PermissionType.GENERIC);
+        super("DragonEggUse", XMaterial.DRAGON_EGG, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,7 +31,7 @@ public class DragonEggUsePermission extends ListeningPermission {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block.getType()) == CompatibleMaterial.DRAGON_EGG) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.DRAGON_EGG) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

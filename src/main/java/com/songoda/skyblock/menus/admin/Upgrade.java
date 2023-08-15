@@ -1,8 +1,8 @@
 package com.songoda.skyblock.menus.admin;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -70,7 +70,7 @@ public class Upgrade {
                     ItemStack is = event.getItem();
                     com.songoda.skyblock.upgrade.Upgrade upgrade = null;
 
-                    if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                    if ((is.getType() == XMaterial.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -88,7 +88,7 @@ public class Upgrade {
                                     .get(0);
                             viewer.setUpgrade(com.songoda.skyblock.upgrade.Upgrade.Type.JUMP);
                         }
-                    } else if ((is.getType() == CompatibleMaterial.WHEAT_SEEDS.getMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == XMaterial.WHEAT_SEEDS.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                             configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname"))))) {
                         upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.CROP)
@@ -124,7 +124,7 @@ public class Upgrade {
                         soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
 
                         Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player), 1L);
-                    } else if ((is.getType() == CompatibleMaterial.SPAWNER.getMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == XMaterial.SPAWNER.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName()
                             .equals(plugin.formatText(configLoad
                                     .getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname"))))) {
@@ -281,7 +281,7 @@ public class Upgrade {
                         null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 1);
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.CROP).get(0);
-                nInv.addItem(nInv.createItem(CompatibleMaterial.WHEAT_SEEDS.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.WHEAT_SEEDS.parseItem(),
                         plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Crop.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Crop.Lore"),
@@ -334,13 +334,13 @@ public class Upgrade {
                     upgradeTiersMembers = upgradesMembers.size();
                 }
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.BOOKSHELF.getItem(), plugin.formatText(
+                nInv.addItem(nInv.createItem(XMaterial.BOOKSHELF.parseItem(), plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Members.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Members.Lore"),
                         new Placeholder[]{new Placeholder("%tiers", "" + upgradeTiersMembers)}, null, null), 4);
 
                 upgrade = upgradeManager.getUpgrades(com.songoda.skyblock.upgrade.Upgrade.Type.SPAWNER).get(0);
-                nInv.addItem(nInv.createItem(CompatibleMaterial.SPAWNER.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.SPAWNER.parseItem(),
                         plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Displayname")),
                         configLoad.getStringList("Menu.Admin.Upgrade.Upgrades.Item.Spawner.Lore"),
                         new Placeholder[]{
@@ -348,7 +348,7 @@ public class Upgrade {
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, null), 6);
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                         plugin.formatText(configLoad.getString("Menu.Admin.Upgrade.Upgrades.Item.Exit.Displayname")),
                         null, null, null, null), 8);
 
@@ -371,7 +371,7 @@ public class Upgrade {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                        if ((is.getType() == XMaterial.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Size.Item.Return.Displayname"))))) {
@@ -474,7 +474,7 @@ public class Upgrade {
 
                                         }, 1L);
                             }
-                        } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                        } else if ((is.getType() == XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial())
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
@@ -672,7 +672,7 @@ public class Upgrade {
                     }
                 });
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                         plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Return.Displayname")),
                         null, null, null, null), 0);
@@ -683,7 +683,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Admin.Upgrade.Size.Item.Information.Displayname")),
                                 configLoad.getStringList("Menu.Admin.Upgrade.Size.Item.Information.Lore"), null, null, null),
                         1);
-                nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                         plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Size.Item.Barrier.Displayname")),
                         null, null, null, null), 2);
@@ -736,7 +736,7 @@ public class Upgrade {
                         PlayerData playerData = playerDataManager.getPlayerData(player);
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                        if ((is.getType() == XMaterial.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
                                         .getString("Menu.Admin.Upgrade.Members.Item.Return.Displayname"))))) {
@@ -838,7 +838,7 @@ public class Upgrade {
 
                                         }, 1L);
                             }
-                        } else if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial())
+                        } else if ((is.getType() == XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial())
                                 && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad
@@ -1042,7 +1042,7 @@ public class Upgrade {
                     }
                 });
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                         plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Return.Displayname")),
                         null, null, null, null), 0);
@@ -1051,7 +1051,7 @@ public class Upgrade {
                                         configLoad.getString("Menu.Admin.Upgrade.Members.Item.Information.Displayname")),
                                 configLoad.getStringList("Menu.Admin.Upgrade.Members.Item.Information.Lore"), null, null, null),
                         1);
-                nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                         plugin.formatText(
                                 configLoad.getString("Menu.Admin.Upgrade.Members.Item.Barrier.Displayname")),
                         null, null, null, null), 2);

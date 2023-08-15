@@ -2,6 +2,7 @@ package com.songoda.skyblock.utils.world;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.config.FileManager.Config;
@@ -71,7 +72,7 @@ public final class LocationUtil {
         Location locWorking = loc.clone();
         for (locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY() >= 0; locWorking.setY(locWorking.getBlockY() - 1)) {
             if (!locWorking.getBlock().isEmpty()) {
-                if (locWorking.getBlock().getType() == CompatibleMaterial.WATER.getMaterial() ||
+                if (locWorking.getBlock().getType() == XMaterial.WATER.parseMaterial() ||
                         (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
                                 locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
                     loc = locWorking;
@@ -88,11 +89,11 @@ public final class LocationUtil {
                 !locChecked.getBlock().isLiquid() &&
                 locChecked.getBlock().getType().isSolid() &&
                 locChecked.getBlock().getType().isBlock() &&
-                locChecked.add(0d, 1d, 0d).getBlock().getType() == CompatibleMaterial.AIR.getMaterial() &&
-                locChecked.add(0d, 2d, 0d).getBlock().getType() == CompatibleMaterial.AIR.getMaterial() &&
+                locChecked.add(0d, 1d, 0d).getBlock().getType() == XMaterial.AIR.parseMaterial() &&
+                locChecked.add(0d, 2d, 0d).getBlock().getType() == XMaterial.AIR.parseMaterial() &&
                 !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
             safe = true;
-            switch (CompatibleMaterial.getMaterial(locChecked.getBlock())) {
+            switch (CompatibleMaterial.getMaterial(locChecked.getBlock().getType()).orElse(XMaterial.AIR)) {
                 case ACACIA_DOOR: // <= 1.8.8
                 case ACACIA_FENCE_GATE:
                 case BIRCH_DOOR:
@@ -219,17 +220,17 @@ public final class LocationUtil {
             final Block block = world.getBlockAt(blockX, y, blockZ).getRelative(BlockFace.UP);
 
             if (isNether) {
-                if (y < 127 && (block.getType() == Material.LAVA || block.getType() == CompatibleMaterial.LAVA.getMaterial() || block.getType() == Material.AIR)) {
+                if (y < 127 && (block.getType() == Material.LAVA || block.getType() == XMaterial.LAVA.parseMaterial() || block.getType() == Material.AIR)) {
                     maxY = y;
                     break;
                 }
             } else {
-                if (block.getType() == CompatibleMaterial.OAK_LEAVES.getMaterial() || block.getType() == CompatibleMaterial.ACACIA_LEAVES.getMaterial()) {
+                if (block.getType() == XMaterial.OAK_LEAVES.parseMaterial() || block.getType() == XMaterial.ACACIA_LEAVES.parseMaterial()) {
                     break;
                 }
 
-                if (block.getType() == Material.AIR || block.getType() == CompatibleMaterial.WATER.getMaterial() || block.getType() == Material.WATER
-                        || block.getType() == CompatibleMaterial.LAVA.getMaterial() || block.getType() == Material.LAVA) {
+                if (block.getType() == Material.AIR || block.getType() == XMaterial.WATER.parseMaterial() || block.getType() == Material.WATER
+                        || block.getType() == XMaterial.LAVA.parseMaterial() || block.getType() == Material.LAVA) {
                     if (!followY) {
                         maxY = y;
                         followY = true;

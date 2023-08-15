@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -20,7 +20,7 @@ public class MobTamingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public MobTamingPermission(SkyBlock plugin) {
-        super("MobTaming", CompatibleMaterial.POPPY, PermissionType.GENERIC);
+        super("MobTaming", XMaterial.POPPY, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }

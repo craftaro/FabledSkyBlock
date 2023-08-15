@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -18,7 +19,7 @@ public class HopperPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public HopperPermission(SkyBlock plugin) {
-        super("Hopper", CompatibleMaterial.HOPPER, PermissionType.GENERIC);
+        super("Hopper", XMaterial.HOPPER, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -32,7 +33,7 @@ public class HopperPermission extends ListeningPermission {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.HOPPER) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.HOPPER) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

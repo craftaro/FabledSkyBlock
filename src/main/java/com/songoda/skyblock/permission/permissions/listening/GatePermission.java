@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -10,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Optional;
+
 public class GatePermission extends ListeningPermission {
     private final SkyBlock plugin;
     private final MessageManager messageManager;
 
     public GatePermission(SkyBlock plugin) {
-        super("Gate", CompatibleMaterial.OAK_FENCE_GATE, PermissionType.GENERIC);
+        super("Gate", XMaterial.OAK_FENCE_GATE, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -27,12 +30,12 @@ public class GatePermission extends ListeningPermission {
         }
 
         Player player = event.getPlayer();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        if (material == null) {
+        Optional<XMaterial> material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType());
+        if (!material.isPresent()) {
             return;
         }
 
-        switch (material) {
+        switch (material.get()) {
             case ACACIA_FENCE_GATE:
             case OAK_FENCE_GATE:
             case BIRCH_FENCE_GATE:

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.stackable;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.eatthepath.uuid.FastUUID;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Location;
@@ -15,6 +16,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -22,7 +24,7 @@ public class StackableManager {
     // TODO: Should probably be a GUI for this
 
     private final SkyBlock plugin;
-    private final Set<CompatibleMaterial> stackableMaterials = EnumSet.noneOf(CompatibleMaterial.class);
+    private final Set<XMaterial> stackableMaterials = EnumSet.noneOf(XMaterial.class);
     private final Map<Location, Stackable> stacks = new HashMap<>();
 
     public StackableManager(SkyBlock plugin) {
@@ -39,10 +41,8 @@ public class StackableManager {
         }
 
         for (String stackableStr : stackableList) {
-            try {
-                this.stackableMaterials.add(CompatibleMaterial.getBlockMaterial(stackableStr));
-            } catch (Exception ignored) {
-            }
+            Optional<XMaterial> stackableMaterial = CompatibleMaterial.getMaterial(stackableStr);
+            stackableMaterial.ifPresent(this.stackableMaterials::add);
         }
     }
 
@@ -89,8 +89,8 @@ public class StackableManager {
                     continue;
                 }
 
-                final CompatibleMaterial type = CompatibleMaterial.getMaterial(block.getType());
-                if (type == null) {
+                final Optional<XMaterial> type = CompatibleMaterial.getMaterial(block.getType());
+                if (!type.isPresent()) {
                     continue;
                 }
 
@@ -99,7 +99,7 @@ public class StackableManager {
                     continue;
                 }
 
-                this.addStack(new Stackable(FastUUID.parseUUID(key), loc, type, size));
+                this.addStack(new Stackable(FastUUID.parseUUID(key), loc, type.get(), size));
             }
         }
     }
@@ -108,11 +108,11 @@ public class StackableManager {
         this.stackableMaterials.clear();
     }
 
-    public Set<CompatibleMaterial> getStackableMaterials() {
+    public Set<XMaterial> getStackableMaterials() {
         return Collections.unmodifiableSet(this.stackableMaterials);
     }
 
-    public boolean isStackableMaterial(CompatibleMaterial material) {
+    public boolean isStackableMaterial(XMaterial material) {
         return this.stackableMaterials.contains(material);
     }
 
@@ -124,7 +124,7 @@ public class StackableManager {
         return this.stacks.containsKey(location);
     }
 
-    public Stackable getStack(Location location, CompatibleMaterial material) {
+    public Stackable getStack(Location location, XMaterial material) {
         Stackable stackable = this.stacks.get(location);
 
         return stackable != null && stackable.getMaterial() == material ? stackable : null;
@@ -139,7 +139,7 @@ public class StackableManager {
         this.stacks.remove(stackable.getLocation());
     }
 
-    public long getStackSizeOf(Location loc, CompatibleMaterial type) {
+    public long getStackSizeOf(Location loc, XMaterial type) {
         final Stackable stack = getStack(loc, type);
 
         return stack == null ? 0 : stack.getSize();

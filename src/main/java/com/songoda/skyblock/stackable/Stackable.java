@@ -1,7 +1,7 @@
 package com.songoda.skyblock.stackable;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -22,12 +22,12 @@ public class Stackable {
     private final UUID uuid;
 
     private Location location;
-    private CompatibleMaterial material;
+    private XMaterial material;
     private int size = 2;
     private ArmorStand display;
     private int maxSize;
 
-    public Stackable(Location location, CompatibleMaterial material) {
+    public Stackable(Location location, XMaterial material) {
         this.uuid = UUID.randomUUID();
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -36,7 +36,7 @@ public class Stackable {
         this.save();
     }
 
-    public Stackable(Location location, CompatibleMaterial material, int maxSize) {
+    public Stackable(Location location, XMaterial material, int maxSize) {
         this.uuid = UUID.randomUUID();
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -46,7 +46,7 @@ public class Stackable {
         this.save();
     }
 
-    public Stackable(UUID uuid, Location location, CompatibleMaterial material, int size) {
+    public Stackable(UUID uuid, Location location, XMaterial material, int size) {
         this.uuid = uuid;
         this.location = new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
         this.material = material;
@@ -66,11 +66,11 @@ public class Stackable {
         this.location = location;
     }
 
-    public CompatibleMaterial getMaterial() {
+    public XMaterial getMaterial() {
         return this.material;
     }
 
-    public void setMaterial(CompatibleMaterial material) {
+    public void setMaterial(XMaterial material) {
         this.material = material;
         this.save();
     }
@@ -151,7 +151,7 @@ public class Stackable {
             as.setMarker(true);
         }
         as.setBasePlate(true);
-        as.setHelmet(this.material.getItem());
+        as.setHelmet(this.material.parseItem());
         as.setCustomName(this.getCustomName());
         as.setCustomNameVisible(true);
         as.setMetadata("StackableArmorStand", new FixedMetadataValue(SkyBlock.getPlugin(SkyBlock.class), ""));
@@ -188,6 +188,6 @@ public class Stackable {
     private String getCustomName() {
         return ChatColor
                 .translateAlternateColorCodes('&', SkyBlock.getPlugin(SkyBlock.class).getLanguage().getString("Hologram.Stackable.Message"))
-                .replace("%block", SkyBlock.getPlugin(SkyBlock.class).getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(this.material)).replace("%amount", NumberUtils.formatNumber(this.size));
+                .replace("%block", SkyBlock.getPlugin(SkyBlock.class).getLocalizationManager().getLocalizationFor(XMaterial.class).getLocale(this.material)).replace("%amount", NumberUtils.formatNumber(this.size));
     }
 }

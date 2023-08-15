@@ -2,6 +2,8 @@ package com.songoda.skyblock.levelling;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.blockscanner.BlockInfo;
 import com.songoda.skyblock.island.Island;
@@ -14,6 +16,7 @@ import com.songoda.skyblock.levelling.calculator.impl.EpicSpawnerCalculator;
 import com.songoda.skyblock.levelling.calculator.impl.UltimateStackerCalculator;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.stackable.StackableManager;
+import com.songoda.skyblock.utils.MaterialUtils;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,18 +34,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 public final class IslandLevelManager {
     private final Map<Island, QueuedIslandScan> inScan;
-    private final Map<CompatibleMaterial, Double> worth;
-    private final Map<CompatibleMaterial, AmountMaterialPair> cachedPairs;
+    private final Map<XMaterial, Double> worth;
+    private final Map<XMaterial, AmountMaterialPair> cachedPairs;
     private final SkyBlock plugin;
 
     public IslandLevelManager(SkyBlock plugin) {
         this.plugin = plugin;
         this.inScan = new HashMap<>();
-        this.worth = new EnumMap<>(CompatibleMaterial.class);
-        this.cachedPairs = new EnumMap<>(CompatibleMaterial.class);
+        this.worth = new EnumMap<>(XMaterial.class);
+        this.cachedPairs = new EnumMap<>(XMaterial.class);
         registerCalculators();
         reloadWorth();
     }
@@ -122,49 +126,48 @@ public final class IslandLevelManager {
 
             final ConfigurationSection current = materialSection.getConfigurationSection(key);
 
-            final CompatibleMaterial material = CompatibleMaterial.getMaterial(key);
+            final Optional<XMaterial> material = CompatibleMaterial.getMaterial(key);
 
-            if (material == null) {
+            if (!material.isPresent()) {
                 continue;
             }
 
-            this.worth.put(material, current.getDouble("Points", 0.0));
+            this.worth.put(material.get(), current.getDouble("Points", 0.0));
         }
     }
 
-    public void addWorth(CompatibleMaterial material, double points) {
+    public void addWorth(XMaterial material, double points) {
         this.worth.put(material, points);
     }
 
-    public void removeWorth(CompatibleMaterial material) {
+    public void removeWorth(XMaterial material) {
         this.worth.remove(material);
     }
 
     public List<LevellingMaterial> getWorthsAsLevelingMaterials() {
-
         final List<LevellingMaterial> materials = new ArrayList<>(this.worth.size());
 
-        for (Entry<CompatibleMaterial, Double> entry : this.worth.entrySet()) {
+        for (Entry<XMaterial, Double> entry : this.worth.entrySet()) {
             materials.add(new LevellingMaterial(entry.getKey(), entry.getValue()));
         }
 
         return materials;
     }
 
-    public Map<CompatibleMaterial, Double> getWorths() {
+    public Map<XMaterial, Double> getWorths() {
         return this.worth;
     }
 
-    public double getWorth(CompatibleMaterial material) {
+    public double getWorth(XMaterial material) {
         return this.worth.getOrDefault(material, 0d);
     }
 
-    public boolean hasWorth(CompatibleMaterial material) {
+    public boolean hasWorth(XMaterial material) {
         return this.worth.containsKey(material);
     }
 
     private void registerCalculators() {
-        final CompatibleMaterial spawner = CompatibleMaterial.SPAWNER;
+        final XMaterial spawner = XMaterial.SPAWNER;
         final PluginManager pm = Bukkit.getPluginManager();
 
         if (pm.isPluginEnabled("EpicSpawners")) {
@@ -180,15 +183,15 @@ public final class IslandLevelManager {
     AmountMaterialPair getAmountAndType(IslandScan scan, BlockInfo info) {
 
         Block block = info.getWorld().getBlockAt(info.getX(), info.getY(), info.getZ());
-        CompatibleMaterial blockType = CompatibleMaterial.getBlockMaterial(block.getType());
+        Optional<XMaterial> blockType = CompatibleMaterial.getMaterial(block.getType());
 
-        if (blockType == CompatibleMaterial.AIR) {
+        if (!blockType.isPresent() || CompatibleMaterial.isAir(blockType.get())) {
             return EMPTY;
         }
 
-        CompatibleMaterial compMaterial = CompatibleMaterial.getMaterial(block);
+        Optional<XMaterial> compMaterial = CompatibleMaterial.getMaterial(block.getType());
 
-        if (compMaterial == null) {
+        if (!compMaterial.isPresent()) {
             return EMPTY;
         }
 
@@ -198,28 +201,28 @@ public final class IslandLevelManager {
             return EMPTY;
         }
 
-        if (compMaterial.isTall()) {
+        if (MaterialUtils.isTall(compMaterial.orElse(XMaterial.STONE))) {
             final Block belowBlock = block.getRelative(BlockFace.DOWN);
-            final CompatibleMaterial belowMaterial = CompatibleMaterial.getMaterial(belowBlock);
+            final XMaterial belowMaterial = CompatibleMaterial.getMaterial(belowBlock.getType()).get();
 
-            if (belowMaterial.isTall()) {
+            if (MaterialUtils.isTall(belowMaterial)) {
                 block = belowBlock;
-                blockType = belowMaterial;
+                blockType = Optional.of(belowMaterial);
                 scan.getDoubleBlocks().add(belowBlock.getLocation());
             } else {
                 scan.getDoubleBlocks().add(block.getRelative(BlockFace.UP).getLocation());
             }
         }
 
-        final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType);
+        final List<Calculator> calculators = CalculatorRegistry.getCalculators(blockType.get());
         final StackableManager stackableManager = this.plugin.getStackableManager();
 
-        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, compMaterial);
+        final long stackSize = stackableManager == null ? 0 : stackableManager.getStackSizeOf(blockLocation, compMaterial.get());
 
         if (calculators == null) {
 
             if (stackSize > 1) {
-                return new AmountMaterialPair(compMaterial, stackSize);
+                return new AmountMaterialPair(compMaterial.get(), stackSize);
             }
 
             AmountMaterialPair cachedPair = this.cachedPairs.get(compMaterial);
@@ -228,8 +231,8 @@ public final class IslandLevelManager {
                 return cachedPair;
             }
 
-            cachedPair = new AmountMaterialPair(compMaterial, 1);
-            this.cachedPairs.put(compMaterial, cachedPair);
+            cachedPair = new AmountMaterialPair(compMaterial.get(), 1);
+            this.cachedPairs.put(compMaterial.get(), cachedPair);
 
             return cachedPair;
         }
@@ -244,7 +247,7 @@ public final class IslandLevelManager {
             amount = 1;
         }
 
-        return new AmountMaterialPair(compMaterial, amount + stackSize);
+        return new AmountMaterialPair(compMaterial.get(), amount + stackSize);
     }
 
     public void updateLevel(Island island, Location location) {
@@ -269,24 +272,24 @@ public final class IslandLevelManager {
 
     private void updateLevelLocation(Island island, Location location) {
         Block block = location.getBlock();
-        CompatibleMaterial material = null;
+        XMaterial material = null;
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (block.getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER;
+                    material = XMaterial.REPEATER;
                     break;
             }
         }
         if (material == null) {
-            material = CompatibleMaterial.getMaterial(block);
+            material = CompatibleMaterial.getMaterial(block.getType()).orElse(null);
         }
 
-        if (material == null || material == CompatibleMaterial.AIR) {
+        if (material == null || material == XMaterial.AIR) {
             return;
         }
 
-        if (material == CompatibleMaterial.SPAWNER) {
+        if (material == XMaterial.SPAWNER) {
             if (Bukkit.getPluginManager().isPluginEnabled("EpicSpawners") ||
                     Bukkit.getPluginManager().isPluginEnabled("UltimateStacker") ||
                     Bukkit.getPluginManager().isPluginEnabled("WildStacker")) {
@@ -296,7 +299,7 @@ public final class IslandLevelManager {
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
 
             if (spawner != null) {
-                material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
+                material = CompatibleMaterial.getMaterial(spawner.getMaterial()).orElse(null);
             }
         }
 

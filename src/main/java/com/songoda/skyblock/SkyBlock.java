@@ -2,13 +2,13 @@ package com.songoda.skyblock;
 
 import com.craftaro.core.SongodaCore;
 import com.craftaro.core.SongodaPlugin;
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerProject;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.HologramManager;
 import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.ban.BanManager;
 import com.songoda.skyblock.bank.BankManager;
@@ -172,7 +172,7 @@ public class SkyBlock extends SongodaPlugin {
         }
 
         // Run Songoda Updater
-        SongodaCore.registerPlugin(this, 17, CompatibleMaterial.GRASS_BLOCK);
+        SongodaCore.registerPlugin(this, 17, XMaterial.GRASS_BLOCK);
 
         // Load Economy
         this.economyManager = new EconomyManager(this);

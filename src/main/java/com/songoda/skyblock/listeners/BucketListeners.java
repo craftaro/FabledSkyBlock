@@ -1,6 +1,7 @@
 package com.songoda.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -28,9 +29,9 @@ public class BucketListeners implements Listener {
 
         IslandManager islandManager = this.plugin.getIslandManager();
 
-        CompatibleMaterial clickedBlock = CompatibleMaterial.getBlockMaterial(event.getBlockClicked().getType());
+        XMaterial clickedBlock = CompatibleMaterial.getMaterial(event.getBlockClicked().getType()).orElse(null);
 
-        if (clickedBlock == CompatibleMaterial.WATER || clickedBlock == CompatibleMaterial.LAVA) {
+        if (clickedBlock == XMaterial.WATER || clickedBlock == XMaterial.LAVA) {
             if (this.plugin.getWorldManager().isIslandWorld(block.getWorld())) {
                 Island island = islandManager.getIslandAtLocation(block.getLocation());
                 // Check permissions.

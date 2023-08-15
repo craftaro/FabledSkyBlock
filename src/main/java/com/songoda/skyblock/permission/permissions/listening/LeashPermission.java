@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +16,7 @@ public class LeashPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public LeashPermission(SkyBlock plugin) {
-        super("Leash", CompatibleMaterial.LEAD, PermissionType.GENERIC);
+        super("Leash", XMaterial.LEAD, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -25,8 +26,8 @@ public class LeashPermission extends ListeningPermission {
         Player player = event.getPlayer();
         ItemStack is = player.getItemInHand();
 
-        if (CompatibleMaterial.getMaterial(is) != CompatibleMaterial.AIR) {
-            if (CompatibleMaterial.getMaterial(is) == CompatibleMaterial.LEAD) {
+        if (!CompatibleMaterial.isAir(CompatibleMaterial.getMaterial(is.getType()).orElse(XMaterial.STONE))) {
+            if (XMaterial.LEAD.isSimilar(is)) {
                 cancelAndMessage(event, player, this.plugin, this.messageManager);
             }
         }

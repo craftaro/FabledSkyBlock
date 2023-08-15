@@ -2,6 +2,7 @@ package com.songoda.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Levelling {
@@ -78,13 +80,13 @@ public class Levelling {
 
             ItemStack is = event.getItem();
 
-            if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
+            if ((XMaterial.BLACK_STAINED_GLASS_PANE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"))))) {
                 soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
-            } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+            } else if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Exit.Displayname"))))) {
                 soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
             } else if ((is.getType() == Material.PAINTING) && (is.hasItemMeta())
@@ -99,7 +101,7 @@ public class Levelling {
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
-            } else if ((is.getType() == CompatibleMaterial.FIREWORK_STAR.getMaterial()) && (is.hasItemMeta())
+            } else if ((XMaterial.FIREWORK_STAR.isSimilar(is)) && (is.hasItemMeta())
                     && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"))))) {
                 Island island = islandManager.getIsland(player);
                 OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID());
@@ -139,7 +141,7 @@ public class Levelling {
                     cooldownManager.createPlayer(CooldownType.LEVELLING, Bukkit.getServer().getOfflinePlayer(island.getOwnerUUID()));
                     levellingManager.startScan(player, island);
                 });
-            } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())) {
+            } else if ((XMaterial.PLAYER_HEAD.isSimilar(is)) && (is.hasItemMeta())) {
                 PlayerData playerData1 = plugin.getPlayerDataManager().getPlayerData(player);
 
                 if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', configLoad.getString("Menu.Levelling.Item.Previous.Displayname")))) {
@@ -184,20 +186,20 @@ public class Levelling {
             }
 
             long value = testIslandMaterials.get(materialName);
-            CompatibleMaterial materials = CompatibleMaterial.getMaterial(materialName);
+            Optional<XMaterial> materials = CompatibleMaterial.getMaterial(materialName);
 
-            if (materials == null) {
+            if (!materials.isPresent()) {
                 continue;
             }
 
-            ItemStack is = materials.getItem();
+            ItemStack is = materials.get().parseItem();
 
             if (is == null || is.getItemMeta() == null) {
                 continue;
             }
 
             is.setAmount(Math.min(Math.toIntExact(value), 64));
-            is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
+            is.setType(CompatibleMaterial.getMaterial(is.getType()).get().parseMaterial());
 
             testInventory.clear();
             testInventory.setItem(0, is);
@@ -209,16 +211,16 @@ public class Levelling {
 
         int playerMenuPage = playerData.getPage(MenuType.LEVELLING), nextEndIndex = islandMaterials.size() - playerMenuPage * 36;
 
-        nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(), configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null), 0, 8);
+        nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(), configLoad.getString("Menu.Levelling.Item.Exit.Displayname"), null, null, null, null), 0, 8);
         if (player.hasPermission("fabledskyblock.island.level.rescan")) {
-            nInv.addItem(nInv.createItem(CompatibleMaterial.FIREWORK_STAR.getItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
+            nInv.addItem(nInv.createItem(XMaterial.FIREWORK_STAR.parseItem(), configLoad.getString("Menu.Levelling.Item.Rescan.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Rescan.Lore"), null, null,
                     new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 3, 5);
         }
         nInv.addItem(
                 nInv.createItem(new ItemStack(Material.PAINTING), configLoad.getString("Menu.Levelling.Item.Statistics.Displayname"), configLoad.getStringList("Menu.Levelling.Item.Statistics.Lore"),
                         new Placeholder[]{new Placeholder("%level_points", NumberUtils.formatNumber(level.getPoints())), new Placeholder("%level", NumberUtils.formatNumber(level.getLevel()))}, null, null),
                 4);
-        nInv.addItem(nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
+        nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(), configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
         if (playerMenuPage != 1) {
             nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(
@@ -235,7 +237,7 @@ public class Levelling {
         }
 
         if (islandMaterials.isEmpty()) {
-            nInv.addItem(nInv.createItem(new ItemStack(CompatibleMaterial.BARRIER.getMaterial()), configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"), null, null, null, null), 31);
+            nInv.addItem(nInv.createItem(XMaterial.BARRIER.parseItem(), configLoad.getString("Menu.Levelling.Item.Nothing.Displayname"), null, null, null, null), 31);
         } else {
             int index = playerMenuPage * 36 - 36, endIndex = index >= islandMaterials.size() ? islandMaterials.size() - 1 : index + 36, inventorySlot = 17;
 
@@ -245,9 +247,9 @@ public class Levelling {
                 }
 
                 String material = (String) islandMaterials.keySet().toArray()[index];
-                CompatibleMaterial materials = CompatibleMaterial.getMaterial(material);
+                Optional<XMaterial> materials = CompatibleMaterial.getMaterial(material);
 
-                if (materials == null) {
+                if (!materials.isPresent()) {
                     break;
                 }
 
@@ -275,15 +277,15 @@ public class Levelling {
                 double pointsEarned = materialAmountCounted * pointsMultiplier;
 
 
-                String name = plugin.getLocalizationManager().getLocalizationFor(CompatibleMaterial.class).getLocale(materials);
+                String name = plugin.getLocalizationManager().getLocalizationFor(XMaterial.class).getLocale(materials.get());
 
-                if (materials == CompatibleMaterial.FARMLAND && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
-                    materials = CompatibleMaterial.DIRT;
+                if (materials.get() == XMaterial.FARMLAND && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
+                    materials = Optional.of(XMaterial.DIRT);
                 }
 
-                ItemStack is = materials.getItem();
+                ItemStack is = materials.get().parseItem();
                 is.setAmount(Math.min(Math.toIntExact(materialAmount), 64));
-                is.setType(CompatibleMaterial.getMaterial(is).getMaterial());
+                is.setType(CompatibleMaterial.getMaterial(is.getType()).get().parseMaterial());
 
                 long finalMaterialAmountCounted = materialAmountCounted;
                 List<String> lore = configLoad.getStringList("Menu.Levelling.Item.Material.Lore");

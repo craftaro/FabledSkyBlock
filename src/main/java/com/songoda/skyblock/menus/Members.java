@@ -1,6 +1,6 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -80,14 +80,14 @@ public class Members {
                         return;
                     }
 
-                    if ((is.getType() == CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getMaterial()) && (is.hasItemMeta())
+                    if ((is.getType() == XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Members.Item.Barrier.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_GLASS_BREAK);
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                    } else if ((is.getType() == XMaterial.OAK_FENCE_GATE.parseMaterial()) && (is.hasItemMeta())
                             && (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Members.Item.Exit.Displayname"))))) {
                         soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -130,7 +130,7 @@ public class Members {
 
                         event.setWillClose(false);
                         event.setWillDestroy(false);
-                    } else if ((is.getType() == CompatibleMaterial.PLAYER_HEAD.getMaterial()) && (is.hasItemMeta())) {
+                    } else if ((is.getType() == XMaterial.PLAYER_HEAD.parseMaterial()) && (is.hasItemMeta())) {
                         if (is.getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&',
                                 configLoad.getString("Menu.Members.Item.Previous.Displayname")))) {
                             playerData.setPage(MenuType.MEMBERS, playerData.getPage(MenuType.MEMBERS) - 1);
@@ -323,7 +323,7 @@ public class Members {
 
             int playerMenuPage = playerData.getPage(MenuType.MEMBERS), nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
 
-            nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+            nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Members.Item.Exit.Displayname"), null, null, null, null), 0, 8);
             nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                     configLoad.getString("Menu.Members.Item.Type.Displayname"),
@@ -346,7 +346,7 @@ public class Members {
                     new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.name()))},
                     null, null), 5);
             nInv.addItem(
-                    nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(),
+                    nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
                             configLoad.getString("Menu.Members.Item.Barrier.Displayname"), null, null, null, null),
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 

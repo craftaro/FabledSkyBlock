@@ -1,6 +1,6 @@
 package com.songoda.skyblock.listeners;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -129,9 +129,9 @@ public class PortalListeners implements Listener {
         IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
         IslandWorld toWorld = IslandWorld.NORMAL;
 
-        if (block.getType() == CompatibleMaterial.NETHER_PORTAL.getMaterial()) {
+        if (block.getType() == XMaterial.NETHER_PORTAL.parseMaterial()) {
             toWorld = fromWorld == IslandWorld.NETHER ? IslandWorld.NORMAL : IslandWorld.NETHER;
-        } else if (block.getType() == CompatibleMaterial.END_PORTAL.getMaterial()) {
+        } else if (block.getType() == XMaterial.END_PORTAL.parseMaterial()) {
             toWorld = fromWorld == IslandWorld.END ? IslandWorld.NORMAL : IslandWorld.END;
         }
 

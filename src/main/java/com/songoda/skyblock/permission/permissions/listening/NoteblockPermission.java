@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +17,7 @@ public class NoteblockPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public NoteblockPermission(SkyBlock plugin) {
-        super("Noteblock", CompatibleMaterial.NOTE_BLOCK, PermissionType.GENERIC);
+        super("Noteblock", XMaterial.NOTE_BLOCK, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -30,7 +31,7 @@ public class NoteblockPermission extends ListeningPermission {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
-        if (CompatibleMaterial.getMaterial(block) == CompatibleMaterial.NOTE_BLOCK) {
+        if (CompatibleMaterial.getMaterial(block.getType()).orElse(null) == XMaterial.NOTE_BLOCK) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }
     }

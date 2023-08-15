@@ -1,8 +1,8 @@
 package com.songoda.skyblock.gui.permissions;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -59,7 +59,7 @@ public class GuiPermissions extends Gui {
         }
         setActionForRange(0, 0, 5, 9, null);
 
-        setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(0, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
@@ -67,14 +67,14 @@ public class GuiPermissions extends Gui {
 
         if (this.role == IslandRole.VISITOR) {
             if (this.configLoad.getBoolean("Island.Visitor.Welcome.Enable")) {
-                setButton(5, GuiUtils.createButtonItem(CompatibleMaterial.MAP,
+                setButton(5, GuiUtils.createButtonItem(XMaterial.MAP,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Welcome.Displayname")),
                                 TextUtils.formatText(this.languageLoad.getStringList("Menu.Settings.Visitor.Item.Welcome.Lore"))),
                         (event) -> this.guiManager.showGUI(event.player, new GuiWelcomeEditor(this.plugin, this, this.island)));
             }
 
             if (this.configLoad.getBoolean("Island.Visitor.Signature.Enable")) {
-                setButton(3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER,
+                setButton(3, GuiUtils.createButtonItem(XMaterial.PAPER,
                                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Signature.Displayname")),
                                 TextUtils.formatText(this.languageLoad.getStringList("Menu.Settings.Visitor.Item.Signature.Lore"))),
                         (event) -> this.guiManager.showGUI(event.player, new GuiSignatureEditor(this.plugin, this, this.island)));
@@ -103,7 +103,7 @@ public class GuiPermissions extends Gui {
                         .replace("%visitors", String.valueOf(this.plugin.getIslandManager().getVisitorsAtIsland(this.island).size())));
             }
 
-            setButton(4, GuiUtils.createButtonItem(CompatibleMaterial.PAINTING,
+            setButton(4, GuiUtils.createButtonItem(XMaterial.PAINTING,
                             TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Visitor.Item.Statistics.Displayname")),
                             welcomeFinal),
                     (event -> {
@@ -125,7 +125,7 @@ public class GuiPermissions extends Gui {
                     }));
         }
 
-        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
@@ -144,7 +144,7 @@ public class GuiPermissions extends Gui {
         this.pages = (int) Math.max(1, Math.ceil(itemCount / 36));
 
         if (this.page != 1) {
-            setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+            setButton(5, 2, GuiUtils.createButtonItem(XMaterial.ARROW,
                             TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
                     (event) -> {
                         this.page--;
@@ -153,7 +153,7 @@ public class GuiPermissions extends Gui {
         }
 
         if (this.page != this.pages) {
-            setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+            setButton(5, 6, GuiUtils.createButtonItem(XMaterial.ARROW,
                             TextUtils.formatText(this.languageLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
                     (event) -> {
                         this.page++;
@@ -187,7 +187,7 @@ public class GuiPermissions extends Gui {
                 });
             }
         } else {
-            setItem(31, CompatibleMaterial.BARRIER.getItem()); // TODO
+            setItem(31, XMaterial.BARRIER.parseItem()); // TODO
         }
     }
 

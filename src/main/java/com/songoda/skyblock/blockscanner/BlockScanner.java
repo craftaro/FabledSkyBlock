@@ -2,6 +2,7 @@ package com.songoda.skyblock.blockscanner;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.google.common.collect.Lists;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.island.Island;
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -271,16 +273,17 @@ public final class BlockScanner extends BukkitRunnable {
         for (int x = initX; x <= lastX; x++) {
             for (int z = initZ; z <= lastZ; z++) {
                 for (int y = scanY; y < world.getMaxHeight(); y++) {
-                    final CompatibleMaterial type = CompatibleMaterial.getBlockMaterial(
+                    final Optional<XMaterial> type = CompatibleMaterial.getMaterial(
                             ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)
                                     ? shot.getSnapshot().getBlockType(x, y, z) :
                                     MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
 
-                    if (type == null) {
+                    if (!type.isPresent()) {
                         continue;
-                    } else if (type == CompatibleMaterial.AIR && this.ignoreAir) {
+
+                    } else if (CompatibleMaterial.isAir(type.get()) && this.ignoreAir) {
                         continue;
-                    } else if (type == CompatibleMaterial.WATER && this.ignoreLiquids) {
+                    } else if (type.get() == XMaterial.WATER && this.ignoreLiquids) {
                         continue;
                     }
 

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.world.block;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("deprecation")
 public class BlockData {
@@ -26,8 +28,8 @@ public class BlockData {
     private String commandBlockName = "";
     private String entity = EntityType.COW.toString();
     private String exitLocation = "";
-    private String flower = CompatibleMaterial.RED_DYE.getMaterial().toString() + ":0";
-    private String playing = CompatibleMaterial.MUSIC_DISC_CHIRP.getMaterial().toString();
+    private String flower = XMaterial.RED_DYE.parseMaterial().toString() + ":0";
+    private String playing = XMaterial.MUSIC_DISC_CHIRP.parseMaterial().toString();
     private String[] signLines = {};
     private String rotateFace = BlockFace.NORTH.toString();
     private String skullOwner = "Notch";
@@ -65,8 +67,8 @@ public class BlockData {
     }
 
     public String getMaterial() {
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(this.material);
-        return material == null ? this.material : CompatibleMaterial.getMaterial(this.material).getMaterial().name();
+        Optional<XMaterial> material = CompatibleMaterial.getMaterial(this.material);
+        return !material.isPresent() ? this.material : CompatibleMaterial.getMaterial(this.material).get().parseMaterial().name();
     }
 
     public void setMaterial(Material material) {

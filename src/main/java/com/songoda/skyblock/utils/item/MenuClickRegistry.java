@@ -1,6 +1,7 @@
 package com.songoda.skyblock.utils.item;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.utils.StringUtil;
 import com.songoda.skyblock.utils.item.nInventoryUtil.ClickEvent;
@@ -54,7 +55,7 @@ public final class MenuClickRegistry {
             return;
         }
 
-        @SuppressWarnings("deprecation") final MenuExecutor executor = this.executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item)));
+        @SuppressWarnings("deprecation") final MenuExecutor executor = this.executors.get(RegistryKey.fromName(meta.getDisplayName(), CompatibleMaterial.getMaterial(item.getType()).get()));
 
 
         if (executor == null) {
@@ -75,9 +76,9 @@ public final class MenuClickRegistry {
         private static final File path = new File(SkyBlock.getPlugin(SkyBlock.class).getDataFolder(), "language.yml");
 
         private final String name;
-        private final CompatibleMaterial type;
+        private final XMaterial type;
 
-        private RegistryKey(String name, CompatibleMaterial type) {
+        private RegistryKey(String name, XMaterial type) {
             this.name = name;
             this.type = type;
         }
@@ -101,11 +102,11 @@ public final class MenuClickRegistry {
             return Objects.equals(this.name, other.name) && this.type == other.type;
         }
 
-        public static RegistryKey fromName(String name, CompatibleMaterial type) {
+        public static RegistryKey fromName(String name, XMaterial type) {
             return new RegistryKey(name, type);
         }
 
-        public static RegistryKey fromLanguageFile(String namePath, CompatibleMaterial type) {
+        public static RegistryKey fromLanguageFile(String namePath, XMaterial type) {
             return new RegistryKey(StringUtil.color(SkyBlock.getPlugin(SkyBlock.class).getFileManager().getConfig(path).getFileConfiguration().getString(namePath)), type);
         }
     }

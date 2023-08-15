@@ -1,6 +1,7 @@
 package com.songoda.skyblock.challenge.defaultinv;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DefaultInventory {
     private final Item defaultItem = new Item(new ItemStack(Material.AIR));
@@ -37,13 +39,13 @@ public class DefaultInventory {
             String name = plugin.formatText(configLoad.getString(k + ".name"));
             List<String> lore = toColor(configLoad.getStringList(k + ".lore"));
             int redirect = configLoad.getInt(k + ".redirect");
-            CompatibleMaterial material = CompatibleMaterial.getMaterial(strItem);
-            if (material == null || material == CompatibleMaterial.AIR) {
+            Optional<XMaterial> material = CompatibleMaterial.getMaterial(strItem);
+            if (!material.isPresent() || CompatibleMaterial.isAir(material.get())) {
                 Bukkit.getLogger().warning("Item " + strItem + " is not a Material");
                 continue;
             }
 
-            ItemStack is = material.getItem();
+            ItemStack is = material.get().parseItem();
             is.setAmount(amount);
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(name);

@@ -1,6 +1,6 @@
 package com.songoda.skyblock.menus;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
@@ -63,7 +63,7 @@ public class Leaderboard {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())
+                        if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
                                         + ".Item.Exit.Displayname"))))) {
@@ -102,7 +102,7 @@ public class Leaderboard {
                     }
                 });
 
-                nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                         configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Exit.Displayname"),
                         null, null, null, null), 0, 4);
                 nInv.addItem(
@@ -129,7 +129,7 @@ public class Leaderboard {
                             2);
                 } else {
                     nInv.addItem(
-                            nInv.createItem(CompatibleMaterial.BLACK_STAINED_GLASS_PANE.getItem(), "", null, null, null, null), 2);
+                            nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(), "", null, null, null, null), 2);
                 }
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.EMERALD), configLoad
@@ -151,7 +151,7 @@ public class Leaderboard {
                     if (playerDataManager.hasPlayerData(player)) {
                         ItemStack is = event.getItem();
 
-                        if ((is.getType() == CompatibleMaterial.OAK_FENCE_GATE.getMaterial()) && (is.hasItemMeta())) {
+                        if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())) {
                             if (is.getItemMeta().getDisplayName().equals(plugin.formatText(
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname")))) {
                                 soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
@@ -225,11 +225,11 @@ public class Leaderboard {
 
                 if (plugin.getConfiguration()
                         .getBoolean("Island.Visitor.Vote")) {
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Return.Displayname"), null, null,
                             null, null), 0, 8);
                 } else {
-                    nInv.addItem(nInv.createItem(CompatibleMaterial.OAK_FENCE_GATE.getItem(),
+                    nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                             configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Exit.Displayname"), null, null,
                             null, null), 0, 8);
                 }

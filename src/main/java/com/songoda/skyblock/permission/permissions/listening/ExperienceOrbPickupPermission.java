@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -15,7 +15,7 @@ public class ExperienceOrbPickupPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public ExperienceOrbPickupPermission(SkyBlock plugin) {
-        super("ExperienceOrbPickup", CompatibleMaterial.EXPERIENCE_BOTTLE, PermissionType.GENERIC);
+        super("ExperienceOrbPickup", XMaterial.EXPERIENCE_BOTTLE, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }

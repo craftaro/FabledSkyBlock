@@ -3,6 +3,8 @@ package com.songoda.skyblock.listeners;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.LogManager;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.google.common.collect.Lists;
@@ -20,6 +22,7 @@ import com.songoda.skyblock.limit.impl.BlockLimitation;
 import com.songoda.skyblock.permission.PermissionManager;
 import com.songoda.skyblock.stackable.Stackable;
 import com.songoda.skyblock.stackable.StackableManager;
+import com.songoda.skyblock.utils.MaterialUtils;
 import com.songoda.skyblock.utils.version.CompatibleSpawners;
 import com.songoda.skyblock.utils.world.LocationUtil;
 import com.songoda.skyblock.world.WorldManager;
@@ -109,19 +112,19 @@ public class BlockListeners implements Listener {
         }
 
         if (stackableManager != null && stackableManager.isStacked(blockLocation)) {
-            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block));
+            Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block.getType()).get());
             if (stackable != null) {
-                CompatibleMaterial material = null;
+                XMaterial material = null;
                 if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                     switch (block.getType().toString().toUpperCase()) {
                         case "DIODE_BLOCK_OFF":
                         case "DIODE_BLOCK_ON":
-                            material = CompatibleMaterial.REPEATER;
+                            material = XMaterial.REPEATER;
                             break;
                     }
                 }
                 if (material == null) {
-                    material = CompatibleMaterial.getMaterial(block);
+                    material = CompatibleMaterial.getMaterial(block.getType()).get();
                 }
                 byte data = block.getData();
 
@@ -131,14 +134,14 @@ public class BlockListeners implements Listener {
                     int count = stackable.getSize();
                     droppedAmount = count;
                     while (count > 64) {
-                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.getMaterial(), 64, data));
+                        dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.parseMaterial(), 64, data));
                         count -= 64;
                     }
-                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.getMaterial(), count, block.getData()));
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, new ItemStack(material.parseMaterial(), count, block.getData()));
                     block.setType(Material.AIR);
                     stackable.setSize(0);
                 } else {
-                    block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material.getMaterial(), 1, data));
+                    block.getWorld().dropItemNaturally(blockLocation.clone().add(.5, 1, .5), new ItemStack(material.parseMaterial(), 1, data));
                     stackable.takeOne();
                     droppedAmount = 1;
                 }
@@ -190,37 +193,36 @@ public class BlockListeners implements Listener {
             return;
         }
 
-        CompatibleMaterial material = null;
+        XMaterial material = null;
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (block.getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    material = CompatibleMaterial.REPEATER;
+                    material = XMaterial.REPEATER;
                     break;
             }
         }
         if (material == null) {
-            material = CompatibleMaterial.getMaterial(block);
+            material = CompatibleMaterial.getMaterial(block.getType()).get();
         }
 
         if (material == null) {
             return;
         }
 
-        if (material.isTall()) {
-
+        if (MaterialUtils.isTall(material)) {
             final org.bukkit.block.Block belowBlock = block.getRelative(BlockFace.DOWN);
 
-            if (CompatibleMaterial.getMaterial(belowBlock).isTall()) {
+            if (MaterialUtils.isTall(CompatibleMaterial.getMaterial(belowBlock.getType()).orElse(XMaterial.STONE))) {
                 block = belowBlock;
             }
         }
 
-        if (block.getType() == CompatibleMaterial.SPAWNER.getBlockMaterial()) {
+        if (block.getType() == XMaterial.SPAWNER.parseMaterial()) {
             CompatibleSpawners spawner = CompatibleSpawners.getSpawner(((CreatureSpawner) block.getState()).getSpawnedType());
 
             if (spawner != null) {
-                material = CompatibleMaterial.getBlockMaterial(spawner.getMaterial());
+                material = CompatibleMaterial.getMaterial(spawner.getMaterial()).get();
             }
         }
 
@@ -356,18 +358,18 @@ public class BlockListeners implements Listener {
 
         ItemStack item = event.getItemInHand();
 
-        if (limits.isBlockLimitExceeded(block, limit) && CompatibleMaterial.getMaterial(item) != CompatibleMaterial.ENDER_EYE) {
-            CompatibleMaterial material = null;
+        if (limits.isBlockLimitExceeded(block, limit) && !XMaterial.ENDER_EYE.isSimilar(item)) {
+            XMaterial material = null;
             if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
                 switch (block.getType().toString().toUpperCase()) {
                     case "DIODE_BLOCK_OFF":
                     case "DIODE_BLOCK_ON":
-                        material = CompatibleMaterial.REPEATER;
+                        material = XMaterial.REPEATER;
                         break;
                 }
             }
             if (material == null) {
-                material = CompatibleMaterial.getMaterial(block);
+                material = CompatibleMaterial.getMaterial(block.getType()).get();
             }
 
             this.plugin.getMessageManager().sendMessage(player, this.plugin.getLanguage().getString("Island.Limit.Block.Exceeded.Message")
@@ -382,19 +384,19 @@ public class BlockListeners implements Listener {
             return;
         }
 
-        if (event.getBlock().getType() == CompatibleMaterial.END_PORTAL_FRAME.getMaterial()
-                && event.getPlayer().getItemInHand().getType() == CompatibleMaterial.ENDER_EYE.getMaterial()) {
+        if (event.getBlock().getType() == XMaterial.END_PORTAL_FRAME.parseMaterial()
+                && XMaterial.ENDER_EYE.isSimilar(event.getPlayer().getItemInHand())) {
             return;
         }
 
         // Not util used 2 islandLevelManager if condition is true
         // Sponge level dupe fix
         if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13) &&
-                block.getType() == CompatibleMaterial.SPONGE.getBlockMaterial()) {
+                block.getType() == XMaterial.SPONGE.parseMaterial()) {
             Bukkit.getScheduler().runTask(this.plugin, () -> {
-                if (blockLoc.getBlock().getType() == CompatibleMaterial.WET_SPONGE.getBlockMaterial()) {
+                if (blockLoc.getBlock().getType() == XMaterial.WET_SPONGE.parseMaterial()) {
                     IslandLevel level = island.getLevel();
-                    CompatibleMaterial material = CompatibleMaterial.SPONGE;
+                    XMaterial material = XMaterial.SPONGE;
                     if (level.hasMaterial(material.name())) {
                         long materialAmount = level.getMaterialAmount(material.name());
 
@@ -545,7 +547,7 @@ public class BlockListeners implements Listener {
             }
 
             if (!this.plugin.getConfiguration().getBoolean("Island.Block.Piston.Connected.Extend")) {
-                if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
+                if (block.getType() == XMaterial.PISTON.parseMaterial() || block.getType() == XMaterial.STICKY_PISTON.parseMaterial()) {
                     event.setCancelled(true);
                     return;
                 }
@@ -644,7 +646,7 @@ public class BlockListeners implements Listener {
             }
 
             if (!this.plugin.getConfiguration().getBoolean("Island.Block.Piston.Connected.Retract")) {
-                if (block.getType() == CompatibleMaterial.PISTON.getMaterial() || block.getType() == CompatibleMaterial.STICKY_PISTON.getMaterial()) {
+                if (block.getType() == XMaterial.PISTON.parseMaterial() || block.getType() == XMaterial.STICKY_PISTON.parseMaterial()) {
                     event.setCancelled(true);
                     return;
                 }
@@ -792,7 +794,7 @@ public class BlockListeners implements Listener {
         BlockFace dispenserDirection = ((org.bukkit.material.Dispenser) event.getBlock().getState().getData()).getFacing();
         org.bukkit.block.Block placeLocation = event.getBlock().getRelative(dispenserDirection);
 
-        if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.WATER_BUCKET
+        if (XMaterial.WATER_BUCKET.isSimilar(event.getItem())
                 && this.plugin.getConfiguration().getBoolean("Island.Nether.AllowNetherWater", false)) {
             placeLocation.setType(Material.WATER);
         }
@@ -822,22 +824,21 @@ public class BlockListeners implements Listener {
             return;
         }
 
-        CompatibleMaterial destmaterial = CompatibleMaterial.getMaterial(event.getToBlock());
-        if (destmaterial == CompatibleMaterial.AIR) {
+        XMaterial destmaterial = CompatibleMaterial.getMaterial(event.getToBlock().getType()).orElse(XMaterial.AIR);
+        if (CompatibleMaterial.isAir(destmaterial)) {
             return;
         }
         if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
             switch (event.getToBlock().getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
-                    destmaterial = CompatibleMaterial.REPEATER;
+                    destmaterial = XMaterial.REPEATER;
                     break;
             }
         }
 
-        CompatibleMaterial srcmaterial = CompatibleMaterial.getMaterial(event.getBlock());
-        if (srcmaterial != CompatibleMaterial.WATER
-                && srcmaterial != CompatibleMaterial.LAVA) {
+        XMaterial srcmaterial = CompatibleMaterial.getMaterial(event.getBlock().getType()).orElse(null);
+        if (srcmaterial != XMaterial.WATER && srcmaterial != XMaterial.LAVA) {
             return;
         }
 
@@ -847,7 +848,7 @@ public class BlockListeners implements Listener {
         }
 
         IslandLevel level = island.getLevel();
-        if (destmaterial != null && level.hasMaterial(destmaterial.name())) {
+        if (level.hasMaterial(destmaterial.name())) {
             long materialAmount = level.getMaterialAmount(destmaterial.name());
 
             if (materialAmount - 1 <= 0) {
@@ -865,11 +866,11 @@ public class BlockListeners implements Listener {
         IslandManager islandManager = this.plugin.getIslandManager();
         IslandWorld world = worldManager.getIslandWorld(block.getWorld());
 
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(block);
+        XMaterial material = CompatibleMaterial.getMaterial(block.getType()).orElse(null);
 
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)
-                && material != CompatibleMaterial.WATER
-                && material != CompatibleMaterial.LAVA) {
+                && material != XMaterial.WATER
+                && material != XMaterial.LAVA) {
             return false;
         }
 
@@ -959,8 +960,7 @@ public class BlockListeners implements Listener {
                                 islandLevelManager.updateLevel(island, genState.getLocation());
                             });
                         } else {
-                            Bukkit.getScheduler().runTask(this.plugin, () ->
-                                    block.setType(CompatibleMaterial.COBBLESTONE.getMaterial()));
+                            Bukkit.getScheduler().runTask(this.plugin, () -> XBlock.setType(block, XMaterial.COBBLESTONE));
                         }
                     });
                     return true;

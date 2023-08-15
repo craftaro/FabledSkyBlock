@@ -1,8 +1,8 @@
 package com.songoda.skyblock.gui.permissions;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.songoda.skyblock.SkyBlock;
@@ -48,13 +48,13 @@ public class GuiAdminPermissions extends Gui {
         }
         setActionForRange(0, 0, 5, 9, null);
 
-        setButton(0, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(0, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
         });
 
-        setButton(8, GuiUtils.createButtonItem(CompatibleMaterial.OAK_FENCE_GATE,
+        setButton(8, GuiUtils.createButtonItem(XMaterial.OAK_FENCE_GATE,
                 TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Exit.Displayname"))), (event) -> {
             this.soundManager.playSound(event.player, XSound.BLOCK_CHEST_CLOSE);
             this.guiManager.showGUI(event.player, this.returnGui);
@@ -67,7 +67,7 @@ public class GuiAdminPermissions extends Gui {
         this.pages = (int) Math.max(1, Math.ceil(itemCount / 36));
 
         if (this.page != 1) {
-            setButton(5, 2, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+            setButton(5, 2, GuiUtils.createButtonItem(XMaterial.ARROW,
                             TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Last.Displayname"))),
                     (event) -> {
                         this.page--;
@@ -76,7 +76,7 @@ public class GuiAdminPermissions extends Gui {
         }
 
         if (this.page != this.pages) {
-            setButton(5, 6, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+            setButton(5, 6, GuiUtils.createButtonItem(XMaterial.ARROW,
                             TextUtils.formatText(this.configLoad.getString("Menu.Settings.Categories.Item.Next.Displayname"))),
                     (event) -> {
                         this.page++;

@@ -1,6 +1,7 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -14,7 +15,7 @@ public class WaterCollectionPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public WaterCollectionPermission(SkyBlock plugin) {
-        super("WaterCollection", CompatibleMaterial.POTION, PermissionType.GENERIC);
+        super("WaterCollection", XMaterial.POTION, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
@@ -22,10 +23,10 @@ public class WaterCollectionPermission extends ListeningPermission {
     @PermissionHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        CompatibleMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock());
-        if (event.getItem() != null && CompatibleMaterial.getMaterial(event.getItem()) != CompatibleMaterial.AIR) {
-            if (CompatibleMaterial.getMaterial(event.getItem()) == CompatibleMaterial.GLASS_BOTTLE) {
-                if (material == CompatibleMaterial.WATER || material == CompatibleMaterial.CAULDRON) {
+        XMaterial material = CompatibleMaterial.getMaterial(event.getClickedBlock().getType()).orElse(null);
+        if (event.getItem() != null && !CompatibleMaterial.isAir(CompatibleMaterial.getMaterial(event.getItem().getType()).orElse(XMaterial.STONE))) {
+            if (XMaterial.GLASS_BOTTLE.isSimilar(event.getItem())) {
+                if (material == XMaterial.WATER || material == XMaterial.CAULDRON) {
                     cancelAndMessage(event, player, this.plugin, this.messageManager);
                     player.updateInventory();
                 }

@@ -1,13 +1,13 @@
 package com.songoda.skyblock.levelling.amount;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 
 
 public class AmountMaterialPair {
     private final long amount;
-    private final CompatibleMaterial material;
+    private final XMaterial material;
 
-    public AmountMaterialPair(CompatibleMaterial type, long amount) {
+    public AmountMaterialPair(XMaterial type, long amount) {
         this.amount = amount;
         this.material = type;
     }
@@ -16,7 +16,7 @@ public class AmountMaterialPair {
         return this.amount;
     }
 
-    public CompatibleMaterial getType() {
+    public XMaterial getType() {
         return this.material;
     }
 }

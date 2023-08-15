@@ -1,6 +1,6 @@
 package com.songoda.skyblock.permission.permissions.listening;
 
-import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.skyblock.SkyBlock;
 import com.songoda.skyblock.message.MessageManager;
 import com.songoda.skyblock.permission.ListeningPermission;
@@ -16,7 +16,7 @@ public class FishingPermission extends ListeningPermission {
     private final MessageManager messageManager;
 
     public FishingPermission(SkyBlock plugin) {
-        super("Fishing", CompatibleMaterial.FISHING_ROD, PermissionType.GENERIC);
+        super("Fishing", XMaterial.FISHING_ROD, PermissionType.GENERIC);
         this.plugin = plugin;
         this.messageManager = plugin.getMessageManager();
     }
