@@ -2,9 +2,6 @@ package com.craftaro.skyblock.leaderboard;
 
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.IslandWorld;
-import com.craftaro.skyblock.leaderboard.leaderheads.TopBank;
-import com.craftaro.skyblock.leaderboard.leaderheads.TopLevel;
-import com.craftaro.skyblock.leaderboard.leaderheads.TopVotes;
 import com.craftaro.skyblock.utils.VaultPermissions;
 import com.craftaro.skyblock.visit.Visit;
 import com.craftaro.skyblock.visit.VisitManager;
@@ -29,7 +26,6 @@ public class LeaderboardManager {
         new LeaderboardTask(plugin).runTaskTimerAsynchronously(plugin, 0L, this.plugin.getConfiguration().getInt("Island.Leaderboard.Reset.Time") * 20);
 
         resetLeaderboard();
-        setupLeaderHeads();
     }
 
     public void resetLeaderboard() {
@@ -114,14 +110,6 @@ public class LeaderboardManager {
         }
 
         return -1;
-    }
-
-    public void setupLeaderHeads() {
-        if (Bukkit.getServer().getPluginManager().getPlugin("LeaderHeads") != null) {
-            new TopLevel(this.plugin);
-            new TopBank(this.plugin);
-            new TopVotes(this.plugin);
-        }
     }
 
     public void clearLeaderboard() {

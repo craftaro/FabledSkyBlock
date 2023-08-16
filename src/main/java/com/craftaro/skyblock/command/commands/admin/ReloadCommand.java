@@ -94,7 +94,6 @@ public class ReloadCommand extends SubCommand {
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
             leaderboardManager.clearLeaderboard();
             leaderboardManager.resetLeaderboard();
-            leaderboardManager.setupLeaderHeads();
 
             Bukkit.getScheduler().runTask(this.plugin, () -> this.plugin.getHologramTask().updateHologram());
         });

@@ -15,7 +15,6 @@ public class LeaderboardTask extends BukkitRunnable {
         LeaderboardManager leaderboardManager = this.plugin.getLeaderboardManager();
         leaderboardManager.clearLeaderboard();
         leaderboardManager.resetLeaderboard();
-        leaderboardManager.setupLeaderHeads();
 
         this.plugin.getHologramTask().updateHologram();
     }

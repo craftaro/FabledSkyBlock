@@ -43,7 +43,6 @@ public class RefreshHologramsCommand extends SubCommand {
             LeaderboardManager leaderboardManager = this.plugin.getLeaderboardManager();
             leaderboardManager.clearLeaderboard();
             leaderboardManager.resetLeaderboard();
-            leaderboardManager.setupLeaderHeads();
 
             Bukkit.getScheduler().runTask(this.plugin, () -> this.plugin.getHologramTask().updateHologram());
         });

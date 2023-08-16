@@ -199,20 +199,12 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- TODO: Check what repo has LeaderHeadsAPI -->
+        <!-- TODO: Check what repo has com.Zrips:Residence -->
         <dependency>
             <groupId>com.Zrips</groupId>
             <artifactId>Residence</artifactId>
             <scope>provided</scope>
             <version>4.9.0.6</version>
-        </dependency>
-
-        <!-- TODO: Check what repo has LeaderHeadsAPI – The project is abandoned so removing support for it might be worth a thought -->
-        <dependency>
-            <groupId>me.robin</groupId>
-            <artifactId>LeaderHeadsAPI</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

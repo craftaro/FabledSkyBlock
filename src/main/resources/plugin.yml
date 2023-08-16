@@ -10,7 +10,6 @@ softdepend:
   - EpicSpawners
   - Holograms
   - HolographicDisplays
-  - LeaderHeads
   - PlaceholderAPI
   - PlayerPoints
   - Reserve
