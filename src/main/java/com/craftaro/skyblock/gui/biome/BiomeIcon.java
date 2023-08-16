@@ -31,7 +31,7 @@ public class BiomeIcon {
         byte tempData = (byte) biomeConfig.getInt("Biomes." + biome.name() + ".DisplayItem.Data", 0);
 
         if (!tempMat.isPresent()) {
-            tempMat = Optional.ofNullable(XMaterial.STONE);
+            tempMat = Optional.of(XMaterial.STONE);
         }
         this.displayItem = tempMat.get().parseItem();
         ItemMeta im = this.displayItem.getItemMeta();

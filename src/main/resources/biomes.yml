@@ -245,7 +245,7 @@ Biomes:
   JUNGLE:
     DisplayName: '&6Jungle'
     DisplayItem:
-      Material: VINES
+      Material: VINE
       Data: 0
     Permission: true
     Normal: true
@@ -259,7 +259,7 @@ Biomes:
   JUNGLE_HILLS:
     DisplayName: '&6Jungle Hills'
     DisplayItem:
-      Material: JUNGLE_TREE_SAPLING
+      Material: JUNGLE_SAPLING
       Data: 0
     Permission: true
     Normal: true
@@ -449,7 +449,7 @@ Biomes:
   SOUL_SAND_VALLEY:
     DisplayName: '&6Soul Sand Valley'
     DisplayItem:
-      Material: SOULSAND
+      Material: SOUL_SAND
       Data: 0
     Permission: true
     Normal: false
@@ -470,7 +470,7 @@ Biomes:
   SWAMP:
     DisplayName: '&6Swamp'
     DisplayItem:
-      Material: LILYPAD
+      Material: LILY_PAD
       Data: 0
     Permission: true
     Normal: true
