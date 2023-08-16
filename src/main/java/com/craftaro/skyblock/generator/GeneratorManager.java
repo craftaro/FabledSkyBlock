@@ -60,7 +60,7 @@ public class GeneratorManager {
             }
 
             this.generatorStorage.add(new Generator(configLoad.getString("Generators." + generatorList + ".Name"),
-                    IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal")),
+                    IslandWorld.valueOf(configLoad.getString("Generators." + generatorList + ".World", "Normal").toUpperCase()),
                     icon, generatorMaterials,
                     configLoad.getLong("Generators." + generatorList + ".UnlockLevel", 0L),
                     configLoad.getBoolean("Generators." + generatorList + ".Permission")));

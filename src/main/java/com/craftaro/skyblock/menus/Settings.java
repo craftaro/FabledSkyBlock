@@ -241,7 +241,7 @@ public class Settings {
 
                             return;
                         } else if (island14.hasRole(IslandRole.OPERATOR, player.getUniqueId())
-                                && !permissionManager.hasPermission(island14, role.name(), IslandRole.OPERATOR)) {
+                                && !permissionManager.hasPermission(island14, role.getFriendlyName(), IslandRole.OPERATOR)) {
                             messageManager.sendMessage(player,
                                     configLoad.getString("Command.Island.Settings.Permission.Access.Message"));
                             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
@@ -262,7 +262,7 @@ public class Settings {
 
                         if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(plugin.formatText(configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"))))) {
+                                .equals(plugin.formatText(configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Item.Return.Displayname"))))) {
                             soundManager.playSound(player, XSound.ENTITY_ARROW_HIT);
 
                             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> open(player, Type.CATEGORIES, null, null), 1L);
@@ -473,7 +473,7 @@ public class Settings {
                     nInv.addItemStack(createItem(island, role, "ExperienceOrbPickup", XMaterial.EXPERIENCE_BOTTLE.parseItem()), 53);
 
                     nInv.setTitle(plugin.formatText(
-                            configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+                            configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Title")));
                     nInv.setRows(6);
                 } else if (role == IslandRole.OPERATOR) {
                     if (mainConfig.getBoolean("Island.Visitor.Banning")) {
@@ -683,7 +683,7 @@ public class Settings {
                     }
 
                     nInv.setTitle(plugin.formatText(
-                            configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+                            configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Title")));
                 } else if (role == IslandRole.OWNER) {
                     if (mainConfig.getBoolean("Island.Settings.PvP.Enable")) {
                         if (mainConfig.getBoolean("Island.Settings.KeepItemsOnDeath.Enable")) {
@@ -1012,12 +1012,12 @@ public class Settings {
                     }
 
                     nInv.setTitle(plugin.formatText(
-                            configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+                            configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Title")));
                     nInv.setRows(2);
                 }
 
                 nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
-                        configLoad.getString("Menu.Settings." + role.name() + ".Item.Return.Displayname"), null, null,
+                        configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Item.Return.Displayname"), null, null,
                         null, null), 0, 8);
 
                 Bukkit.getServer().getScheduler().runTask(plugin, nInv::open);
@@ -1475,7 +1475,7 @@ public class Settings {
 
         ItemMeta im = is.getItemMeta();
 
-        String roleName = role.name();
+        String roleName = role.getFriendlyName();
 
         if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
             roleName = "Default";
@@ -1508,14 +1508,14 @@ public class Settings {
             return "Default";
         }
 
-        return role.name();
+        return role.getFriendlyName();
     }
 
     private boolean hasPermission(Island island, Player player, IslandRole role) {
         PermissionManager permissionManager = SkyBlock.getPlugin(SkyBlock.class).getPermissionManager();
         if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP
                 || role == IslandRole.OWNER) {
-            String roleName = role.name();
+            String roleName = role.getFriendlyName();
 
             if (role == IslandRole.OWNER) {
                 roleName = "Island";

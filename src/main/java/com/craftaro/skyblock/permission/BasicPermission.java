@@ -37,7 +37,7 @@ public abstract class BasicPermission {
 
         ItemMeta im = is.getItemMeta();
 
-        String roleName = role.name();
+        String roleName = role.getFriendlyName();
 
         if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP) {
             roleName = "Default";

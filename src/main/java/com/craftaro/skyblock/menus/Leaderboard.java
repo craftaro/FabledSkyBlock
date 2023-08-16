@@ -65,7 +65,7 @@ public class Leaderboard {
 
                         if ((XMaterial.OAK_FENCE_GATE.isSimilar(is)) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
-                                .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
+                                .equals(plugin.formatText(configLoad.getString("Menu.Leaderboard." + Viewer.Type.BROWSE.getFriendlyName()
                                         + ".Item.Exit.Displayname"))))) {
                             soundManager.playSound(player, XSound.BLOCK_CHEST_CLOSE);
 
@@ -74,25 +74,25 @@ public class Leaderboard {
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.getFriendlyName()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.LEVEL.name()))))) {
+                                                .replace("%leaderboard", Viewer.Type.LEVEL.getFriendlyName()))))) {
                             playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.LEVEL));
                         } else if ((is.getType() == Material.GOLD_INGOT) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.getFriendlyName()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.BANK.name()))))) {
+                                                .replace("%leaderboard", Viewer.Type.BANK.getFriendlyName()))))) {
                             playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.BANK));
                         } else if ((is.getType() == Material.EMERALD) && (is.hasItemMeta())
                                 && (is.getItemMeta().getDisplayName()
                                 .equals(ChatColor.translateAlternateColorCodes('&',
                                         configLoad
-                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.name()
+                                                .getString("Menu.Leaderboard." + Viewer.Type.BROWSE.getFriendlyName()
                                                         + ".Item.Leaderboard.Displayname")
-                                                .replace("%leaderboard", Viewer.Type.VOTES.name()))))) {
+                                                .replace("%leaderboard", Viewer.Type.VOTES.getFriendlyName()))))) {
                             playerDataManager.getPlayerData(player).setViewer(new Viewer(Viewer.Type.VOTES));
                         }
 
@@ -103,16 +103,16 @@ public class Leaderboard {
                 });
 
                 nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
-                        configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Item.Exit.Displayname"),
+                        configLoad.getString("Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Exit.Displayname"),
                         null, null, null, null), 0, 4);
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.DIAMOND), configLoad
                                         .getString(
-                                                "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                        .replace("%leaderboard", Viewer.Type.LEVEL.name()),
+                                                "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Displayname")
+                                        .replace("%leaderboard", Viewer.Type.LEVEL.getFriendlyName()),
                                 configLoad.getStringList(
-                                        "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.LEVEL.name())}, null,
+                                        "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Lore"),
+                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.LEVEL.getFriendlyName())}, null,
                                 null),
                         1);
 
@@ -120,11 +120,11 @@ public class Leaderboard {
                     nInv.addItem(
                             nInv.createItem(new ItemStack(Material.GOLD_INGOT), configLoad
                                             .getString(
-                                                    "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                            .replace("%leaderboard", Viewer.Type.BANK.name()),
+                                                    "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Displayname")
+                                            .replace("%leaderboard", Viewer.Type.BANK.getFriendlyName()),
                                     configLoad.getStringList(
-                                            "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                    new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.BANK.name())}, null,
+                                            "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Lore"),
+                                    new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.BANK.getFriendlyName())}, null,
                                     null),
                             2);
                 } else {
@@ -134,16 +134,16 @@ public class Leaderboard {
                 nInv.addItem(
                         nInv.createItem(new ItemStack(Material.EMERALD), configLoad
                                         .getString(
-                                                "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Displayname")
-                                        .replace("%leaderboard", Viewer.Type.VOTES.name()),
+                                                "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Displayname")
+                                        .replace("%leaderboard", Viewer.Type.VOTES.getFriendlyName()),
                                 configLoad.getStringList(
-                                        "Menu.Leaderboard." + viewer.getType().name() + ".Item.Leaderboard.Lore"),
-                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.VOTES.name())}, null,
+                                        "Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Item.Leaderboard.Lore"),
+                                new Placeholder[]{new Placeholder("%leaderboard", Viewer.Type.VOTES.getFriendlyName())}, null,
                                 null),
                         3);
 
                 nInv.setTitle(plugin.formatText(
-                        configLoad.getString("Menu.Leaderboard." + viewer.getType().name() + ".Title")));
+                        configLoad.getString("Menu.Leaderboard." + viewer.getType().getFriendlyName() + ".Title")));
                 nInv.setType(InventoryType.HOPPER);
 
             } else {
@@ -200,7 +200,7 @@ public class Leaderboard {
                         if (leaderboardPosition != -1) {
                             List<com.craftaro.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                                     .getLeaderboardManager().getLeaderboard(
-                                            com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
+                                            com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().getFriendlyName()));
 
                             if (leaderboardIslands.size() > leaderboardPosition) {
                                 com.craftaro.skyblock.leaderboard.Leaderboard leaderboard = leaderboardIslands.get(leaderboardPosition);
@@ -236,7 +236,7 @@ public class Leaderboard {
 
                 List<com.craftaro.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                         .getLeaderboardManager().getLeaderboard(
-                                com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
+                                com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().getFriendlyName()));
 
                 for (com.craftaro.skyblock.leaderboard.Leaderboard leaderboard : leaderboardIslands) {
                     Visit visit = leaderboard.getVisit();
@@ -287,7 +287,7 @@ public class Leaderboard {
                     List<String> itemLore = new ArrayList<>();
 
                     for (String itemLoreList : configLoad.getStringList(
-                            "Menu.Leaderboard.Leaderboard.Item.Island." + viewer.getType().name() + ".Lore")) {
+                            "Menu.Leaderboard.Leaderboard.Item.Island." + viewer.getType().getFriendlyName() + ".Lore")) {
                         if (itemLoreList.contains("%signature")) {
                             if (visit.getSignature() == null || visit.getSignature().isEmpty()) {
                                 itemLore.add(
@@ -339,7 +339,7 @@ public class Leaderboard {
                 }
 
                 nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard",
-                        viewer.getType().name())));
+                        viewer.getType().getFriendlyName())));
                 nInv.setRows(6);
 
             }
@@ -359,7 +359,20 @@ public class Leaderboard {
         }
 
         public enum Type {
-            BROWSE, LEVEL, BANK, VOTES
+            BROWSE("Browse"),
+            LEVEL("Level"),
+            BANK("Bank"),
+            VOTES("Votes");
+
+            private final String friendlyName;
+
+            Type(String friendlyName) {
+                this.friendlyName = friendlyName;
+            }
+
+            public String getFriendlyName() {
+                return this.friendlyName;
+            }
         }
     }
 }

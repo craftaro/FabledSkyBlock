@@ -1,5 +1,17 @@
 package com.craftaro.skyblock.island;
 
 public enum IslandEnvironment {
-    ISLAND, VISITOR, MAIN
+    ISLAND("Island"),
+    VISITOR("Visitor"),
+    MAIN("Main");
+
+    private final String friendlyName;
+
+    IslandEnvironment(String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+        return this.friendlyName;
+    }
 }

@@ -55,7 +55,7 @@ public class UnlockCommand extends SubCommand {
         }
 
         Island island = islandManager.getIsland(player);
-        IslandWorld islandWorld = IslandWorld.valueOf(type);
+        IslandWorld islandWorld = IslandWorld.valueOf(type.toUpperCase());
 
         if (island == null) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Owner.Message"));
@@ -70,7 +70,7 @@ public class UnlockCommand extends SubCommand {
         }
 
         double price = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
-                .getFileConfiguration().getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
+                .getFileConfiguration().getDouble("Island.World." + islandWorld.getFriendlyName() + ".UnlockPrice");
 
         if (!economy.hasBalance(player, price)) {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(

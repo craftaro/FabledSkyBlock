@@ -51,7 +51,7 @@ public class SetHologramCommand extends SubCommand {
             if (hologramType != null) {
                 fileManager.setLocation(
                         fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml")),
-                        "Location.Hologram.Leaderboard." + hologramType.name(), player.getLocation(), true);
+                        "Location.Hologram.Leaderboard." + hologramType.getFriendlyName(), player.getLocation(), true);
 
 
                 Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
@@ -64,7 +64,7 @@ public class SetHologramCommand extends SubCommand {
                     hologramManager.spawnHologram(hologramType1);
                 });
 
-                messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type", hologramType.name()));
+                messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.SetHologram.Set.Message").replace("%type", hologramType.getFriendlyName()));
                 soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
 
                 return;

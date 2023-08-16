@@ -100,7 +100,7 @@ public class HologramTask extends BukkitRunnable {
         }
 
         hologramLines.add(TextUtils.formatText(
-                languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Header")));
+                languageConfigLoad.getString("Hologram.Leaderboard." + type.getFriendlyName() + ".Header")));
 
         for (int i = 0; i < 10; i++) {
             Leaderboard leaderboard = leaderboardManager.getLeaderboardFromPosition(leaderboardType, i);
@@ -118,21 +118,21 @@ public class HologramTask extends BukkitRunnable {
             if (type == HologramType.LEVEL) {
                 IslandLevel level = visit.getLevel();
                 hologramLines.add(TextUtils.formatText(
-                        languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
+                        languageConfigLoad.getString("Hologram.Leaderboard." + type.getFriendlyName() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%level", NumberUtils.formatNumber(level.getLevel()))
                                 .replace("%points", NumberUtils.formatNumber(level.getPoints()))));
             } else if (type == HologramType.BANK) {
                 hologramLines.add(TextUtils.formatText(
-                        languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
+                        languageConfigLoad.getString("Hologram.Leaderboard." + type.getFriendlyName() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%balance",
                                         "" + NumberUtils.formatNumber(visit.getBankBalance()))));
             } else if (type == HologramType.VOTES) {
                 hologramLines.add(TextUtils.formatText(
-                        languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Claimed")
+                        languageConfigLoad.getString("Hologram.Leaderboard." + type.getFriendlyName() + ".Claimed")
                                 .replace("%position", "" + (i + 1))
                                 .replace("%player", islandOwnerName)
                                 .replace("%votes",
@@ -140,7 +140,7 @@ public class HologramTask extends BukkitRunnable {
             }
         }
 
-        String hologramFooter = languageConfigLoad.getString("Hologram.Leaderboard." + type.name() + ".Footer");
+        String hologramFooter = languageConfigLoad.getString("Hologram.Leaderboard." + type.getFriendlyName() + ".Footer");
 
         if (!hologramFooter.isEmpty()) {
             hologramLines.add(TextUtils.formatText(hologramFooter));

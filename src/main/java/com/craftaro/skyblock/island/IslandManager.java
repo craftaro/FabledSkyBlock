@@ -94,7 +94,7 @@ public class IslandManager {
         this.offset = plugin.getConfiguration().getInt("Island.Creation.Distance", 1200);
 
         for (IslandWorld worldList : IslandWorld.values()) {
-            ConfigurationSection configSection = configLoad.getConfigurationSection("World." + worldList.name() + ".nextAvailableLocation");
+            ConfigurationSection configSection = configLoad.getConfigurationSection("World." + worldList.getFriendlyName() + ".nextAvailableLocation");
             this.islandPositions.add(new IslandPosition(worldList, configSection.getDouble("x"), configSection.getDouble("z")));
         }
 
@@ -124,8 +124,8 @@ public class IslandManager {
         FileConfiguration configLoad = config.getFileConfiguration();
         for (IslandPosition islandPositionList : this.islandPositions) {
             if (islandPositionList.getWorld() == world) {
-                int island_number = (int) configLoad.get("World." + world.name() + ".nextAvailableLocation.island_number");
-                ConfigurationSection configSection = configLoad.createSection("World." + world.name() + ".nextAvailableLocation");
+                int island_number = (int) configLoad.get("World." + world.getFriendlyName() + ".nextAvailableLocation.island_number");
+                ConfigurationSection configSection = configLoad.createSection("World." + world.getFriendlyName() + ".nextAvailableLocation");
                 configSection.set("x", islandPositionList.getX());
                 configSection.set("z", islandPositionList.getZ());
                 configSection.set("island_number", (island_number + 1));
@@ -156,8 +156,8 @@ public class IslandManager {
 
                 FileConfiguration configLoad_world = config_world.getFileConfiguration();
                 FileConfiguration configLoad_config = this.plugin.getConfiguration();
-                int x = (int) configLoad_world.get("World." + world.name() + ".nextAvailableLocation.island_number");
-                int islandHeight = configLoad_config.getInt("Island.World." + world.name() + ".IslandSpawnHeight", 72);
+                int x = (int) configLoad_world.get("World." + world.getFriendlyName() + ".nextAvailableLocation.island_number");
+                int islandHeight = configLoad_config.getInt("Island.World." + world.getFriendlyName() + ".IslandSpawnHeight", 72);
                 while (true) {
                     double r = Math.floor((Math.sqrt(x + 1) - 1) / 2) + 1;
                     double p = (8 * r * (r - 1)) / 2;
@@ -1037,7 +1037,7 @@ public class IslandManager {
 
         FileManager.Config config = fileManager.getConfig(new File(this.plugin.getDataFolder().toString() + "/island-data", island.getOwnerUUID() + ".yml"));
 
-        if (config.getFileConfiguration().getString("Location." + world.name()) == null) {
+        if (config.getFileConfiguration().getString("Location." + world.getFriendlyName()) == null) {
             pasteStructure(island, world);
             return;
         }
@@ -1046,9 +1046,9 @@ public class IslandManager {
             org.bukkit.Location location;
 
             if (environmentList == IslandEnvironment.ISLAND) {
-                location = fileManager.getLocation(config, "Location." + world.name() + "." + environmentList.name(), true);
+                location = fileManager.getLocation(config, "Location." + world.getFriendlyName() + "." + environmentList.getFriendlyName(), true);
             } else {
-                location = fileManager.getLocation(config, "Location." + world.name() + ".Spawn." + environmentList.name(), true);
+                location = fileManager.getLocation(config, "Location." + world.getFriendlyName() + ".Spawn." + environmentList.getFriendlyName(), true);
             }
 
             island.addLocation(world, environmentList, worldManager.getLocation(location, world));
@@ -1088,10 +1088,10 @@ public class IslandManager {
         for (IslandEnvironment environmentList : IslandEnvironment.values()) {
             if (environmentList == IslandEnvironment.ISLAND) {
                 island.addLocation(world, environmentList, islandLocation);
-                fileManager.setLocation(config, "Location." + world.name() + "." + environmentList.name(), islandLocation, true);
+                fileManager.setLocation(config, "Location." + world.getFriendlyName() + "." + environmentList.getFriendlyName(), islandLocation, true);
             } else {
                 island.addLocation(world, environmentList, islandLocation.clone().add(0.5D, 0.0D, 0.5D));
-                fileManager.setLocation(config, "Location." + world.name() + ".Spawn." + environmentList.name(), islandLocation.clone().add(0.5D, 0.0D, 0.5D), true);
+                fileManager.setLocation(config, "Location." + world.getFriendlyName() + ".Spawn." + environmentList.getFriendlyName(), islandLocation.clone().add(0.5D, 0.0D, 0.5D), true);
             }
         }
 
@@ -1147,7 +1147,7 @@ public class IslandManager {
         FileManager.Config islandData = fileManager.getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
         FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
 
-        configLoadIslandData.set("Unlocked." + islandWorld.name(), true);
+        configLoadIslandData.set("Unlocked." + islandWorld.getFriendlyName(), true);
 
         pasteStructure(island, islandWorld);
 
@@ -1172,11 +1172,11 @@ public class IslandManager {
         FileManager fileManager = this.plugin.getFileManager();
         FileManager.Config islandData = fileManager.getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/island-data"), island.getOwnerUUID().toString() + ".yml"));
         FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
-        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + islandWorld.name());
+        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + islandWorld.getFriendlyName());
 
         if (!unlocked) {
             FileConfiguration configLoad = this.plugin.getConfiguration();
-            double price = configLoad.getDouble("Island.World." + islandWorld.name() + ".UnlockPrice");
+            double price = configLoad.getDouble("Island.World." + islandWorld.getFriendlyName() + ".UnlockPrice");
             if (price == -1) {
                 unlocked = true;
             }

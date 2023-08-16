@@ -62,7 +62,7 @@ public class VoidGenerator extends ChunkGenerator {
             setChunkBiome2D(biome, biomeGrid);
         }
 
-        ConfigurationSection section = worldSection.getConfigurationSection(this.islandWorld.name());
+        ConfigurationSection section = worldSection.getConfigurationSection(this.islandWorld.getFriendlyName());
 
         if (section.getBoolean("Liquid.Enable")) {
             if (section.getBoolean("Liquid.Lava")) {

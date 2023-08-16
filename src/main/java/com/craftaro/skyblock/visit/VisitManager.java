@@ -152,7 +152,7 @@ public class VisitManager {
 
             LocationUtil.teleportPlayerToSpawn(targetPlayer);
 
-            messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit." + removal.name() + ".Message"));
+            messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit." + removal.getFriendlyName() + ".Message"));
             soundManager.playSound(targetPlayer, XSound.ENTITY_ENDERMAN_TELEPORT);
         }
     }
@@ -249,6 +249,18 @@ public class VisitManager {
     }
 
     public enum Removal {
-        UNLOADED, KICKED, DELETED
+        UNLOADED("Unloaded"),
+        KICKED("Kicked"),
+        DELETED("Deleted");
+
+        private final String friendlyName;
+
+        Removal(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 }

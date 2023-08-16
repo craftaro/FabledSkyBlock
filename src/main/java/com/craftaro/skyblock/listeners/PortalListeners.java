@@ -139,7 +139,7 @@ public class PortalListeners implements Listener {
             switch (toWorld) {
                 case END:
                 case NETHER:
-                    if (configLoad.getBoolean("Island.World." + toWorld.name() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
+                    if (configLoad.getBoolean("Island.World." + toWorld.getFriendlyName() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
                         teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                     }
                     break;

@@ -39,6 +39,23 @@ public class Upgrade {
     }
 
     public enum Type {
-        CROP, SPAWNER, FLY, DROPS, SIZE, SPEED, JUMP, MEMBERS
+        CROP("Crop"),
+        SPAWNER("Spawner"),
+        FLY("Fly"),
+        DROPS("Drops"),
+        SIZE("Size"),
+        SPEED("Speed"),
+        JUMP("Jump"),
+        MEMBERS("Members");
+
+        private final String friendlyName;
+
+        Type(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 }

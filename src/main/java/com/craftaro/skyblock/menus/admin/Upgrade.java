@@ -144,14 +144,10 @@ public class Upgrade {
                                 boolean enabled = upgrade.isEnabled();
                                 Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin,
                                         () -> {
-                                            Config config = fileManager.getConfig(new File(
-                                                    plugin.getDataFolder(), "upgrades.yml"));
-                                            FileConfiguration configLoad1 = config
-                                                    .getFileConfiguration();
+                                            Config config = fileManager.getConfig(new File(plugin.getDataFolder(), "upgrades.yml"));
+                                            FileConfiguration configLoad1 = config.getFileConfiguration();
 
-                                            configLoad1.set(
-                                                    "Upgrades." + upgradeType.name() + ".Enable",
-                                                    enabled);
+                                            configLoad1.set("Upgrades." + upgradeType.getFriendlyName() + ".Enable", enabled);
 
                                             try {
                                                 configLoad1.save(config.getFile());
@@ -207,7 +203,7 @@ public class Upgrade {
                                                             .getFileConfiguration();
 
                                                     configLoad1.set(
-                                                            "Upgrades." + upgradeType.name() + ".Cost",
+                                                            "Upgrades." + upgradeType.getFriendlyName() + ".Cost",
                                                             upgradeCost);
 
                                                     try {

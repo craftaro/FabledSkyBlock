@@ -65,10 +65,10 @@ public class MoveListeners implements Listener {
         IslandWorld world = worldManager.getIslandWorld(player.getWorld());
 
         if (world == IslandWorld.NETHER || world == IslandWorld.END) {
-            if (!this.plugin.getConfiguration().getBoolean("Island.World." + world.name() + ".Enable")) {
+            if (!this.plugin.getConfiguration().getBoolean("Island.World." + world.getFriendlyName() + ".Enable")) {
                 FileConfiguration configLoad = this.plugin.getLanguage();
 
-                messageManager.sendMessage(player, configLoad.getString("Island.World.Message").replace(configLoad.getString("Island.World.Word." + world.name()), world.name()));
+                messageManager.sendMessage(player, configLoad.getString("Island.World.Message").replace(configLoad.getString("Island.World.Word." + world.getFriendlyName()), world.getFriendlyName()));
 
                 if (playerDataManager.hasPlayerData(player)) {
                     PlayerData playerData = playerDataManager.getPlayerData(player);
@@ -107,8 +107,8 @@ public class MoveListeners implements Listener {
                             keepItemsOnDeath = configLoad.getBoolean("Island.KeepItemsOnDeath.Enable");
                         }
 
-                        if (configLoad.getBoolean("Island.World." + world.name() + ".Liquid.Enable")) {
-                            if (to.getY() <= configLoad.getInt("Island.World." + world.name() + ".Liquid.Height")) {
+                        if (configLoad.getBoolean("Island.World." + world.getFriendlyName() + ".Liquid.Enable")) {
+                            if (to.getY() <= configLoad.getInt("Island.World." + world.getFriendlyName() + ".Liquid.Height")) {
                                 if (keepItemsOnDeath && configLoad.getBoolean("Island.Liquid.Teleport.Enable")) {
                                     player.setFallDistance(0.0F);
                                     teleportPlayerToIslandSpawn(player, soundManager, island);

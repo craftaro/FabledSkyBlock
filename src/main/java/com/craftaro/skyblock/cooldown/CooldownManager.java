@@ -72,16 +72,16 @@ public class CooldownManager {
                     .getConfig(new File(new File(this.plugin.getDataFolder(), "player-data"), player.getUniqueId() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (configLoad.getString("Island." + cooldownType.name() + ".Cooldown") != null) {
-                return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt("Island." + cooldownType.name() + ".Cooldown")));
+            if (configLoad.getString("Island." + cooldownType.getFriendlyName() + ".Cooldown") != null) {
+                return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt("Island." + cooldownType.getFriendlyName() + ".Cooldown")));
             }
         } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
             FileManager.Config config = this.plugin.getFileManager()
                     .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (configLoad.getString(cooldownType.name() + ".Cooldown") != null) {
-                return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt(cooldownType.name() + ".Cooldown")));
+            if (configLoad.getString(cooldownType.getFriendlyName() + ".Cooldown") != null) {
+                return new CooldownPlayer(player.getUniqueId(), new Cooldown(configLoad.getInt(cooldownType.getFriendlyName() + ".Cooldown")));
             }
         }
 
@@ -101,14 +101,14 @@ public class CooldownManager {
 
         if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION || cooldownType == CooldownType.PREVIEW) {
             time = this.plugin.getConfiguration()
-                    .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
+                    .getInt("Island." + cooldownType.getFriendlyName() + ".Cooldown.Time");
 
             FileManager.Config config = fileManager
                     .getConfig(new File(new File(this.plugin.getDataFolder(), "player-data"), player.getUniqueId() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            configLoad.set("Island." + cooldownType.name() + ".Cooldown", time);
+            configLoad.set("Island." + cooldownType.getFriendlyName() + ".Cooldown", time);
 
             try {
                 configLoad.save(configFile);
@@ -117,14 +117,14 @@ public class CooldownManager {
             }
         } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
             time = this.plugin.getConfiguration()
-                    .getInt("Island." + cooldownType.name() + ".Cooldown.Time");
+                    .getInt("Island." + cooldownType.getFriendlyName() + ".Cooldown.Time");
 
             FileManager.Config config = this.plugin.getFileManager()
                     .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"));
             File configFile = config.getFile();
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            configLoad.set(cooldownType.name() + ".Cooldown", time);
+            configLoad.set(cooldownType.getFriendlyName() + ".Cooldown", time);
 
             try {
                 configLoad.save(configFile);
@@ -143,11 +143,11 @@ public class CooldownManager {
                     this.plugin.getFileManager()
                             .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/player-data"),
                                     player.getUniqueId().toString() + ".yml"))
-                            .getFileConfiguration().set("Island." + cooldownType.name() + ".Cooldown", null);
+                            .getFileConfiguration().set("Island." + cooldownType.getFriendlyName() + ".Cooldown", null);
                 } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
                     this.plugin.getFileManager().getConfig(
-                                    new File(new File(this.plugin.getDataFolder().toString() + "/island-data"), player.getUniqueId().toString() + ".yml"))
-                            .getFileConfiguration().set(cooldownType.name() + ".Cooldown", null);
+                                    new File(new File(this.plugin.getDataFolder() + "/island-data"), player.getUniqueId() + ".yml"))
+                            .getFileConfiguration().set(cooldownType.getFriendlyName() + ".Cooldown", null);
                 }
                 it.remove();
                 break;
@@ -198,13 +198,12 @@ public class CooldownManager {
             if (cooldownPlayerList.getUUID().equals(player.getUniqueId())) {
                 if (cooldownType == CooldownType.BIOME || cooldownType == CooldownType.CREATION || cooldownType == CooldownType.DELETION) {
                     this.plugin.getFileManager()
-                            .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/player-data"),
-                                    player.getUniqueId().toString() + ".yml"))
+                            .getConfig(new File(new File(this.plugin.getDataFolder() + "/player-data"), player.getUniqueId() + ".yml"))
                             .getFileConfiguration().set("Island." + cooldownType + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
                 } else if (cooldownType == CooldownType.LEVELLING || cooldownType == CooldownType.OWNERSHIP) {
                     this.plugin.getFileManager()
                             .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), player.getUniqueId() + ".yml"))
-                            .getFileConfiguration().set(cooldownType.name() + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
+                            .getFileConfiguration().set(cooldownType.getFriendlyName() + ".Cooldown", cooldownPlayerList.getCooldown().getTime());
                 }
                 break;
             }

@@ -328,7 +328,7 @@ public class Members {
             nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                     configLoad.getString("Menu.Members.Item.Type.Displayname"),
                     configLoad.getStringList("Menu.Members.Item.Type.Lore"),
-                    new Placeholder[]{new Placeholder("%type", type.name())}, null, null), 3);
+                    new Placeholder[]{new Placeholder("%type", type.getFriendlyName())}, null, null), 3);
             nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                     configLoad.getString("Menu.Members.Item.Statistics.Displayname"),
                     configLoad.getStringList("Menu.Members.Item.Statistics.Lore"),
@@ -343,7 +343,7 @@ public class Members {
             nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                     configLoad.getString("Menu.Members.Item.Sort.Displayname"),
                     configLoad.getStringList("Menu.Members.Item.Sort.Lore"),
-                    new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.name()))},
+                    new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.getFriendlyName()))},
                     null, null), 5);
             nInv.addItem(
                     nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -585,10 +585,36 @@ public class Members {
     }
 
     public enum Type {
-        DEFAULT, MEMBERS, OPERATORS, OWNER
+        DEFAULT("Default"),
+        MEMBERS("Members"),
+        OPERATORS("Operators"),
+        OWNER("Owner");
+
+        private final String friendlyName;
+
+        Type(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 
     public enum Sort {
-        DEFAULT, PLAYTIME, MEMBER_SINCE, LAST_ONLINE
+        DEFAULT("Default"),
+        PLAYTIME("Playtime"),
+        MEMBER_SINCE("MemberSince"),
+        LAST_ONLINE("LastOnline");
+
+        private final String friendlyName;
+
+        Sort(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 }

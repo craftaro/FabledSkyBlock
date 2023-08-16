@@ -5,11 +5,21 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public enum IslandRole {
-    COOP,
-    VISITOR,
-    MEMBER,
-    OPERATOR,
-    OWNER;
+    COOP("Coop"),
+    VISITOR("Visitor"),
+    MEMBER("Member"),
+    OPERATOR("Operator"),
+    OWNER("Owner");
+
+    private final String friendlyName;
+
+    IslandRole(String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+        return this.friendlyName;
+    }
 
     private static final Set<IslandRole> ROLES = Collections.unmodifiableSet(EnumSet.allOf(IslandRole.class));
 

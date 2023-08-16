@@ -147,9 +147,9 @@ public class FileManager {
                             FileConfiguration mainConfigLoad = mainConfig.getFileConfiguration();
 
                             for (IslandWorld worldList : IslandWorld.values()) {
-                                if (mainConfigLoad.getString("World." + worldList.name()) != null) {
-                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.x", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.x"));
-                                    configLoad.set("World." + worldList.name() + ".nextAvailableLocation.z", mainConfigLoad.getDouble("World." + worldList.name() + ".nextAvailableLocation.z"));
+                                if (mainConfigLoad.getString("World." + worldList.getFriendlyName()) != null) {
+                                    configLoad.set("World." + worldList.getFriendlyName() + ".nextAvailableLocation.x", mainConfigLoad.getDouble("World." + worldList.getFriendlyName() + ".nextAvailableLocation.x"));
+                                    configLoad.set("World." + worldList.getFriendlyName() + ".nextAvailableLocation.z", mainConfigLoad.getDouble("World." + worldList.getFriendlyName() + ".nextAvailableLocation.z"));
                                 }
                             }
 

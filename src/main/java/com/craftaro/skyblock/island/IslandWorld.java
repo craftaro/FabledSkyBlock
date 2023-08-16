@@ -8,7 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum IslandWorld {
-    NORMAL, NETHER, END;
+    NORMAL("Normal"), NETHER("Nether"), END("End");
+
+    private final String friendlyName;
+
+    IslandWorld(String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+        return this.friendlyName;
+    }
 
     public static List<IslandWorld> getIslandWorlds() {
         List<IslandWorld> islandWorlds = new ArrayList<>(3);

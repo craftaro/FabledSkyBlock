@@ -489,7 +489,7 @@ public class Upgrade {
 
             ItemStack potion = new ItemStack(Material.POTION);
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SPEED.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SPEED.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.SPEED);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
@@ -541,7 +541,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.JUMP.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.JUMP.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.JUMP);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
@@ -594,7 +594,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.CROP.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.CROP.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.CROP);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
@@ -632,7 +632,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.FLY.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.FLY.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.FLY);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
@@ -670,7 +670,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.DROPS.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.DROPS.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.DROPS);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
@@ -708,7 +708,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.MEMBERS.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.MEMBERS.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.MEMBERS);
 
                 if (upgrades != null && !upgrades.isEmpty()) {
@@ -770,7 +770,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SIZE.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SIZE.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.SIZE);
 
                 if (upgrades != null && !upgrades.isEmpty()) {
@@ -832,7 +832,7 @@ public class Upgrade {
                 }
             }
 
-            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SPAWNER.name().toLowerCase())) {
+            if (player.hasPermission("fabledskyblock.upgrade." + com.craftaro.skyblock.upgrade.Upgrade.Type.SPAWNER.getFriendlyName().toLowerCase())) {
                 upgrades = upgradeManager.getUpgrades(com.craftaro.skyblock.upgrade.Upgrade.Type.SPAWNER);
 
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {

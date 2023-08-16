@@ -32,8 +32,8 @@ public class UpgradeManager {
             if (typeList != Upgrade.Type.SIZE && typeList != Upgrade.Type.MEMBERS) {
                 List<Upgrade> upgrades = new ArrayList<>();
 
-                Upgrade upgrade = new Upgrade(configLoad.getDouble("Upgrades." + typeList.name() + ".Cost"));
-                upgrade.setEnabled(configLoad.getBoolean("Upgrades." + typeList.name() + ".Enable"));
+                Upgrade upgrade = new Upgrade(configLoad.getDouble("Upgrades." + typeList.getFriendlyName() + ".Cost"));
+                upgrade.setEnabled(configLoad.getBoolean("Upgrades." + typeList.getFriendlyName() + ".Enable"));
                 upgrades.add(upgrade);
 
                 this.upgradeStorage.put(typeList, upgrades);

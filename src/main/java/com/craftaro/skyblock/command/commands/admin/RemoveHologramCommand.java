@@ -63,11 +63,11 @@ public class RemoveHologramCommand extends SubCommand {
                 Config locationsConfig = fileManager.getConfig(new File(this.plugin.getDataFolder(), "locations.yml"));
                 FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
-                if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.name()) == null) {
+                if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + hologramType.getFriendlyName()) == null) {
                     messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Set.Message"));
                     soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
                 } else {
-                    locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.name(), null);
+                    locationsConfigLoad.set("Location.Hologram.Leaderboard." + hologramType.getFriendlyName(), null);
 
                     try {
                         locationsConfigLoad.save(locationsConfig.getFile());
@@ -84,7 +84,7 @@ public class RemoveHologramCommand extends SubCommand {
                         }
                     });
 
-                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.name()));
+                    messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.RemoveHologram.Removed.Message").replace("%type", hologramType.getFriendlyName()));
                     soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
                 }
 

@@ -64,7 +64,7 @@ public class RemoveUpgradeCommand extends SubCommand {
 
             Upgrade.Type upgrade = null;
             for (Upgrade.Type type : Upgrade.Type.values()) {
-                if (type.name().equalsIgnoreCase(args[1])) {
+                if (type.getFriendlyName().equalsIgnoreCase(args[1])) {
                     upgrade = type;
                     break;
                 }
@@ -105,7 +105,7 @@ public class RemoveUpgradeCommand extends SubCommand {
 
                     FileConfiguration islandDataConfigLoad = YamlConfiguration.loadConfiguration(islandDataFile);
 
-                    if (islandDataConfigLoad.getString("Upgrade." + upgrade.name()) == null) {
+                    if (islandDataConfigLoad.getString("Upgrade." + upgrade.getFriendlyName()) == null) {
                         messageManager.sendMessage(sender,
                                 configLoad.getString("Command.Island.Admin.RemoveUpgrade.Upgrade.Missing.Message"));
                         soundManager.playSound(sender, XSound.BLOCK_ANVIL_LAND);
@@ -113,7 +113,7 @@ public class RemoveUpgradeCommand extends SubCommand {
                         return;
                     }
 
-                    islandDataConfigLoad.set("Upgrade." + upgrade.name(), null);
+                    islandDataConfigLoad.set("Upgrade." + upgrade.getFriendlyName(), null);
 
                     try {
                         islandDataConfigLoad.save(islandDataFile);
@@ -124,7 +124,7 @@ public class RemoveUpgradeCommand extends SubCommand {
 
                 messageManager.sendMessage(sender,
                         configLoad.getString("Command.Island.Admin.RemoveUpgrade.Removed.Message")
-                                .replace("%player", targetPlayerName).replace("%upgrade", upgrade.name()));
+                                .replace("%player", targetPlayerName).replace("%upgrade", upgrade.getFriendlyName()));
                 soundManager.playSound(sender, XSound.BLOCK_NOTE_BLOCK_PLING);
             }
         } else {

@@ -57,7 +57,7 @@ public class SetBiomeCommand extends SubCommand {
             if (args.length > 2) {
                 String worldName = args[2].toUpperCase().trim();
                 for (IslandWorld islandWorld : IslandWorld.values()) {
-                    if (islandWorld.name().equalsIgnoreCase(worldName)) {
+                    if (islandWorld.getFriendlyName().equalsIgnoreCase(worldName)) {
                         world = islandWorld;
                     }
                 }

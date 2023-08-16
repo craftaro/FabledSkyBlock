@@ -48,7 +48,7 @@ public class GuiPermissions extends Gui {
         this.languageLoad = plugin.getFileManager()
                 .getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         this.configLoad = this.plugin.getConfiguration();
-        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Settings." + role.name() + ".Title")));
+        setTitle(TextUtils.formatText(this.languageLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Title")));
         setDefaultItem(null);
         paint();
     }
@@ -137,7 +137,7 @@ public class GuiPermissions extends Gui {
 
         if (this.configLoad.getBoolean("Island.Settings.Permission")) {
             permissions.removeIf(permission -> !this.player.hasPermission("fabledskyblock.settings." +
-                    this.role.name().toLowerCase() + "." + permission.getName().toLowerCase()));
+                    this.role.getFriendlyName().toLowerCase() + "." + permission.getName().toLowerCase()));
         }
 
         double itemCount = permissions.size();
@@ -195,7 +195,7 @@ public class GuiPermissions extends Gui {
         PermissionManager permissionManager = SkyBlock.getInstance().getPermissionManager();
         if (role == IslandRole.VISITOR || role == IslandRole.MEMBER || role == IslandRole.COOP
                 || role == IslandRole.OWNER) {
-            String roleName = role.name();
+            String roleName = role.getFriendlyName();
 
             if (role == IslandRole.OWNER) {
                 roleName = "Island";

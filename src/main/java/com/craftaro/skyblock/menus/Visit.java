@@ -331,7 +331,7 @@ public class Visit {
         nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                 configLoad.getString("Menu.Visit.Item.Type.Displayname"),
                 configLoad.getStringList("Menu.Visit.Item.Type.Lore"),
-                new Placeholder[]{new Placeholder("%type", StringUtil.capitalizeUppercaseLetters(type.name()))},
+                new Placeholder[]{new Placeholder("%type", StringUtil.capitalizeUppercaseLetters(type.getFriendlyName()))},
                 null, null), 3);
         nInv.addItem(nInv.createItem(new ItemStack(Material.PAINTING),
                 configLoad.getString("Menu.Visit.Item.Statistics.Displayname"),
@@ -345,7 +345,7 @@ public class Visit {
         nInv.addItem(nInv.createItem(new ItemStack(Material.HOPPER),
                 configLoad.getString("Menu.Visit.Item.Sort.Displayname"),
                 configLoad.getStringList("Menu.Visit.Item.Sort.Lore"),
-                new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.name()))},
+                new Placeholder[]{new Placeholder("%sort", StringUtil.capitalizeUppercaseLetters(sort.getFriendlyName()))},
                 null, null), 5);
         nInv.addItem(
                 nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(),
@@ -527,10 +527,37 @@ public class Visit {
     }
 
     public enum Type {
-        DEFAULT, SOLO, TEAM
+        DEFAULT("Default"),
+        SOLO("Solo"),
+        TEAM("Team");
+
+        private final String friendlyName;
+
+        Type(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 
     public enum Sort {
-        DEFAULT, PLAYERS, LEVEL, MEMBERS, VISITS, VOTES
+        DEFAULT("Default"),
+        PLAYERS("Players"),
+        LEVEL("Level"),
+        MEMBERS("Members"),
+        VISITS("Visits"),
+        VOTES("Votes");
+
+        private final String friendlyName;
+
+        Sort(String friendlyName) {
+            this.friendlyName = friendlyName;
+        }
+
+        public String getFriendlyName() {
+            return this.friendlyName;
+        }
     }
 }

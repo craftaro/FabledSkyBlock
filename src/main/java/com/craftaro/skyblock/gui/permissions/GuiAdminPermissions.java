@@ -37,7 +37,7 @@ public class GuiAdminPermissions extends Gui {
         this.configLoad = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "language.yml")).getFileConfiguration();
         this.settingsConfig = plugin.getFileManager().getConfig(new File(plugin.getDataFolder(), "settings.yml"));
         this.settingsConfigLoad = this.settingsConfig.getFileConfiguration();
-        setTitle(TextUtils.formatText(this.configLoad.getString("Menu.Settings." + role.name() + ".Title")));
+        setTitle(TextUtils.formatText(this.configLoad.getString("Menu.Settings." + role.getFriendlyName() + ".Title")));
         setDefaultItem(null);
         paint();
     }
@@ -95,7 +95,7 @@ public class GuiAdminPermissions extends Gui {
                 continue;
             }
 
-            final String path = "Settings." + this.role.name() + "." + permission.getName();
+            final String path = "Settings." + this.role.getFriendlyName() + "." + permission.getName();
             boolean setting = this.settingsConfigLoad.getBoolean(path);
             setButton(i, permission.getItem(setting, this.role), (event) -> {
                 this.settingsConfigLoad.set(path, !setting);

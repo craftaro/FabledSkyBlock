@@ -203,13 +203,13 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.getFriendlyName() + "." + permission.getName()) == null) {
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
                     }
                 }
 
@@ -261,7 +261,7 @@ public class Island {
                 for (BasicPermission permission : allPermissions) {
                     permissions.add(
                             new IslandPermission(permission, this.plugin.getSettings()
-                                    .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
+                                    .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
                 }
 
                 this.islandPermissions.put(roleList, permissions);
@@ -419,15 +419,15 @@ public class Island {
                 if (environment == IslandEnvironment.ISLAND) {
                     fileManager.setLocation(
                             fileManager
-                                    .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/island-data"),
+                                    .getConfig(new File(new File(this.plugin.getDataFolder() + "/island-data"),
                                             getOwnerUUID().toString() + ".yml")),
-                            "Location." + world.name() + "." + environment.name(), location, true);
+                            "Location." + world.getFriendlyName() + "." + environment.getFriendlyName(), location, true);
                 } else {
                     fileManager.setLocation(
                             fileManager
-                                    .getConfig(new File(new File(this.plugin.getDataFolder().toString() + "/island-data"),
+                                    .getConfig(new File(new File(this.plugin.getDataFolder() + "/island-data"),
                                             getOwnerUUID().toString() + ".yml")),
-                            "Location." + world.name() + ".Spawn." + environment.name(), location, true);
+                            "Location." + world.getFriendlyName() + ".Spawn." + environment.getFriendlyName(), location, true);
                 }
 
                 islandLocationList.setLocation(location);
@@ -606,8 +606,8 @@ public class Island {
                     new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
 
-            if (configLoad.getString(role.name() + "s") != null) {
-                for (String playerList : configLoad.getStringList(role.name() + "s")) {
+            if (configLoad.getString(role.getFriendlyName() + "s") != null) {
+                for (String playerList : configLoad.getStringList(role.getFriendlyName() + "s")) {
                     islandRoles.add(FastUUID.parseUUID(playerList));
                 }
             }
@@ -654,14 +654,14 @@ public class Island {
 
                 List<String> islandMembers;
 
-                if (configLoad.getString(role.name() + "s") == null) {
+                if (configLoad.getString(role.getFriendlyName() + "s") == null) {
                     islandMembers = new ArrayList<>();
                 } else {
-                    islandMembers = configLoad.getStringList(role.name() + "s");
+                    islandMembers = configLoad.getStringList(role.getFriendlyName() + "s");
                 }
 
                 islandMembers.add(FastUUID.toString(uuid));
-                configLoad.set(role.name() + "s", islandMembers);
+                configLoad.set(role.getFriendlyName() + "s", islandMembers);
 
                 try {
                     configLoad.save(configFile);
@@ -684,10 +684,10 @@ public class Island {
                 Config config = this.plugin.getFileManager().getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), getOwnerUUID().toString() + ".yml"));
                 File configFile = config.getFile();
                 FileConfiguration configLoad = config.getFileConfiguration();
-                List<String> islandMembers = configLoad.getStringList(role.name() + "s");
+                List<String> islandMembers = configLoad.getStringList(role.getFriendlyName() + "s");
 
                 islandMembers.remove(FastUUID.toString(uuid));
-                configLoad.set(role.name() + "s", islandMembers);
+                configLoad.set(role.getFriendlyName() + "s", islandMembers);
 
                 try {
                     configLoad.save(configFile);
@@ -713,7 +713,7 @@ public class Island {
     public void setUpgrade(Player player, Upgrade.Type type, boolean status) {
         this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().set("Upgrade." + type.name(), status);
+                .getFileConfiguration().set("Upgrade." + type.getFriendlyName(), status);
 
         Bukkit.getServer().getPluginManager()
                 .callEvent(new IslandUpgradeEvent(getAPIWrapper(), player, APIUtil.fromImplementation(type)));
@@ -722,19 +722,19 @@ public class Island {
     public void removeUpgrade(Upgrade.Type type) {
         this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().set("Upgrade." + type.name(), null);
+                .getFileConfiguration().set("Upgrade." + type.getFriendlyName(), null);
     }
 
     public boolean hasUpgrade(Upgrade.Type type) {
         return this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getString("Upgrade." + type.name()) != null;
+                .getFileConfiguration().getString("Upgrade." + type.getFriendlyName()) != null;
     }
 
     public boolean isUpgrade(Upgrade.Type type) {
         return this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getBoolean("Upgrade." + type.name());
+                .getFileConfiguration().getBoolean("Upgrade." + type.getFriendlyName());
     }
 
     public boolean hasPermission(IslandRole role, BasicPermission permission) {
@@ -821,8 +821,8 @@ public class Island {
                 new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getString("Visitor." + message.name() + ".Message") != null) {
-            islandMessage = configLoad.getStringList("Visitor." + message.name() + ".Message");
+        if (configLoad.getString("Visitor." + message.getFriendlyName() + ".Message") != null) {
+            islandMessage = configLoad.getStringList("Visitor." + message.getFriendlyName() + ".Message");
         }
 
         return islandMessage;
@@ -833,8 +833,8 @@ public class Island {
                 new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"));
         FileConfiguration configLoad = config.getFileConfiguration();
 
-        if (configLoad.getString("Visitor." + message.name() + ".Author") != null) {
-            return configLoad.getString("Visitor." + message.name() + ".Author");
+        if (configLoad.getString("Visitor." + message.getFriendlyName() + ".Author") != null) {
+            return configLoad.getString("Visitor." + message.getFriendlyName() + ".Author");
         }
         return "";
     }
@@ -848,8 +848,8 @@ public class Island {
             Config config = this.plugin.getFileManager().getConfig(
                     new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"));
             FileConfiguration configLoad = config.getFileConfiguration();
-            configLoad.set("Visitor." + message.name() + ".Message", islandMessageChangeEvent.getLines());
-            configLoad.set("Visitor." + message.name() + ".Author", islandMessageChangeEvent.getAuthor());
+            configLoad.set("Visitor." + message.getFriendlyName() + ".Message", islandMessageChangeEvent.getLines());
+            configLoad.set("Visitor." + message.getFriendlyName() + ".Author", islandMessageChangeEvent.getAuthor());
 
             if (message == IslandMessage.SIGNATURE) {
                 getVisit().setSignature(lines);
@@ -962,19 +962,19 @@ public class Island {
         Config islandData = fileManager
                 .getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"));
         FileConfiguration configLoadIslandData = islandData.getFileConfiguration();
-        double price = configLoad.getDouble("Island.World." + type.name() + ".UnlockPrice");
+        double price = configLoad.getDouble("Island.World." + type.getFriendlyName() + ".UnlockPrice");
 
-        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type.name());
+        boolean unlocked = configLoadIslandData.getBoolean("Unlocked." + type.getFriendlyName());
         if (price == -1) {
-            configLoadIslandData.set("Unlocked." + type.name(), true);
+            configLoadIslandData.set("Unlocked." + type.getFriendlyName(), true);
             unlocked = true;
         }
 
         if (!unlocked && player != null) {
             messageManager.sendMessage(player,
                     this.plugin.getLanguage()
-                            .getString("Island.Unlock." + type.name() + ".Message").replace(
-                                    "%cost%", NumberUtils.formatNumber(price)));
+                            .getString("Island.Unlock." + type.getFriendlyName() + ".Message")
+                            .replace("%cost%", NumberUtils.formatNumber(price)));
 
             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             if (type == IslandWorld.END) {

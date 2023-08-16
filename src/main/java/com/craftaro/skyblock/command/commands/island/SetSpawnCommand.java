@@ -92,7 +92,7 @@ public class SetSpawnCommand extends SubCommand {
                 || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
             if ((island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                     && (this.plugin.getPermissionManager().hasPermission(island,
-                    environment.name() + "Spawn", IslandRole.OPERATOR)))
+                    environment.getFriendlyName() + "Spawn", IslandRole.OPERATOR)))
                     || island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
                 if (islandManager.isPlayerAtIsland(island, player)) {
                     IslandWorld world = this.plugin.getWorldManager().getIslandWorld(player.getWorld());
@@ -153,23 +153,23 @@ public class SetSpawnCommand extends SubCommand {
                     island.setLocation(world, environment, newSpawnLocation);
 
                     messageManager.sendMessage(player,
-                            configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn", environment.name().toLowerCase()));
+                            configLoad.getString("Command.Island.SetSpawn.Set.Message").replace("%spawn", environment.getFriendlyName().toLowerCase()));
                     soundManager.playSound(player, XSound.BLOCK_NOTE_BLOCK_PLING);
 
                     return;
                 }
 
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn", environment.name().toLowerCase()));
+                        configLoad.getString("Command.Island.SetSpawn.Island.Message").replace("%spawn", environment.getFriendlyName().toLowerCase()));
                 soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else {
                 messageManager.sendMessage(player,
-                        configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn", environment.name().toLowerCase()));
+                        configLoad.getString("Command.Island.SetSpawn.Permission.Message").replace("%spawn", environment.getFriendlyName().toLowerCase()));
                 soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             }
         } else {
             messageManager.sendMessage(player, configLoad.getString("Command.Island.SetSpawn.Role.Message")
-                    .replace("%spawn", environment.name().toLowerCase()));
+                    .replace("%spawn", environment.getFriendlyName().toLowerCase()));
             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
         }
     }
