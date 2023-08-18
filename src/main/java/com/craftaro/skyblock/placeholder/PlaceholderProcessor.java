@@ -42,8 +42,7 @@ public class PlaceholderProcessor {
         LeaderboardManager leaderboardManager = plugin.getLeaderboardManager();
 
         FileManager fileManager = plugin.getFileManager();
-        FileConfiguration placeholdersLoad = fileManager.getConfig(
-                new File(plugin.getDataFolder(), "placeholders.yml")).getFileConfiguration();
+        FileConfiguration placeholdersLoad = fileManager.getConfig(new File(plugin.getDataFolder(), "placeholders.yml")).getFileConfiguration();
 
         if (placeholdersLoad == null) {
             return "Error";

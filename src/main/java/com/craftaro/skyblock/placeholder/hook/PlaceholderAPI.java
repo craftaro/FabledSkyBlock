@@ -31,7 +31,7 @@ public class PlaceholderAPI extends PlaceholderExpansion {
         return true;
     }
 
-    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
-        return this.placeholderProcessor.processPlaceholder(player, "fabledskyblock_" + identifier);
+    public String onPlaceholderRequest(Player player, @NotNull String params) {
+        return this.placeholderProcessor.processPlaceholder(player, "fabledskyblock_" + params);
     }
 }
