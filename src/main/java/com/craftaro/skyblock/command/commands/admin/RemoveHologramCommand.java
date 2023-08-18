@@ -76,7 +76,7 @@ public class RemoveHologramCommand extends SubCommand {
                     }
 
                     Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
-                        HologramType hologramType1 = HologramType.valueOf(WordUtils.capitalize(args[0].toLowerCase()));
+                        HologramType hologramType1 = HologramType.valueOf(args[0].toUpperCase());
                         Hologram hologram = hologramManager.getHologram(hologramType1);
 
                         if (hologram != null) {
