@@ -200,7 +200,7 @@ public class Leaderboard {
                         if (leaderboardPosition != -1) {
                             List<com.craftaro.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                                     .getLeaderboardManager().getLeaderboard(
-                                            com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().getFriendlyName()));
+                                            com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 
                             if (leaderboardIslands.size() > leaderboardPosition) {
                                 com.craftaro.skyblock.leaderboard.Leaderboard leaderboard = leaderboardIslands.get(leaderboardPosition);
@@ -236,7 +236,7 @@ public class Leaderboard {
 
                 List<com.craftaro.skyblock.leaderboard.Leaderboard> leaderboardIslands = plugin
                         .getLeaderboardManager().getLeaderboard(
-                                com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().getFriendlyName()));
+                                com.craftaro.skyblock.leaderboard.Leaderboard.Type.valueOf(viewer.getType().name()));
 
                 for (com.craftaro.skyblock.leaderboard.Leaderboard leaderboard : leaderboardIslands) {
                     Visit visit = leaderboard.getVisit();
