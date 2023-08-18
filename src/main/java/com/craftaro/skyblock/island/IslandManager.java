@@ -1311,7 +1311,7 @@ public class IslandManager {
             if (!island.isCoopPlayer(visitor) && !island.isPlayerWhitelisted(visitor)) {
                 Player targetPlayer = Bukkit.getServer().getPlayer(visitor);
                 LocationUtil.teleportPlayerToSpawn(targetPlayer);
-                messageManager.sendMessage(targetPlayer, configLoad.getString("Island.Visit.Whitelisted.Message").replace("%player", islandOwnerPlayerName)); // TODO
+                messageManager.sendMessage(targetPlayer, configLoad.getString("Command.Island.Visit.Whitelisted.Message").replace("%player", islandOwnerPlayerName)); // TODO
             }
         }
     }
