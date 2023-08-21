@@ -574,6 +574,11 @@ public class Challenge {
             @Override
             public boolean has(Player p, Object obj) {
                 Economy economy = SkyBlock.getPlugin(SkyBlock.class).getEconomyManager().getEconomy();
+                if (economy == null) {
+                    SkyBlock.getInstance().getLogger().warning("No compatible economy plugin found – Please check your configuration");
+                    return false;
+                }
+
                 if (obj instanceof Number) {
                     return economy.getBalance(p) >= ((Number) obj).doubleValue();
                 }

@@ -72,7 +72,11 @@ public class UnlockCommand extends SubCommand {
         double price = fileManager.getConfig(new File(this.plugin.getDataFolder(), "config.yml"))
                 .getFileConfiguration().getDouble("Island.World." + islandWorld.getFriendlyName() + ".UnlockPrice");
 
-        if (!economy.hasBalance(player, price)) {
+        if (economy == null || !economy.hasBalance(player, price)) {
+            if (economy == null) {
+                this.plugin.getLogger().warning("No compatible economy plugin found – Please check your configuration");
+            }
+
             messageManager.sendMessage(player, configLoad.getString("Command.Island.Unlock.Money.Message").replace(
                     "%cost%", NumberUtils.formatNumber(price)));
             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);

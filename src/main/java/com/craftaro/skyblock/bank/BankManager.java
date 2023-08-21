@@ -77,7 +77,6 @@ public class BankManager {
     }
 
     public List<String> getBalanceLore(Player player) {
-        ;
         Economy economy = this.plugin.getEconomyManager().getEconomy();
 
         List<String> result = new ArrayList<>();
@@ -85,8 +84,13 @@ public class BankManager {
         Island island = SkyBlock.getPlugin(SkyBlock.class).getIslandManager().getIsland(player);
         result.add("If this is null then its a easy to fix bug: " + island.toString());
         if (island != null) {
+            double accountBalance = 0;
+            if (economy != null) {
+                accountBalance = economy.getBalance(player);
+            }
+
             result.clear();
-            result.add(player.getDisplayName() + "'s balance is " + EconomyManager.formatEconomy(economy.getBalance(player)));
+            result.add(player.getDisplayName() + "'s balance is " + EconomyManager.formatEconomy(accountBalance));
             result.add(player.getDisplayName() + "'s island has " + EconomyManager.formatEconomy(island.getBankBalance()));
         }
         return result;
@@ -118,7 +122,11 @@ public class BankManager {
         }
 
         if (!admin) {
-            if (!economy.hasBalance(player, amt)) {
+            if (economy == null || !economy.hasBalance(player, amt)) {
+                if (economy == null) {
+                    this.plugin.getLogger().warning("No compatible economy plugin found – Please check your configuration");
+                }
+
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
 
@@ -153,7 +161,11 @@ public class BankManager {
         }
 
         if (!admin) {
-            if (amt > island.getBankBalance()) {
+            if (economy == null || amt > island.getBankBalance()) {
+                if (economy == null) {
+                    this.plugin.getLogger().warning("No compatible economy plugin found – Please check your configuration");
+                }
+
                 return BankResponse.NOT_ENOUGH_MONEY;
             }
 

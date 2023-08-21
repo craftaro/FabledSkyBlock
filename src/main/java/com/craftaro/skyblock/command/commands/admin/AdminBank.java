@@ -56,10 +56,24 @@ public class AdminBank extends SubCommand {
         } else {
             switch (args[0].toLowerCase()) {
                 case "balance":
+                    double balance = 0;
+
                     if (args.length >= 3) {
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID())))));
+                        if (economy != null) {
+                            balance = economy.getBalance(Bukkit.getOfflinePlayer(island.getOwnerUUID()));
+                        }
+
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message")
+                                .replace("%player%", args[1])
+                                .replace("%bal%", EconomyManager.formatEconomy(balance)));
                     } else {
-                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
+                        if (economy != null) {
+                            balance = economy.getBalance(Bukkit.getOfflinePlayer(args[1]));
+                        }
+
+                        messageManager.sendMessage(player, configLoad.getString("Command.Island.Admin.Bank.Balance.Message")
+                                .replace("%player%", args[1])
+                                .replace("%bal%", EconomyManager.formatEconomy(balance)));
                     }
                     return;
                 case "deposit":
@@ -122,7 +136,13 @@ public class AdminBank extends SubCommand {
         }
         switch (args[0]) {
             case "balance":
-                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.Balance.Message").replace("%player%", args[1]).replace("%bal%", EconomyManager.formatEconomy(economy.getBalance(Bukkit.getOfflinePlayer(args[1])))));
+                double balance = 0;
+                if (economy != null) {
+                    balance = economy.getBalance(Bukkit.getOfflinePlayer(args[1]));
+                }
+                messageManager.sendMessage(sender, configLoad.getString("Command.Island.Admin.Bank.Balance.Message")
+                        .replace("%player%", args[1])
+                        .replace("%bal%", EconomyManager.formatEconomy(balance)));
                 return;
             case "deposit":
                 if (args.length >= 3) {

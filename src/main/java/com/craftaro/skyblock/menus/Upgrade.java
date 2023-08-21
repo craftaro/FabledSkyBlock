@@ -55,7 +55,7 @@ public class Upgrade {
 
         FileConfiguration configLoad = plugin.getLanguage();
 
-        if (!economy.isEnabled()) {
+        if (economy == null || !economy.isEnabled()) {
             messageManager.sendMessage(player, configLoad.getString("Island.Upgrade.Disabled.Message"));
             soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
 
