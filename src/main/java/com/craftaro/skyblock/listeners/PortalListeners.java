@@ -76,7 +76,6 @@ public class PortalListeners implements Listener {
         }
 
         Island island = islandManager.getIslandAtLocation(player.getLocation());
-
         if (island == null) {
             return;
         }
@@ -94,6 +93,20 @@ public class PortalListeners implements Listener {
 
             default:
                 spawnEnvironment = IslandEnvironment.VISITOR;
+        }
+
+        IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
+        IslandWorld toWorld = IslandWorld.NORMAL;
+
+        if (block.getType() == XMaterial.NETHER_PORTAL.parseMaterial()) {
+            toWorld = fromWorld == IslandWorld.NETHER ? IslandWorld.NORMAL : IslandWorld.NETHER;
+        } else if (block.getType() == XMaterial.END_PORTAL.parseMaterial()) {
+            toWorld = fromWorld == IslandWorld.END ? IslandWorld.NORMAL : IslandWorld.END;
+        }
+
+        if (!configLoad.getBoolean("Island.World." + toWorld.getFriendlyName() + ".Enable")) {
+            // Skip any of our behavior if the target world is disabled (vanilla or third-party plugin might want to handle it)
+            return;
         }
 
         Tick tick;
@@ -123,29 +136,19 @@ public class PortalListeners implements Listener {
 
         PlayerEnterPortalEvent playerEnterPortalEvent = new PlayerEnterPortalEvent(player, player.getLocation());
         // Check permissions.
-        boolean perms = !this.plugin.getPermissionManager().processPermission(playerEnterPortalEvent,
-                player, island);
-
-        IslandWorld fromWorld = worldManager.getIslandWorld(player.getWorld());
-        IslandWorld toWorld = IslandWorld.NORMAL;
-
-        if (block.getType() == XMaterial.NETHER_PORTAL.parseMaterial()) {
-            toWorld = fromWorld == IslandWorld.NETHER ? IslandWorld.NORMAL : IslandWorld.NETHER;
-        } else if (block.getType() == XMaterial.END_PORTAL.parseMaterial()) {
-            toWorld = fromWorld == IslandWorld.END ? IslandWorld.NORMAL : IslandWorld.END;
-        }
+        boolean perms = !this.plugin.getPermissionManager().processPermission(playerEnterPortalEvent, player, island);
 
         if (!perms) {
             switch (toWorld) {
                 case END:
                 case NETHER:
-                    if (configLoad.getBoolean("Island.World." + toWorld.getFriendlyName() + ".Enable") && island.isRegionUnlocked(player, toWorld)) {
+                    if (island.isRegionUnlocked(player, toWorld)) {
                         teleportPlayerToWorld(player, soundManager, island, spawnEnvironment, tick, toWorld);
                     }
                     break;
 
                 default:
-                    IslandWorld toWorldF = toWorld;
+                    final IslandWorld toWorldF = toWorld;
 
                     Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> PaperLib.teleportAsync(player, island.getLocation(toWorldF, spawnEnvironment)), 1L);
                     soundManager.playSound(player, XSound.ENTITY_ENDERMAN_TELEPORT);
