@@ -20,6 +20,23 @@ public enum IslandWorld {
         return this.friendlyName;
     }
 
+    public static List<IslandWorld> getIslandWorlds() {
+        List<IslandWorld> islandWorlds = new ArrayList<>(3);
+
+        WorldManager worldManager = SkyBlock.getPlugin(SkyBlock.class).getWorldManager();
+        if (worldManager.getWorld(NORMAL) != null) {
+            islandWorlds.add(NORMAL);
+        }
+        if (worldManager.getWorld(NETHER) != null) {
+            islandWorlds.add(NETHER);
+        }
+        if (worldManager.getWorld(END) != null) {
+            islandWorlds.add(END);
+        }
+
+        return islandWorlds;
+    }
+
     public Environment getUncheckedEnvironment() {
         switch (this) {
             case NORMAL:
@@ -46,35 +63,5 @@ public enum IslandWorld {
         }
 
         return null;
-    }
-
-    public static List<IslandWorld> getIslandWorlds() {
-        List<IslandWorld> islandWorlds = new ArrayList<>(3);
-
-        WorldManager worldManager = SkyBlock.getPlugin(SkyBlock.class).getWorldManager();
-        if (worldManager.getWorld(NORMAL) != null) {
-            islandWorlds.add(NORMAL);
-        }
-        if (worldManager.getWorld(NETHER) != null) {
-            islandWorlds.add(NETHER);
-        }
-        if (worldManager.getWorld(END) != null) {
-            islandWorlds.add(END);
-        }
-
-        return islandWorlds;
-    }
-
-    public static IslandWorld getByEnvironment(Environment environment) {
-        switch (environment) {
-            case NORMAL:
-                return IslandWorld.NORMAL;
-            case NETHER:
-                return IslandWorld.NETHER;
-            case THE_END:
-                return IslandWorld.END;
-            default:
-                return null;
-        }
     }
 }

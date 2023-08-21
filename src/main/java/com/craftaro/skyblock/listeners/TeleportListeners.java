@@ -194,14 +194,6 @@ public class TeleportListeners implements Listener {
             return;
         }
 
-        IslandWorld toIslandWorld = IslandWorld.getByEnvironment(to.getWorld().getEnvironment());
-
-        FileConfiguration configLoad = this.plugin.getConfiguration();
-        if (toIslandWorld == null || !configLoad.getBoolean("Island.World." + toIslandWorld.getFriendlyName() + ".Enable")) {
-            // Skip any of our behavior if the target world is disabled (vanilla or third-party plugin might want to handle it)
-            return;
-        }
-
         if (worldManager.getIslandWorld(e.getFrom().getWorld()) != null) {
             e.setCancelled(true);
         }
