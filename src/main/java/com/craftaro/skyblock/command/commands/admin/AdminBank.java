@@ -2,7 +2,7 @@ package com.craftaro.skyblock.command.commands.admin;
 
 import com.craftaro.core.hooks.EconomyManager;
 import com.craftaro.core.hooks.economies.Economy;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.command.SubCommand;
 import com.craftaro.skyblock.config.FileManager;

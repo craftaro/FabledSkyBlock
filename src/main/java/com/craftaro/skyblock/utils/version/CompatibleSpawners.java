@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.utils.version;
 
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 

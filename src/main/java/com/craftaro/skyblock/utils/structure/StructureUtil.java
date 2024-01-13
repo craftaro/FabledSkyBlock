@@ -4,7 +4,7 @@ import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.nms.Nms;
 import com.craftaro.core.nms.nbt.NBTEntity;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.utils.Compression;
 import com.craftaro.skyblock.utils.world.LocationUtil;

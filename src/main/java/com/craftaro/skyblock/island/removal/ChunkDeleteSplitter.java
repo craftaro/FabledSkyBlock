@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.island.removal;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XBlock;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XBlock;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.blockscanner.BlockInfo;
 import com.craftaro.skyblock.blockscanner.BlockScanner;

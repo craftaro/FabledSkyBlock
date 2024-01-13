@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.listeners;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.challenge.player.PlayerManager;
 import com.craftaro.skyblock.cooldown.CooldownManager;

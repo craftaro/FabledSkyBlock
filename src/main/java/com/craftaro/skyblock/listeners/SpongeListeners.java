@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.listeners;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.island.IslandLevel;

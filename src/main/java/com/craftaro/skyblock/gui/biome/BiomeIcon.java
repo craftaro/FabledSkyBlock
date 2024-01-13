@@ -2,7 +2,7 @@ package com.craftaro.skyblock.gui.biome;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

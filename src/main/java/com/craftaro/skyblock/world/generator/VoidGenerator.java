@@ -2,7 +2,7 @@ package com.craftaro.skyblock.world.generator;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.IslandWorld;
 import org.bukkit.Material;

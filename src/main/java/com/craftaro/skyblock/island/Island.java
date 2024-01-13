@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.island;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.PlayerUtils;
 import com.craftaro.core.world.SWorldBorder;

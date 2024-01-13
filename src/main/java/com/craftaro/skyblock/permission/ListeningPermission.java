@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.permission;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.message.MessageManager;
 import com.craftaro.skyblock.permission.event.events.PlayerEnterPortalEvent;

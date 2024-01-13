@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.generator;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 
 public class GeneratorMaterial {
     private final XMaterial materials;

@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.challenge.inventory.inv;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.challenge.FabledChallenge;
 import com.craftaro.skyblock.challenge.challenge.Challenge;
 import com.craftaro.skyblock.challenge.challenge.ChallengeCategory;

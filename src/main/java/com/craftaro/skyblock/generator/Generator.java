@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.generator;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.island.IslandWorld;
 
 import java.util.List;

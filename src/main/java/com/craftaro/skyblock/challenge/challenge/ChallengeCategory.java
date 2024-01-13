@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.challenge.challenge;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;

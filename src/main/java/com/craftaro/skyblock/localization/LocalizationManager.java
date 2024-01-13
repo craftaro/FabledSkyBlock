@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.localization;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.IslandRole;
 import com.craftaro.skyblock.localization.type.Localization;

@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.structure;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 
 import java.util.List;
 

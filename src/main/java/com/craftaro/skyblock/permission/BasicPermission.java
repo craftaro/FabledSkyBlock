@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.permission;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;

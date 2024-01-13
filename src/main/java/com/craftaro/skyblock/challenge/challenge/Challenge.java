@@ -2,7 +2,7 @@ package com.craftaro.skyblock.challenge.challenge;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.hooks.economies.Economy;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.bank.BankManager;
 import com.craftaro.skyblock.config.FileManager;

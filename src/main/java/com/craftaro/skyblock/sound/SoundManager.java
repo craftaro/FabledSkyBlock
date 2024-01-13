@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.sound;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;

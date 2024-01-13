@@ -3,7 +3,7 @@ package com.craftaro.skyblock.utils.item;
 import com.craftaro.core.compatibility.ClassMapping;
 import com.craftaro.core.compatibility.MethodMapping;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.NMSUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

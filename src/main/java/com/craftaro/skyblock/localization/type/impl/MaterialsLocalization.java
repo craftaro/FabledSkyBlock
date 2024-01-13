@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.localization.type.impl;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 
 public class MaterialsLocalization extends EnumLocalization<XMaterial> {
     public MaterialsLocalization(String keysPath) {

@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.island;
 
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.config.FileManager.Config;
 import com.craftaro.skyblock.island.reward.LevelReward;

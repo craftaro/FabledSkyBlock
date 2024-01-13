@@ -1,7 +1,7 @@
 package com.craftaro.skyblock.command.commands.admin;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.biome.BiomeManager;
 import com.craftaro.skyblock.command.SubCommand;

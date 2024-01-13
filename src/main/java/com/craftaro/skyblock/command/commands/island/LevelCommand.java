@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.command.commands.island;
 
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.command.SubCommand;

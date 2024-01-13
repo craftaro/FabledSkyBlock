@@ -5,10 +5,11 @@ import com.craftaro.core.SongodaPlugin;
 import com.craftaro.core.compatibility.ServerProject;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
+import com.craftaro.core.dependency.Dependency;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.HologramManager;
 import com.craftaro.core.hooks.LogManager;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.api.SkyBlockAPI;
 import com.craftaro.skyblock.ban.BanManager;
 import com.craftaro.skyblock.bank.BankManager;
@@ -81,7 +82,9 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SkyBlock extends SongodaPlugin {
     private FileManager fileManager;
@@ -145,6 +148,11 @@ public class SkyBlock extends SongodaPlugin {
     private FileConfiguration settings;
     private FileConfiguration stackables;
     private FileConfiguration upgrades;
+
+    @Override
+    protected Set<Dependency> getDependencies() {
+        return new HashSet<>();
+    }
 
     @Override
     public void onPluginLoad() {
