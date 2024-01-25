@@ -5,7 +5,6 @@ import com.craftaro.core.SongodaPlugin;
 import com.craftaro.core.compatibility.ServerProject;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
-import com.craftaro.core.dependency.Dependency;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.HologramManager;
 import com.craftaro.core.hooks.LogManager;
@@ -148,11 +147,6 @@ public class SkyBlock extends SongodaPlugin {
     private FileConfiguration settings;
     private FileConfiguration stackables;
     private FileConfiguration upgrades;
-
-    @Override
-    protected Set<Dependency> getDependencies() {
-        return new HashSet<>();
-    }
 
     @Override
     public void onPluginLoad() {

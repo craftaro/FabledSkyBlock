@@ -48,11 +48,6 @@
                                 </relocation>
 
                                 <relocation>
-                                    <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>com.craftaro.skyblock.third_party.io.papermc.lib</shadedPattern>
-                                </relocation>
-
-                                <relocation>
                                     <pattern>com.eatthepath.uuid</pattern>
                                     <shadedPattern>com.craftaro.skyblock.third_party.com.eatthepath.uuid</shadedPattern>
                                 </relocation>
@@ -85,6 +80,7 @@
                                         <exclude>**/third_party/org/h2/**</exclude>
                                         <exclude>**/third_party/com/cryptomorin/**</exclude>
                                         <exclude>**/third_party/org/reactivestreams/**</exclude>
+                                        <exclude>**/third_party/io/papermc/lib/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
