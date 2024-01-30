@@ -520,7 +520,7 @@ public class IslandManager {
             removeIsland(uuid2);
             this.islandStorage.put(player.getUniqueId(), island);
 
-            Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(), player));
+            Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(), player, uuid2));
 
             ArrayList<UUID> islandMembers = new ArrayList<>();
             islandMembers.addAll(island.getRole(IslandRole.MEMBER));
