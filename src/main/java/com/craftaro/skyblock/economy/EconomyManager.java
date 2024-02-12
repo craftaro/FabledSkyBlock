@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.economy;
 
 import com.craftaro.core.hooks.Hook;
+import com.craftaro.core.hooks.OutdatedHookInterface;
 import com.craftaro.core.hooks.economies.Economy;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.manager.Manager;
@@ -15,7 +16,7 @@ public class EconomyManager extends Manager {
     }
 
     public void setEconomy(String economyString) {
-        Hook hook = com.craftaro.core.hooks.EconomyManager.getManager().getHook(economyString);
+        OutdatedHookInterface hook = com.craftaro.core.hooks.EconomyManager.getManager().getHook(economyString);
         if (hook != null &&
                 hook.isEnabled() &&
                 hook instanceof Economy &&
