@@ -15,7 +15,7 @@ public class Hologram {
     private final Location location;
 
     public Hologram(HologramType type, Location location, List<String> lines) {
-        this.hologramId = location.toString() + UUID.randomUUID();
+        this.hologramId = type + "_" + UUID.randomUUID();
 
         this.type = type;
         this.location = location;
