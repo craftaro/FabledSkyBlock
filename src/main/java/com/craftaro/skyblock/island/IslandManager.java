@@ -1530,9 +1530,7 @@ public class IslandManager {
     public void updateFlight(Player player) {
         // The player can fly in other worlds if they are in creative or have another
         // plugin's fly permission.
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly")) {
-            return;
-        }
+
 
         // Residence support
         if (Bukkit.getServer().getPluginManager().getPlugin("Residence") != null) {
@@ -1562,7 +1560,7 @@ public class IslandManager {
 
         boolean hasGlobalFlyPermission = player.hasPermission("fabledskyblock.*") || player.hasPermission("fabledskyblock.fly.*");
         boolean hasOwnIslandFlyPermission = player.hasPermission("fabledskyblock.fly") && island.getRole(player) != null && island.getRole(player) != IslandRole.VISITOR;
-        if (hasGlobalFlyPermission || hasOwnIslandFlyPermission) {
+        if (hasGlobalFlyPermission || hasOwnIslandFlyPermission || player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly")) {
             WorldManager worldManager = this.plugin.getWorldManager();
             boolean canFlyInWorld = worldManager.isIslandWorld(player.getWorld());
             Bukkit.getServer().getScheduler().runTask(this.plugin, () -> player.setAllowFlight(canFlyInWorld));

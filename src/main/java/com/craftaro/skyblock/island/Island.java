@@ -113,7 +113,7 @@ public class Island {
 
         this.level = new IslandLevel(getOwnerUUID(), this.plugin);
 
-        File configFile = new File(this.plugin.getDataFolder().toString() + "/island-data");
+        File configFile = new File(this.plugin.getDataFolder() + "/island-data");
 
         Config config = fileManager.getConfig(new File(configFile, this.ownerUUID + ".yml"));
 
@@ -191,7 +191,7 @@ public class Island {
 
             Config settingsDataConfig = null;
 
-            File settingDataFile = new File(this.plugin.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml");
+            File settingDataFile = new File(this.plugin.getDataFolder() + "/setting-data", getOwnerUUID().toString() + ".yml");
 
             if (fileManager.isFileExist(settingDataFile)) {
                 settingsDataConfig = fileManager.getConfig(settingDataFile);
@@ -203,13 +203,13 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.getFriendlyName() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName()) == null) {
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
                     }
                 }
 
