@@ -112,7 +112,7 @@ public class IslandManager {
      * @deprecated use {@link #updateFlight(Player)} instead
      */
     @Deprecated
-    public void giveUpgrades(Player player, Island island) {
+    public void giveUgrades(Player player, Island island) {
         Preconditions.checkArgument(player != null, "Cannot give upgrades to null player");
         Preconditions.checkArgument(island != null, "Cannot give upgrades to null island");
 

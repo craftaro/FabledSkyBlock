@@ -1530,7 +1530,7 @@ public class IslandManager {
     public void updateFlight(Player player) {
         // The player can fly in other worlds if they are in creative or have another
         // plugin's fly permission.
-        // Merged this with final if block as OPs were not able to fly.
+
 
         // Residence support
         if (Bukkit.getServer().getPluginManager().getPlugin("Residence") != null) {
