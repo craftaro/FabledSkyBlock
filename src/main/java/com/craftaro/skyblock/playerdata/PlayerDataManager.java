@@ -3,22 +3,27 @@ package com.craftaro.skyblock.playerdata;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.ban.BanManager;
 import com.craftaro.skyblock.config.FileManager;
-import com.craftaro.skyblock.island.*;
+import com.craftaro.skyblock.island.Island;
+import com.craftaro.skyblock.island.IslandLocation;
+import com.craftaro.skyblock.island.IslandManager;
+import com.craftaro.skyblock.island.IslandRole;
+import com.craftaro.skyblock.island.IslandStatus;
+import com.craftaro.skyblock.island.IslandWorld;
 import com.craftaro.skyblock.message.MessageManager;
 import com.craftaro.skyblock.scoreboard.ScoreboardManager;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.utils.world.LocationUtil;
 import com.craftaro.skyblock.visit.Visit;
 import com.craftaro.skyblock.world.WorldManager;
-import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -53,21 +58,21 @@ public class PlayerDataManager {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         String[] playerTexture;
-        String something = null;
+
         try {
-            ItemStack skullItem = SkullUtils.getSkull(player.getUniqueId());
-            ItemMeta skullMeta = skullItem.getItemMeta();
-            something = SkullUtils.getSkinValue(skullMeta);
-            System.out.println(something);
+            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
+            Method getProfileMethod = entityPlayer.getClass().getMethod("getProfile");
+            GameProfile gameProfile = (GameProfile) getProfileMethod.invoke(entityPlayer);
+            Property property = gameProfile.getProperties().get("textures").iterator().next();
+            playerTexture = new String[]{property.getSignature(), property.getValue()};
         } catch (Exception e) {
-            e.printStackTrace();
             playerTexture = new String[]{
                     "K9P4tCIENYbNpDuEuuY0shs1x7iIvwXi4jUUVsATJfwsAIZGS+9OZ5T2HB0tWBoxRvZNi73Vr+syRdvTLUWPusVXIg+2fhXmQoaNEtnQvQVGQpjdQP0TkZtYG8PbvRxE6Z75ddq+DVx/65OSNHLWIB/D+Rg4vINh4ukXNYttn9QvauDHh1aW7/IkIb1Bc0tLcQyqxZQ3mdglxJfgIerqnlA++Lt7TxaLdag4y1NhdZyd3OhklF5B0+B9zw/qP8QCzsZU7VzJIcds1+wDWKiMUO7+60OSrIwgE9FPamxOQDFoDvz5BOULQEeNx7iFMB+eBYsapCXpZx0zf1bduppBUbbVC9wVhto/J4tc0iNyUq06/esHUUB5MHzdJ0Y6IZJAD/xIw15OLCUH2ntvs8V9/cy5/n8u3JqPUM2zhUGeQ2p9FubUGk4Q928L56l3omRpKV+5QYTrvF+AxFkuj2hcfGQG3VE2iYZO6omXe7nRPpbJlHkMKhE8Xvd1HP4PKpgivSkHBoZ92QEUAmRzZydJkp8CNomQrZJf+MtPiNsl/Q5RQM+8CQThg3+4uWptUfP5dDFWOgTnMdA0nIODyrjpp+bvIJnsohraIKJ7ZDnj4tIp4ObTNKDFC/8j8JHz4VCrtr45mbnzvB2DcK8EIB3JYT7ElJTHnc5BKMyLy5SKzuw=",
                     "eyJ0aW1lc3RhbXAiOjE1MjkyNTg0MTE4NDksInByb2ZpbGVJZCI6Ijg2NjdiYTcxYjg1YTQwMDRhZjU0NDU3YTk3MzRlZWQ3IiwicHJvZmlsZU5hbWUiOiJTdGV2ZSIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGMxYzc3Y2U4ZTU0OTI1YWI1ODEyNTQ0NmVjNTNiMGNkZDNkMGNhM2RiMjczZWI5MDhkNTQ4Mjc4N2VmNDAxNiJ9LCJDQVBFIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjc2N2Q0ODMyNWVhNTMyNDU2MTQwNmI4YzgyYWJiZDRlMjc1NWYxMTE1M2NkODVhYjA1NDVjYzIifX19"};
         }
 
-        configLoad.set("Texture.Signature", "");
-        configLoad.set("Texture.Value", something);
+        configLoad.set("Texture.Signature", playerTexture[0]);
+        configLoad.set("Texture.Value", playerTexture[1]);
         configLoad.set("Statistics.Island.Playtime", 0);
 
         try {
