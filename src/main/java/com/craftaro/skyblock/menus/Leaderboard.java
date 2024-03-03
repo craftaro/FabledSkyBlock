@@ -1,8 +1,5 @@
 package com.craftaro.skyblock.menus;
 
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.placeholder.Placeholder;
@@ -11,6 +8,9 @@ import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.visit.Visit;
+import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,17 +247,17 @@ public class Leaderboard {
                     String playerName;
                     String[] playerTexture;
 
-                    Player targetPlayer = Bukkit.getServer().getPlayer(visit.getOwnerUUID());
+                    org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getOfflinePlayer(visit.getOwnerUUID());
 
                     if (targetPlayer == null) {
                         OfflinePlayer offlinePlayer = new OfflinePlayer(visit.getOwnerUUID());
                         playerName = offlinePlayer.getName();
                         playerTexture = offlinePlayer.getTexture();
-                    } else {
+                    }
+                    else {
                         playerName = targetPlayer.getName();
-
-                        if (playerDataManager.hasPlayerData(targetPlayer)) {
-                            playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+                        if (playerDataManager.hasPlayerData(targetPlayer.getUniqueId())) {
+                            playerTexture = playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
                         } else {
                             playerTexture = new String[]{null, null};
                         }
@@ -307,9 +308,10 @@ public class Leaderboard {
                             playerTexture = steveSkinTexture;
                         }
                     }
+                    ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
 
                     nInv.addItem(
-                            nInv.createItem(ItemUtils.getCustomHead(playerTexture[0], playerTexture[1]),
+                            nInv.createItem(phead,
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
                                             .replace("%owner", playerName)
                                             .replace("%position", "" + (leaderboard.getPosition() + 1)),
@@ -327,9 +329,14 @@ public class Leaderboard {
 
                 int[] itemSlots = new int[]{13, 21, 22, 23, 29, 31, 33, 37, 40, 43};
 
+
                 for (int i = 0; i < itemSlots.length; i++) {
                     if (!nInv.getItems().containsKey(itemSlots[i])) {
-                        nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(questionMarkSkinTexture[0], questionMarkSkinTexture[1]),
+                        ItemStack qhead = XMaterial.PLAYER_HEAD.parseItem();
+                        SkullMeta qskullMeta = (SkullMeta) qhead.getItemMeta();
+                        SkullUtils.setSkullBase64(qskullMeta,questionMarkSkinTexture[1],questionMarkSkinTexture[0]);
+                        qhead.setItemMeta(qskullMeta);
+                        nInv.addItem(nInv.createItem(qhead,
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Empty.Displayname")
                                                 .replace("%position", "" + (i + 1)),
                                         configLoad.getStringList("Menu.Leaderboard.Leaderboard.Item.Empty.Lore"),
