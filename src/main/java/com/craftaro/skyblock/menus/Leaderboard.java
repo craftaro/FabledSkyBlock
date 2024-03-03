@@ -308,6 +308,7 @@ public class Leaderboard {
                             playerTexture = steveSkinTexture;
                         }
                     }
+                    ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
 
                     ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
                     nInv.addItem(
