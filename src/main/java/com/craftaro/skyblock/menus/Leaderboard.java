@@ -308,8 +308,8 @@ public class Leaderboard {
                             playerTexture = steveSkinTexture;
                         }
                     }
-                    ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
 
+                    ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
                     nInv.addItem(
                             nInv.createItem(phead,
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
@@ -344,7 +344,6 @@ public class Leaderboard {
                                 itemSlots[i]);
                     }
                 }
-
                 nInv.setTitle(plugin.formatText(configLoad.getString("Menu.Leaderboard.Leaderboard.Title").replace("%leaderboard",
                         viewer.getType().getFriendlyName())));
                 nInv.setRows(6);
