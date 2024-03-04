@@ -2,6 +2,7 @@ package com.craftaro.skyblock.gui.wip;
 
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
@@ -102,7 +103,7 @@ public class GuiBans extends Gui {
                 String targetPlayerName;
                 String[] targetPlayerTexture;
 
-                Player targetPlayer = Bukkit.getServer().getPlayer(uuid);
+                org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getOfflinePlayer(uuid);
 
                 if (targetPlayer == null) {
                     OfflinePlayer offlinePlayer = new OfflinePlayer(uuid);
@@ -111,14 +112,14 @@ public class GuiBans extends Gui {
                 } else {
                     targetPlayerName = targetPlayer.getName();
 
-                    if (this.playerDataManager.hasPlayerData(targetPlayer)) {
-                        targetPlayerTexture = this.playerDataManager.getPlayerData(targetPlayer).getTexture();
+                    if (this.playerDataManager.hasPlayerData(targetPlayer.getUniqueId())) {
+                        targetPlayerTexture = this.playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
                     } else {
                         targetPlayerTexture = new String[]{null, null};
                     }
                 }
 
-                ItemStack is = ItemUtils.getCustomHead(targetPlayerTexture[0], targetPlayerTexture[1]);
+                ItemStack is = SkullUtils.getSkull(targetPlayer.getUniqueId());
                 ItemMeta im = is.getItemMeta();
                 if (im != null) {
                     im.setDisplayName(this.languageLoad.getString("Menu.Bans.Item.Ban.Displayname")
