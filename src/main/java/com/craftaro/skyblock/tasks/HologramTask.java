@@ -46,9 +46,8 @@ public class HologramTask extends BukkitRunnable {
     public void run() {
         for (HologramType hologramTypeList : HologramType.values()) {
             if (hologramTypeList == HologramType.VOTES) {
-                if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
+                if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote"))
                     continue;
-                }
             }
             spawnHologram(hologramTypeList);
         }

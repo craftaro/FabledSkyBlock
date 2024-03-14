@@ -65,78 +65,79 @@ public class ScoreboardManager extends Manager {
     }
 
     public void updatePlayerScoreboardType(Player player) {
-        if (this.enabled) {
-            PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
-            IslandManager islandManager = this.plugin.getIslandManager();
+        if (!this.enabled)
+            return;
 
-            PlayerData playerData = playerDataManager.getPlayerData(player);
-            Island island = islandManager.getIsland(player);
+        PlayerDataManager playerDataManager = this.plugin.getPlayerDataManager();
+        IslandManager islandManager = this.plugin.getIslandManager();
 
-            if (playerData.isScoreboard()) {
-                ScoreboardType type;
-                if (island != null) {
-                    Visit islandVisit = island.getVisit();
-                    boolean hasVisitors = (islandVisit != null &&
-                            islandVisit.getVisitors() != null &&
-                            islandVisit.getVisitors().size() > 1);
-                    boolean hasMembers = (islandVisit != null &&
-                            islandVisit.getMembers() > 1);
+        PlayerData playerData = playerDataManager.getPlayerData(player);
+        Island island = islandManager.getIsland(player);
 
-                    if (hasMembers) {
-                        if (hasVisitors) {
-                            type = ScoreboardType.ISLAND_TEAM_VISITORS;
-                        } else {
-                            type = ScoreboardType.ISLAND_TEAM_EMPTY;
-                        }
-                    } else {
-                        if (hasVisitors) {
-                            type = ScoreboardType.ISLAND_SOLO_VISITORS;
-                        } else {
-                            type = ScoreboardType.ISLAND_SOLO_EMPTY;
-                        }
-                    }
+        if (!playerData.isScoreboard())
+            return;
+
+        ScoreboardType type;
+        if (island != null) {
+            Visit islandVisit = island.getVisit();
+            boolean hasVisitors = (islandVisit != null &&
+                    islandVisit.getVisitors() != null &&
+                    islandVisit.getVisitors().size() > 1);
+            boolean hasMembers = (islandVisit != null &&
+                    islandVisit.getMembers() > 1);
+
+            if (hasMembers) {
+                if (hasVisitors) {
+                    type = ScoreboardType.ISLAND_TEAM_VISITORS;
                 } else {
-                    type = ScoreboardType.NO_ISLAND;
+                    type = ScoreboardType.ISLAND_TEAM_EMPTY;
                 }
-                synchronized (player) {
-                    setPlayerScoreboard(player, type);
+            } else {
+                if (hasVisitors) {
+                    type = ScoreboardType.ISLAND_SOLO_VISITORS;
+                } else {
+                    type = ScoreboardType.ISLAND_SOLO_EMPTY;
                 }
             }
+        } else {
+            type = ScoreboardType.NO_ISLAND;
+        }
+        synchronized (player) {
+            setPlayerScoreboard(player, type);
         }
     }
 
 
     public void setPlayerScoreboard(Player player, ScoreboardType type) {
-        if (this.enabled) {
-            for (Driver driver : this.drivers) {
-                driver.unregisterHolder(player);
-                if (driver.getBoardType() == type) {
-                    driver.registerHolder(new Holder(this.plugin, driver, player));
-                }
-            }
+        if (!enabled)
+            return;
+
+        for (Driver driver : drivers) {
+            driver.unregisterHolder(player);
+            if (driver.getBoardType() == type)
+                driver.registerHolder(new Holder(plugin, driver, player));
         }
     }
 
     public void unregisterPlayer(Player player) {
-        if (this.enabled) {
-            for (Driver driver : this.drivers) {
-                driver.unregisterHolder(player);
-            }
-            player.setScoreboard(this.emptyScoreboard);
-        }
+        if (!enabled)
+            return;
+
+        for (Driver driver : drivers)
+            driver.unregisterHolder(player);
+        player.setScoreboard(emptyScoreboard);
     }
 
     public void addDisabledPlayer(Player player) {
         if (this.enabled) {
             this.disabledPlayers.add(player);
-            Bukkit.getScheduler().runTask(this.plugin, () -> this.unregisterPlayer(player));
+            Bukkit.getScheduler().runTask(plugin, () -> unregisterPlayer(player));
         }
     }
 
     public void removeDisabledPlayer(Player player) {
-        if (this.enabled) {
+        if (this.enabled)
             this.disabledPlayers.remove(player);
-        }
     }
 
     public boolean isPlayerDisabled(Player player) {
@@ -144,25 +145,25 @@ public class ScoreboardManager extends Manager {
     }
 
     private void newDriver(ScoreboardType board) {
-        FileManager fileManager = this.plugin.getFileManager();
+        FileManager fileManager = plugin.getFileManager();
         FileConfiguration configload = fileManager.getConfig(
-                new File(this.plugin.getDataFolder(), "config.yml")).getFileConfiguration();
+                new File(plugin.getDataFolder(), "config.yml")).getFileConfiguration();
 
-        Driver driver = new Driver(this.plugin, board);
+        Driver driver = new Driver(plugin, board);
         if (configload.getBoolean("Island.Scoreboard.Async", true)) {
-            driver.runTaskTimerAsynchronously(this.plugin, 1L, 1L);
+            driver.runTaskTimerAsynchronously(plugin, 1L, 1L);
         } else {
-            driver.runTaskTimer(this.plugin, 1L, 1L);
+            driver.runTaskTimer(plugin, 1L, 1L);
         }
-        this.drivers.add(driver);
+        drivers.add(driver);
     }
 
     public void clearDrivers() {
-        if (this.enabled) {
+        if (enabled) {
             for (Driver driver : this.drivers) {
                 driver.cancel();
             }
-            this.drivers.clear();
+            drivers.clear();
         }
     }
 
