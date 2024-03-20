@@ -255,10 +255,14 @@ public class Island {
     }
 
     /**
-     * @return The IslandRole of a player
+     * @return The IslandRole of a player or Visitor if not found
      */
     public IslandRole getRole(OfflinePlayer player) {
         Preconditions.checkArgument(player != null, "Cannot get role for null player");
+
+        if (isCoopPlayer(player.getUniqueId())) {
+            return IslandRole.COOP;
+        }
 
         for (com.craftaro.skyblock.island.IslandRole role : com.craftaro.skyblock.island.IslandRole.values()) {
             if (this.handle.hasRole(role, player.getUniqueId())) {
@@ -266,7 +270,7 @@ public class Island {
             }
         }
 
-        return null;
+        return IslandRole.VISITOR;
     }
 
     /**
