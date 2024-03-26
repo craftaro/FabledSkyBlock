@@ -51,7 +51,7 @@ public class CoopCommand extends SubCommand {
                     || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                     && permissionManager.hasPermission(island, "CoopPlayers", IslandRole.OPERATOR))) {
                 if (args.length == 1 || args.length == 2) {
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                    Player targetPlayer = Bukkit.getServer().getPlayerExact(args[0]);
 
                     UUID targetPlayerUUID;
                     String targetPlayerName;
