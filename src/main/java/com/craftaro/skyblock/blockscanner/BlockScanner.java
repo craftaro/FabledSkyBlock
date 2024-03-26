@@ -114,7 +114,7 @@ public final class BlockScanner extends BukkitRunnable {
             if (ignoreY) {
                 startY = world.getMaxHeight();
             } else {
-                startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : 0;
+                startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : world.getMinHeight();
             }
 
             for (List<CachedChunk> sub : parts) {
