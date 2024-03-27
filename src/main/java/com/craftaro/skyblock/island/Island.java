@@ -1,10 +1,10 @@
 package com.craftaro.skyblock.island;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
+import com.craftaro.core.nms.world.NmsWorldBorder;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.PlayerUtils;
-import com.craftaro.core.world.SWorldBorder;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.api.event.island.IslandBiomeChangeEvent;
 import com.craftaro.skyblock.api.event.island.IslandLocationChangeEvent;
@@ -150,7 +150,7 @@ public class Island {
 
             if (configLoad.getString("Border") == null) {
                 configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-                configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
+                configLoad.set("Border.Color", NmsWorldBorder.BorderColor.BLUE.name());
             }
 
             if (configLoad.getString("Members") != null) {
@@ -246,7 +246,7 @@ public class Island {
             configLoad.set("UUID", this.islandUUID.toString());
             configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status").toUpperCase());
             configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-            configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
+            configLoad.set("Border.Color", NmsWorldBorder.BorderColor.BLUE.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
             configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
             configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
@@ -449,13 +449,13 @@ public class Island {
                 .getFileConfiguration().set("Border.Enable", border);
     }
 
-    public SWorldBorder.Color getBorderColor() {
-        return SWorldBorder.Color.valueOf(this.plugin.getFileManager().getConfig(
-                        new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getString("Border.Color"));
+    public NmsWorldBorder.BorderColor getBorderColor() {
+        String colorString = this.plugin.getFileManager().getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().getString("Border.Color");
+        return NmsWorldBorder.BorderColor.valueOf(colorString.toUpperCase());
     }
 
-    public void setBorderColor(SWorldBorder.Color color) {
+    public void setBorderColor(NmsWorldBorder.BorderColor color) {
         this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().set("Border.Color", color.name());

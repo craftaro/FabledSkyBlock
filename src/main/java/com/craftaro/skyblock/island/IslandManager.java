@@ -6,9 +6,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.world.SWorldBorder;
+import com.craftaro.core.nms.Nms;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.api.event.island.IslandCreateEvent;
 import com.craftaro.skyblock.api.event.island.IslandDeleteEvent;
@@ -43,6 +41,8 @@ import com.craftaro.skyblock.utils.world.LocationUtil;
 import com.craftaro.skyblock.utils.world.block.BlockDegreesType;
 import com.craftaro.skyblock.visit.VisitManager;
 import com.craftaro.skyblock.world.WorldManager;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.eatthepath.uuid.FastUUID;
 import com.google.common.base.Preconditions;
 import io.papermc.lib.PaperLib;
@@ -1511,10 +1511,10 @@ public class IslandManager {
                         if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
                             Location islandLocation = island.getLocation(worldManager.getIslandWorld(player.getWorld()), IslandEnvironment.ISLAND);
                             if (islandLocation != null) {
-                                SWorldBorder.send(player, island.getBorderColor(), island.getSize(), islandLocation.clone().add(increment, 0, increment));
+                                Nms.getImplementations().getWorldBorder().send(player, island.getBorderColor(), island.getSize(), islandLocation.clone().add(increment, 0, increment));
                             }
                         } else {
-                            SWorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
+                            Nms.getImplementations().getWorldBorder().send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                         }
                     });
                 }
@@ -1666,7 +1666,7 @@ public class IslandManager {
                     if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                         Bukkit.getScheduler().runTask(this.plugin, () -> {
                             for (Player all : getPlayersAtIsland(island)) {
-                                SWorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
+                                Nms.getImplementations().getWorldBorder().send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
                             }
                         });
                     }
@@ -1678,7 +1678,7 @@ public class IslandManager {
                 if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                     Bukkit.getScheduler().runTask(this.plugin, () -> {
                         for (Player all : getPlayersAtIsland(island)) {
-                            SWorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
+                            Nms.getImplementations().getWorldBorder().send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
                         }
                     });
                 }

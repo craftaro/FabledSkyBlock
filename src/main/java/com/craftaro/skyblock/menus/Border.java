@@ -1,8 +1,8 @@
 package com.craftaro.skyblock.menus;
 
+import com.craftaro.core.nms.world.NmsWorldBorder;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.world.SWorldBorder;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.island.IslandManager;
@@ -82,13 +82,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Blue")))))) {
-                if (island.getBorderColor() == SWorldBorder.Color.Blue) {
+                if (island.getBorderColor() == NmsWorldBorder.BorderColor.BLUE) {
                     soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(SWorldBorder.Color.Blue);
+                    island.setBorderColor(NmsWorldBorder.BorderColor.BLUE);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
@@ -100,13 +100,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Green")))))) {
-                if (island.getBorderColor() == SWorldBorder.Color.Green) {
+                if (island.getBorderColor() == NmsWorldBorder.BorderColor.GREEN) {
                     soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(SWorldBorder.Color.Green);
+                    island.setBorderColor(NmsWorldBorder.BorderColor.GREEN);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
@@ -118,13 +118,13 @@ public class Border {
                     .equals(ChatColor.translateAlternateColorCodes('&',
                             configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                     configLoad.getString("Menu.Border.Item.Word.Red")))))) {
-                if (island.getBorderColor() == SWorldBorder.Color.Red) {
+                if (island.getBorderColor() == NmsWorldBorder.BorderColor.RED) {
                     soundManager.playSound(player, XSound.ENTITY_CHICKEN_EGG);
 
                     event.setWillClose(false);
                     event.setWillDestroy(false);
                 } else {
-                    island.setBorderColor(SWorldBorder.Color.Red);
+                    island.setBorderColor(NmsWorldBorder.BorderColor.RED);
                     islandManager.updateBorder(island);
 
                     soundManager.playSound(player, XSound.BLOCK_WOODEN_BUTTON_CLICK_ON);
@@ -139,7 +139,7 @@ public class Border {
         nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                 configLoad.getString("Menu.Border.Item.Exit.Displayname"), null, null, null, null), 0);
 
-        SWorldBorder.Color borderColor = island.getBorderColor();
+        NmsWorldBorder.BorderColor borderColor = island.getBorderColor();
         String borderToggle;
 
         if (island.isBorder()) {
@@ -152,9 +152,8 @@ public class Border {
                 configLoad.getString("Menu.Border.Item.Toggle.Displayname"),
                 configLoad.getStringList("Menu.Border.Item.Toggle.Lore"),
                 new Placeholder[]{new Placeholder("%toggle", borderToggle)}, null, null), 1);
-
         if (player.hasPermission("fabledskyblock.island.border.blue")) {
-            if (borderColor == SWorldBorder.Color.Blue) {
+            if (borderColor == NmsWorldBorder.BorderColor.BLUE) {
                 nInv.addItem(nInv.createItem(XMaterial.LIGHT_BLUE_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Blue")),
@@ -174,7 +173,7 @@ public class Border {
                     "", null, null, null, null), 2);
         }
         if (player.hasPermission("fabledskyblock.island.border.green")) {
-            if (borderColor == SWorldBorder.Color.Green) {
+            if (borderColor == NmsWorldBorder.BorderColor.GREEN) {
                 nInv.addItem(nInv.createItem(XMaterial.LIME_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Green")),
@@ -196,7 +195,7 @@ public class Border {
                     "", null, null, null, null), 3);
         }
         if (player.hasPermission("fabledskyblock.island.border.red")) {
-            if (borderColor == SWorldBorder.Color.Red) {
+            if (borderColor == NmsWorldBorder.BorderColor.RED) {
                 nInv.addItem(nInv.createItem(XMaterial.RED_DYE.parseItem(),
                         configLoad.getString("Menu.Border.Item.Color.Displayname").replace("%color",
                                 configLoad.getString("Menu.Border.Item.Word.Red")),

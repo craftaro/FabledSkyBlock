@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.api.utils;
 
-import com.craftaro.core.world.SWorldBorder;
+import com.craftaro.core.nms.world.NmsWorldBorder;
 import com.craftaro.skyblock.api.island.IslandBorderColor;
 import com.craftaro.skyblock.api.island.IslandUpgrade;
 import com.craftaro.skyblock.api.island.IslandWorld;
@@ -191,26 +191,26 @@ public final class APIUtil {
         return null;
     }
 
-    public static SWorldBorder.Color toImplementation(IslandBorderColor color) {
+    public static NmsWorldBorder.BorderColor toImplementation(IslandBorderColor color) {
         switch (color) {
             case BLUE:
-                return SWorldBorder.Color.Blue;
+                return NmsWorldBorder.BorderColor.BLUE;
             case GREEN:
-                return SWorldBorder.Color.Green;
+                return NmsWorldBorder.BorderColor.GREEN;
             case RED:
-                return SWorldBorder.Color.Red;
+                return NmsWorldBorder.BorderColor.RED;
         }
 
         return null;
     }
 
-    public static IslandBorderColor fromImplementation(SWorldBorder.Color color) {
+    public static IslandBorderColor fromImplementation(NmsWorldBorder.BorderColor color) {
         switch (color) {
-            case Blue:
+            case BLUE:
                 return IslandBorderColor.BLUE;
-            case Green:
+            case GREEN:
                 return IslandBorderColor.GREEN;
-            case Red:
+            case RED:
                 return IslandBorderColor.RED;
         }
 
