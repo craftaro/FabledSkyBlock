@@ -1509,9 +1509,10 @@ public class IslandManager {
 
                     Bukkit.getScheduler().runTask(this.plugin, () -> {
                         if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                            SWorldBorder.send(player, island.getBorderColor(), island.getSize(),
-                                    island.getLocation(worldManager.getIslandWorld(player.getWorld()),
-                                            IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
+                            Location islandLocation = island.getLocation(worldManager.getIslandWorld(player.getWorld()), IslandEnvironment.ISLAND);
+                            if (islandLocation != null) {
+                                SWorldBorder.send(player, island.getBorderColor(), island.getSize(), islandLocation.clone().add(increment, 0, increment));
+                            }
                         } else {
                             SWorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                         }
