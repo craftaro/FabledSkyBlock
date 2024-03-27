@@ -2,6 +2,7 @@ package com.craftaro.skyblock.blockscanner;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.skyblock.utils.world.WorldUtil;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
@@ -114,7 +115,7 @@ public final class BlockScanner extends BukkitRunnable {
             if (ignoreY) {
                 startY = world.getMaxHeight();
             } else {
-                startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : world.getMinHeight();
+                startY = !ignoreLiquidsY && liquidSection.getBoolean("Enable") && !config.getBoolean("Island.Levelling.ScanLiquid") ? liquidSection.getInt("Height") + 1 : WorldUtil.getMinHeight(world);
             }
 
             for (List<CachedChunk> sub : parts) {
@@ -148,7 +149,7 @@ public final class BlockScanner extends BukkitRunnable {
             if (this.island != null) {
                 Location islandLocation = this.island.getLocation(worldManager.getIslandWorld(world), IslandEnvironment.ISLAND);
 
-                Location minLocation = new Location(world, islandLocation.getBlockX() - this.island.getRadius(), world.getMinHeight(), islandLocation.getBlockZ() - this.island.getRadius());
+                Location minLocation = new Location(world, islandLocation.getBlockX() - this.island.getRadius(), WorldUtil.getMinHeight(world), islandLocation.getBlockZ() - this.island.getRadius());
                 Location maxLocation = new Location(world, islandLocation.getBlockX() + this.island.getRadius(), world.getMaxHeight(), islandLocation.getBlockZ() + this.island.getRadius());
 
                 int minX = Math.min(maxLocation.getBlockX(), minLocation.getBlockX());
