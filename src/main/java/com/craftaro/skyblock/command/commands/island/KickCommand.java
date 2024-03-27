@@ -59,7 +59,7 @@ public class KickCommand extends SubCommand {
                     UUID targetPlayerUUID = null;
                     String targetPlayerName = null;
 
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                    Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                     Set<UUID> islandMembers = island.getRole(IslandRole.MEMBER), islandOperators = island.getRole(IslandRole.OPERATOR),
                             islandVisitors = islandManager.getVisitorsAtIsland(island);

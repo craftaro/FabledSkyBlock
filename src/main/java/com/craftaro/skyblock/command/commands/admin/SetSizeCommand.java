@@ -50,7 +50,7 @@ public class SetSizeCommand extends SubCommand {
 
         if (args.length == 2) {
             if (args[1].matches("[0-9]+")) {
-                Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                Player targetPlayer = Bukkit.getPlayerExact(args[0]);
                 UUID islandOwnerUUID;
                 String targetPlayerName;
 

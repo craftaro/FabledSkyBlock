@@ -38,7 +38,7 @@ public class InformationCommand extends SubCommand {
             UUID islandOwnerUUID = null;
 
             if (args.length == 1) {
-                Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                 if (targetPlayer == null) {
                     OfflinePlayer targetOfflinePlayer = new OfflinePlayer(args[0]);

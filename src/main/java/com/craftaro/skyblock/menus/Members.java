@@ -150,7 +150,7 @@ public class Members {
                             String playerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
                             UUID playerUUID;
 
-                            Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
+                            Player targetPlayer = Bukkit.getPlayerExact(playerName);
 
                             if (targetPlayer == null) {
                                 playerUUID = new OfflinePlayer(playerName).getUUID();

@@ -54,7 +54,7 @@ public class DeleteCommand extends SubCommand {
         }
 
         if (args.length == 1) {
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+            Player targetPlayer = Bukkit.getPlayerExact(args[0]);
             UUID targetPlayerUUID;
             String targetPlayerName;
 

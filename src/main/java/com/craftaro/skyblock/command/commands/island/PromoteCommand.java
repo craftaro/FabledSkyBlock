@@ -53,7 +53,7 @@ public class PromoteCommand extends SubCommand {
             soundManager.playSound(player, XSound.ENTITY_VILLAGER_NO);
             return;
         }
-        Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+        Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
         if (targetPlayer == null) {
             OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);

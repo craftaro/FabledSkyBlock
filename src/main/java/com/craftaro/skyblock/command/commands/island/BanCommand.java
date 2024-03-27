@@ -47,7 +47,7 @@ public class BanCommand extends SubCommand {
                 } else if (this.plugin.getConfiguration().getBoolean("Island.Visitor.Banning")) {
                     if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                             || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId()) && permissionManager.hasPermission(island, "Ban", IslandRole.OPERATOR))) {
-                        Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                        Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                         UUID targetPlayerUUID;
                         String targetPlayerName;

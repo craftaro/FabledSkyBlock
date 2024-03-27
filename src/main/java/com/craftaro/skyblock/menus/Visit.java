@@ -135,7 +135,7 @@ public class Visit {
                         String targetPlayerName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
                         UUID targetPlayerUUID;
 
-                        Player targetPlayer = Bukkit.getServer().getPlayer(targetPlayerName);
+                        Player targetPlayer = Bukkit.getPlayerExact(targetPlayerName);
 
                         if (targetPlayer == null) {
                             targetPlayerUUID = new OfflinePlayer(targetPlayerName).getUniqueId();
