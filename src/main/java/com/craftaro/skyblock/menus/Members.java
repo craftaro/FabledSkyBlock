@@ -398,12 +398,12 @@ public class Members {
 
                         int islandPlaytime;
 
-                        org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getOfflinePlayer(playerUUID);
+                        Player targetPlayer = Bukkit.getServer().getPlayer(playerUUID);
 
                         if (targetPlayer == null) {
                             OfflinePlayer offlinePlayer = new OfflinePlayer(playerUUID);
                             playerName = offlinePlayer.getName();
-                            playerTexture = offlinePlayer.getTexture();
+                            //playerTexture = offlinePlayer.getTexture();
                             islandPlaytime = offlinePlayer.getPlaytime();
                             playTimeDurationTime = NumberUtil.getDuration(Integer.valueOf(islandPlaytime));
 
@@ -419,8 +419,8 @@ public class Members {
                         } else {
                             playerName = targetPlayer.getName();
 
-                            playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer.getUniqueId());
-                            playerTexture = playerData.getTexture();
+                            playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer);
+                            //playerTexture = playerData.getTexture();
                             islandPlaytime = playerData.getPlaytime();
                             playTimeDurationTime = NumberUtil.getDuration(islandPlaytime);
 
@@ -571,7 +571,8 @@ public class Members {
                                 }
                             }
                         }
-                        ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
+
+                        ItemStack phead = SkullUtils.getSkull(Bukkit.getPlayerUniqueId(playerName));
                         nInv.addItem(
                                 nInv.createItem(phead,
                                         configLoad.getString("Menu.Members.Item.Member.Displayname").replace("%player",
