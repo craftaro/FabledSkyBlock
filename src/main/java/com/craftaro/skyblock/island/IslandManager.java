@@ -1189,14 +1189,16 @@ public class IslandManager {
         Map<UUID, PlayerData> playerDataStorage = this.plugin.getPlayerDataManager().getPlayerData();
         Set<UUID> islandVisitors = new HashSet<>();
 
-        for (UUID playerDataStorageList : playerDataStorage.keySet()) {
-            PlayerData playerData = playerDataStorage.get(playerDataStorageList);
-            UUID islandOwnerUUID = playerData.getIsland();
+        synchronized (playerDataStorage) {
+            for (UUID playerDataStorageList : playerDataStorage.keySet()) {
+                PlayerData playerData = playerDataStorage.get(playerDataStorageList);
+                UUID islandOwnerUUID = playerData.getIsland();
 
-            if (islandOwnerUUID != null && islandOwnerUUID.equals(island.getOwnerUUID())) {
-                if (playerData.getOwner() == null || !playerData.getOwner().equals(island.getOwnerUUID())) {
-                    if (Bukkit.getServer().getPlayer(playerDataStorageList) != null) {
-                        islandVisitors.add(playerDataStorageList);
+                if (islandOwnerUUID != null && islandOwnerUUID.equals(island.getOwnerUUID())) {
+                    if (playerData.getOwner() == null || !playerData.getOwner().equals(island.getOwnerUUID())) {
+                        if (Bukkit.getServer().getPlayer(playerDataStorageList) != null) {
+                            islandVisitors.add(playerDataStorageList);
+                        }
                     }
                 }
             }
