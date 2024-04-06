@@ -3,6 +3,7 @@ package com.craftaro.skyblock.gui.coop;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
@@ -139,7 +140,7 @@ public class GuiCoop extends Gui {
                         String targetPlayerName;
                         String[] targetPlayerTexture;
 
-                        Player targetPlayer = Bukkit.getServer().getPlayer(uuid);
+                        org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getOfflinePlayer(uuid);
 
                         if (targetPlayer == null) {
                             OfflinePlayer offlinePlayer = new OfflinePlayer(uuid);
@@ -148,26 +149,25 @@ public class GuiCoop extends Gui {
                         } else {
                             targetPlayerName = targetPlayer.getName();
 
-                            if (playerDataManager.hasPlayerData(targetPlayer)) {
-                                targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+                            if (playerDataManager.hasPlayerData(targetPlayer.getUniqueId())) {
+                                targetPlayerTexture = playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
                             } else {
                                 targetPlayerTexture = new String[]{null, null};
                             }
                         }
-
-                        ItemStack is = ItemUtils.getCustomHead(targetPlayerTexture[0], targetPlayerTexture[1]);
-                        ItemMeta im = is.getItemMeta();
-                        if (im != null) {
-                            im.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Coop.Displayname")
+                        ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
+                        ItemMeta pheadmeta = phead.getItemMeta();
+                        if (pheadmeta != null) {
+                            pheadmeta.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Coop.Displayname")
                                     .replace("%player", targetPlayerName == null ? "" : targetPlayerName)
                                     .replace("%type", type == IslandCoop.TEMP ?
                                             this.languageLoad.getString("Menu.Coop.Item.Word.Temp") :
                                             this.languageLoad.getString("Menu.Coop.Item.Word.Normal"))));
-                            im.setLore(TextUtils.formatText(this.languageLoad.getStringList("Menu.Coop.Item.Coop.Lore")));
-                            is.setItemMeta(im);
+                            pheadmeta.setLore(TextUtils.formatText(this.languageLoad.getStringList("Menu.Coop.Item.Coop.Lore")));
+                            phead.setItemMeta(pheadmeta);
                         }
 
-                        setButton(i, is, e -> {
+                        setButton(i, phead, e -> {
                             Bukkit.getServer().dispatchCommand(e.player, "island coop " + targetPlayerName);
                             paint();
                         });

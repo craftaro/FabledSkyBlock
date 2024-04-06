@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
@@ -214,7 +215,7 @@ public class Ownership {
             String originalOwnerName, ownershipPassword = island.getPassword();
             String[] playerTexture;
 
-            Player targetPlayer = Bukkit.getServer().getPlayer(island.getOriginalOwnerUUID());
+            org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getPlayer(island.getOriginalOwnerUUID());
 
             if (targetPlayer == null) {
                 OfflinePlayer offlinePlayer = new OfflinePlayer(originalOwnerUUID);
@@ -222,12 +223,12 @@ public class Ownership {
                 playerTexture = offlinePlayer.getTexture();
             } else {
                 originalOwnerName = targetPlayer.getName();
-                playerTexture = playerDataManager.getPlayerData(targetPlayer).getTexture();
+                playerTexture = playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
             }
-
+            ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
             nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
-            nInv.addItem(nInv.createItem(ItemUtils.getCustomHead(playerTexture[0], playerTexture[1]),
+            nInv.addItem(nInv.createItem(phead,
                     configLoad.getString("Menu.Ownership.Item.Original.Displayname"),
                     configLoad.getStringList("Menu.Ownership.Item.Original.Lore"),
                     new Placeholder[]{new Placeholder("%player", originalOwnerName)}, null, null), 1);

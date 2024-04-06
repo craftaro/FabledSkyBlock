@@ -6,9 +6,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.world.SWorldBorder;
+import com.craftaro.core.nms.Nms;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.api.event.island.IslandCreateEvent;
 import com.craftaro.skyblock.api.event.island.IslandDeleteEvent;
@@ -43,6 +41,8 @@ import com.craftaro.skyblock.utils.world.LocationUtil;
 import com.craftaro.skyblock.utils.world.block.BlockDegreesType;
 import com.craftaro.skyblock.visit.VisitManager;
 import com.craftaro.skyblock.world.WorldManager;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.eatthepath.uuid.FastUUID;
 import com.google.common.base.Preconditions;
 import io.papermc.lib.PaperLib;
@@ -520,7 +520,7 @@ public class IslandManager {
             removeIsland(uuid2);
             this.islandStorage.put(player.getUniqueId(), island);
 
-            Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(), player));
+            Bukkit.getServer().getPluginManager().callEvent(new IslandOwnershipTransferEvent(island.getAPIWrapper(), player, uuid2));
 
             ArrayList<UUID> islandMembers = new ArrayList<>();
             islandMembers.addAll(island.getRole(IslandRole.MEMBER));
@@ -1189,14 +1189,16 @@ public class IslandManager {
         Map<UUID, PlayerData> playerDataStorage = this.plugin.getPlayerDataManager().getPlayerData();
         Set<UUID> islandVisitors = new HashSet<>();
 
-        for (UUID playerDataStorageList : playerDataStorage.keySet()) {
-            PlayerData playerData = playerDataStorage.get(playerDataStorageList);
-            UUID islandOwnerUUID = playerData.getIsland();
+        synchronized (playerDataStorage) {
+            for (UUID playerDataStorageList : playerDataStorage.keySet()) {
+                PlayerData playerData = playerDataStorage.get(playerDataStorageList);
+                UUID islandOwnerUUID = playerData.getIsland();
 
-            if (islandOwnerUUID != null && islandOwnerUUID.equals(island.getOwnerUUID())) {
-                if (playerData.getOwner() == null || !playerData.getOwner().equals(island.getOwnerUUID())) {
-                    if (Bukkit.getServer().getPlayer(playerDataStorageList) != null) {
-                        islandVisitors.add(playerDataStorageList);
+                if (islandOwnerUUID != null && islandOwnerUUID.equals(island.getOwnerUUID())) {
+                    if (playerData.getOwner() == null || !playerData.getOwner().equals(island.getOwnerUUID())) {
+                        if (Bukkit.getServer().getPlayer(playerDataStorageList) != null) {
+                            islandVisitors.add(playerDataStorageList);
+                        }
                     }
                 }
             }
@@ -1509,11 +1511,12 @@ public class IslandManager {
 
                     Bukkit.getScheduler().runTask(this.plugin, () -> {
                         if (configLoad.getBoolean("Island.WorldBorder.Enable") && island.isBorder()) {
-                            SWorldBorder.send(player, island.getBorderColor(), island.getSize(),
-                                    island.getLocation(worldManager.getIslandWorld(player.getWorld()),
-                                            IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
+                            Location islandLocation = island.getLocation(worldManager.getIslandWorld(player.getWorld()), IslandEnvironment.ISLAND);
+                            if (islandLocation != null) {
+                                Nms.getImplementations().getWorldBorder().send(player, island.getBorderColor(), island.getSize(), islandLocation.clone().add(increment, 0, increment));
+                            }
                         } else {
-                            SWorldBorder.send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
+                            Nms.getImplementations().getWorldBorder().send(player, null, 1.4999992E7D, new org.bukkit.Location(player.getWorld(), 0, 0, 0));
                         }
                     });
                 }
@@ -1530,9 +1533,7 @@ public class IslandManager {
     public void updateFlight(Player player) {
         // The player can fly in other worlds if they are in creative or have another
         // plugin's fly permission.
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly")) {
-            return;
-        }
+
 
         // Residence support
         if (Bukkit.getServer().getPluginManager().getPlugin("Residence") != null) {
@@ -1562,7 +1563,7 @@ public class IslandManager {
 
         boolean hasGlobalFlyPermission = player.hasPermission("fabledskyblock.*") || player.hasPermission("fabledskyblock.fly.*");
         boolean hasOwnIslandFlyPermission = player.hasPermission("fabledskyblock.fly") && island.getRole(player) != null && island.getRole(player) != IslandRole.VISITOR;
-        if (hasGlobalFlyPermission || hasOwnIslandFlyPermission) {
+        if (hasGlobalFlyPermission || hasOwnIslandFlyPermission || player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR || player.hasPermission("essentials.fly") || player.hasPermission("cmi.command.fly")) {
             WorldManager worldManager = this.plugin.getWorldManager();
             boolean canFlyInWorld = worldManager.isIslandWorld(player.getWorld());
             Bukkit.getServer().getScheduler().runTask(this.plugin, () -> player.setAllowFlight(canFlyInWorld));
@@ -1667,7 +1668,7 @@ public class IslandManager {
                     if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                         Bukkit.getScheduler().runTask(this.plugin, () -> {
                             for (Player all : getPlayersAtIsland(island)) {
-                                SWorldBorder.send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
+                                Nms.getImplementations().getWorldBorder().send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
                             }
                         });
                     }
@@ -1679,7 +1680,7 @@ public class IslandManager {
                 if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                     Bukkit.getScheduler().runTask(this.plugin, () -> {
                         for (Player all : getPlayersAtIsland(island)) {
-                            SWorldBorder.send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
+                            Nms.getImplementations().getWorldBorder().send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));
                         }
                     });
                 }

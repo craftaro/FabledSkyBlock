@@ -50,7 +50,7 @@ public class AddUpgradeCommand extends SubCommand {
         FileConfiguration configLoad = config.getFileConfiguration();
 
         if (args.length == 2) {
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+            Player targetPlayer = Bukkit.getPlayerExact(args[0]);
             UUID islandOwnerUUID;
             String targetPlayerName;
 

@@ -1,10 +1,10 @@
 package com.craftaro.skyblock.island;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
+import com.craftaro.core.nms.world.NmsWorldBorder;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.PlayerUtils;
-import com.craftaro.core.world.SWorldBorder;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.api.event.island.IslandBiomeChangeEvent;
 import com.craftaro.skyblock.api.event.island.IslandLocationChangeEvent;
@@ -113,7 +113,7 @@ public class Island {
 
         this.level = new IslandLevel(getOwnerUUID(), this.plugin);
 
-        File configFile = new File(this.plugin.getDataFolder().toString() + "/island-data");
+        File configFile = new File(this.plugin.getDataFolder() + "/island-data");
 
         Config config = fileManager.getConfig(new File(configFile, this.ownerUUID + ".yml"));
 
@@ -150,7 +150,7 @@ public class Island {
 
             if (configLoad.getString("Border") == null) {
                 configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-                configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
+                configLoad.set("Border.Color", NmsWorldBorder.BorderColor.BLUE.name());
             }
 
             if (configLoad.getString("Members") != null) {
@@ -191,7 +191,7 @@ public class Island {
 
             Config settingsDataConfig = null;
 
-            File settingDataFile = new File(this.plugin.getDataFolder().toString() + "/setting-data", getOwnerUUID().toString() + ".yml");
+            File settingDataFile = new File(this.plugin.getDataFolder() + "/setting-data", getOwnerUUID().toString() + ".yml");
 
             if (fileManager.isFileExist(settingDataFile)) {
                 settingsDataConfig = fileManager.getConfig(settingDataFile);
@@ -203,13 +203,13 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.getFriendlyName() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName()) == null) {
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.getFriendlyName() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
                     }
                 }
 
@@ -246,7 +246,7 @@ public class Island {
             configLoad.set("UUID", this.islandUUID.toString());
             configLoad.set("Visitor.Status", mainConfigLoad.getString("Island.Visitor.Status").toUpperCase());
             configLoad.set("Border.Enable", mainConfigLoad.getBoolean("Island.WorldBorder.Default", false));
-            configLoad.set("Border.Color", SWorldBorder.Color.Blue.name());
+            configLoad.set("Border.Color", NmsWorldBorder.BorderColor.BLUE.name());
             configLoad.set("Biome.Type", mainConfigLoad.getString("Island.Biome.Default.Type").toUpperCase());
             configLoad.set("Weather.Synchronised", mainConfigLoad.getBoolean("Island.Weather.Default.Synchronised")); // TODO: Synchronized
             configLoad.set("Weather.Time", mainConfigLoad.getInt("Island.Weather.Default.Time"));
@@ -449,13 +449,13 @@ public class Island {
                 .getFileConfiguration().set("Border.Enable", border);
     }
 
-    public SWorldBorder.Color getBorderColor() {
-        return SWorldBorder.Color.valueOf(this.plugin.getFileManager().getConfig(
-                        new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
-                .getFileConfiguration().getString("Border.Color"));
+    public NmsWorldBorder.BorderColor getBorderColor() {
+        String colorString = this.plugin.getFileManager().getConfig(new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
+                .getFileConfiguration().getString("Border.Color");
+        return NmsWorldBorder.BorderColor.valueOf(colorString.toUpperCase());
     }
 
-    public void setBorderColor(SWorldBorder.Color color) {
+    public void setBorderColor(NmsWorldBorder.BorderColor color) {
         this.plugin.getFileManager().getConfig(
                         new File(new File(this.plugin.getDataFolder(), "island-data"), this.ownerUUID.toString() + ".yml"))
                 .getFileConfiguration().set("Border.Color", color.name());

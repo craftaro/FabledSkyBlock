@@ -51,7 +51,7 @@ public class SetAlwaysLoadedCommand extends SubCommand {
         SoundManager soundManager = this.plugin.getSoundManager();
 
         if (args.length == 1) {
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+            Player targetPlayer = Bukkit.getPlayerExact(args[0]);
             UUID islandOwnerUUID;
 
             if (targetPlayer == null) {

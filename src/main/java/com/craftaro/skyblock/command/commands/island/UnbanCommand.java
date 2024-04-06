@@ -45,7 +45,7 @@ public class UnbanCommand extends SubCommand {
                 if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                         || (island.hasRole(IslandRole.OPERATOR, player.getUniqueId())
                         && this.plugin.getPermissionManager().hasPermission(island, "Unban", IslandRole.OPERATOR))) {
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                    Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                     UUID targetPlayerUUID;
                     String targetPlayerName;

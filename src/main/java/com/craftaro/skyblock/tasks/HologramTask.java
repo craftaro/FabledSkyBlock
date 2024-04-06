@@ -46,9 +46,8 @@ public class HologramTask extends BukkitRunnable {
     public void run() {
         for (HologramType hologramTypeList : HologramType.values()) {
             if (hologramTypeList == HologramType.VOTES) {
-                if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote")) {
+                if (!plugin.getConfiguration().getBoolean("Island.Visitor.Vote"))
                     continue;
-                }
             }
             spawnHologram(hologramTypeList);
         }
@@ -73,9 +72,9 @@ public class HologramTask extends BukkitRunnable {
         FileManager.Config locationsConfig = fileManager.getConfig(new File(plugin.getDataFolder(), "locations.yml"));
         FileConfiguration locationsConfigLoad = locationsConfig.getFileConfiguration();
 
-        if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type) != null) {
+        if (locationsConfigLoad.getString("Location.Hologram.Leaderboard." + type.getFriendlyName()) != null) {
             spawnHologram(type, plugin.getFileManager().getLocation(locationsConfig,
-                    "Location.Hologram.Leaderboard." + type, true), getHologramLines(type));
+                    "Location.Hologram.Leaderboard." + type.getFriendlyName(), true), getHologramLines(type));
         }
     }
 

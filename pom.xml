@@ -6,7 +6,7 @@
 
     <groupId>com.craftaro</groupId>
     <artifactId>FabledSkyBlock</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.6</version>
 
     <name>FabledSkyBlock</name>
     <description>Bring your server's SkyBlock experience to the next level with the ability to fine-tune island settings, create custom islands, view leaderboards, and much more</description>
@@ -25,7 +25,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.5.2</version>
 
                 <executions>
                     <execution>
@@ -45,11 +45,6 @@
                                 <relocation>
                                     <pattern>com.craftaro.core</pattern>
                                     <shadedPattern>com.craftaro.skyblock.core</shadedPattern>
-                                </relocation>
-
-                                <relocation>
-                                    <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>com.craftaro.skyblock.third_party.io.papermc.lib</shadedPattern>
                                 </relocation>
 
                                 <relocation>
@@ -85,6 +80,7 @@
                                         <exclude>**/third_party/org/h2/**</exclude>
                                         <exclude>**/third_party/com/cryptomorin/**</exclude>
                                         <exclude>**/third_party/org/reactivestreams/**</exclude>
+                                        <exclude>**/third_party/io/papermc/lib/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -150,7 +146,7 @@
         <dependency>
             <groupId>io.papermc</groupId>
             <artifactId>paperlib</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.8</version>
             <scope>compile</scope>
         </dependency>
 
@@ -163,7 +159,7 @@
 
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -171,14 +167,14 @@
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
+            <version>1.7.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.3</version>
+            <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
 
@@ -199,8 +195,29 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.2.9</version>
+            <version>7.2.20</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>3.16.29</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.108.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

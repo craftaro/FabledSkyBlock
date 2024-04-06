@@ -82,6 +82,7 @@ public class PlayerDataManager {
         }
     }
 
+
     public void loadPlayerData(Player player) {
         if (this.plugin.getFileManager().isFileExist(new File(this.plugin.getDataFolder().toString() + "/player-data", player.getUniqueId().toString() + ".yml"))) {
             PlayerData playerData = new PlayerData(player);

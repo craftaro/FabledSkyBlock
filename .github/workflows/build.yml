@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare Workspace
         uses: ./.github/actions/setup_project_workspace
         with:
@@ -33,14 +33,14 @@ jobs:
         with:
           append_snapshot: ${{ github.ref_type == 'tag' && 'false' || 'true' }}
           version: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          increment_version: ${{ github.ref_type == 'tag' && '' || 'patch' }}
+          increment_version: ${{ github.ref_type != 'tag' && 'patch' || '' }}
           increment_version_only_if_not_snapshot_version: ${{ github.ref == 'refs/heads/development' && 'true' || 'false' }}
 
       - name: Build with Maven
         run: mvn -B -Duser.name="GitHub Actions on $GITHUB_REPOSITORY (id=$GITHUB_RUN_ID)" -DskipTests clean package
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}
           path: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
@@ -54,7 +54,7 @@ jobs:
           keystore_password: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_PASSWORD }}
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-Signed
           path: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
@@ -76,7 +76,7 @@ jobs:
     if: ${{ always() && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/development' || github.ref_type == 'tag') }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Notify Webhook
         uses: craftaro/GH-Commons/.github/actions/discord_send_job_results@master
         with:

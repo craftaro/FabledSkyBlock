@@ -51,7 +51,7 @@ public class VoteCommand extends SubCommand {
                 return;
             }
 
-            Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+            Player targetPlayer = Bukkit.getPlayerExact(args[0]);
             UUID islandOwnerUUID;
             String targetPlayerName;
 

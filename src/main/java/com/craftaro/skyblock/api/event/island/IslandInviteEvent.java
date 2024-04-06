@@ -24,7 +24,7 @@ public class IslandInviteEvent extends IslandEvent {
         return HANDLERS;
     }
 
-    public HandlerList getHandlerList() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

@@ -5,6 +5,7 @@ import com.craftaro.core.hooks.economies.Economy;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.config.FileManager;
 import com.craftaro.skyblock.island.Island;
+import com.craftaro.skyblock.playerdata.PlayerData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class BankManager {
@@ -71,8 +73,11 @@ public class BankManager {
     }
 
     private void loadTransactions() {
-        for (UUID uid : SkyBlock.getInstance().getPlayerDataManager().getPlayerData().keySet()) {
-            this.log.put(uid, SkyBlock.getInstance().getPlayerDataManager().getPlayerData().get(uid).getTransactions());
+        Map<UUID, PlayerData> playerDataStorage = SkyBlock.getInstance().getPlayerDataManager().getPlayerData();
+        synchronized (playerDataStorage) {
+            for (UUID uid : playerDataStorage.keySet()) {
+                this.log.put(uid, playerDataStorage.get(uid).getTransactions());
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.listeners.hooks;
 
+import com.craftaro.epicspawners.api.events.SpawnerAccessEvent;
 import com.craftaro.epicspawners.api.events.SpawnerBreakEvent;
 import com.craftaro.epicspawners.api.events.SpawnerChangeEvent;
 import com.craftaro.epicspawners.api.events.SpawnerPlaceEvent;
@@ -7,6 +8,7 @@ import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.island.IslandLevel;
 import com.craftaro.skyblock.island.IslandManager;
+import com.craftaro.skyblock.permission.PermissionManager;
 import com.craftaro.skyblock.utils.version.CompatibleSpawners;
 import com.craftaro.skyblock.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -130,6 +132,33 @@ public class EpicSpawners implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onSpawnerAccess(SpawnerAccessEvent event) {
+        if (event.getSpawner().getLocation() == null) {
+            return;
+        }
+
+        IslandManager islandManager = this.plugin.getIslandManager();
+        WorldManager worldManager = this.plugin.getWorldManager();
+
+        Location location = event.getSpawner().getLocation();
+        if (!worldManager.isIslandWorld(location.getWorld())) {
+            return;
+        }
+
+        Island island = islandManager.getIslandAtLocation(location);
+
+        if (island == null) {
+            return;
+        }
+
+        PermissionManager permissionManager = this.plugin.getPermissionManager();
+
+        if (!permissionManager.hasPermission(event.getPlayer(), island, permissionManager.getPermission("SpawnEgg"))) {
+            event.setCancelled(true);
         }
     }
 }

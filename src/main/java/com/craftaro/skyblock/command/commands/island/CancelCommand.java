@@ -42,7 +42,7 @@ public class CancelCommand extends SubCommand {
             } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())
                     || island.hasRole(IslandRole.OPERATOR, player.getUniqueId())) {
                 String playerName = args[0];
-                Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
+                Player targetPlayer = Bukkit.getPlayerExact(playerName);
 
                 if (targetPlayer == null) {
                     messageManager.sendMessage(player, configLoad.getString("Command.Island.Cancel.Offline.Message"));

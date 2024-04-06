@@ -64,7 +64,7 @@ public class InviteCommand extends SubCommand {
                                 configLoad.getString("Command.Island.Invite.Yourself.Message"));
                         soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
                     } else {
-                        Player targetPlayer = Bukkit.getServer().getPlayer(playerName);
+                        Player targetPlayer = Bukkit.getPlayerExact(playerName);
 
                         if (targetPlayer == null) {
                             messageManager.sendMessage(player,

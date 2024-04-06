@@ -33,7 +33,7 @@ public class CurrentCommand extends SubCommand {
         if (args.length > 0) {
             if (!args[0].equalsIgnoreCase(player.getName())) {
                 if (args.length == 1) {
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                    Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                     if (targetPlayer == null) {
                         messageManager.sendMessage(player,

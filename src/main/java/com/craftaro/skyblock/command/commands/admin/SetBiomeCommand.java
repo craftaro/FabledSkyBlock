@@ -76,7 +76,7 @@ public class SetBiomeCommand extends SubCommand {
             }
 
             if (biome != null) {
-                Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                Player targetPlayer = Bukkit.getPlayerExact(args[0]);
                 UUID islandOwnerUUID;
                 String targetPlayerName;
 

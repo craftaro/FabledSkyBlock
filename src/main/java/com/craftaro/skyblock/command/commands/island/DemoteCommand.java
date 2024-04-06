@@ -40,7 +40,7 @@ public class DemoteCommand extends SubCommand {
                 messageManager.sendMessage(player, configLoad.getString("Command.Island.Demote.Owner.Message"));
                 soundManager.playSound(player, XSound.BLOCK_ANVIL_LAND);
             } else if (island.hasRole(IslandRole.OWNER, player.getUniqueId())) {
-                Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                 if (targetPlayer == null) {
                     OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);

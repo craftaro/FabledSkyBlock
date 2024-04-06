@@ -73,7 +73,7 @@ public class OwnerCommand extends SubCommand {
                     UUID targetPlayerUUID;
                     String targetPlayerName;
 
-                    Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+                    Player targetPlayer = Bukkit.getPlayerExact(args[0]);
 
                     if (targetPlayer == null) {
                         OfflinePlayer offlinePlayer = new OfflinePlayer(args[0]);

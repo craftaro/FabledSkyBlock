@@ -4,6 +4,9 @@ import com.craftaro.skyblock.playerdata.PlayerData;
 import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class VisitTask extends BukkitRunnable {
     private final PlayerDataManager playerDataManager;
 
@@ -13,9 +16,12 @@ public class VisitTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (PlayerData playerData : this.playerDataManager.getPlayerData().values()) {
-            if (playerData.getIsland() != null) {
-                playerData.setVisitTime(playerData.getVisitTime() + 1);
+        Map<UUID, PlayerData> playerDataStorage = this.playerDataManager.getPlayerData();
+        synchronized (playerDataStorage) {
+            for (PlayerData playerData : playerDataStorage.values()) {
+                if (playerData.getIsland() != null) {
+                    playerData.setVisitTime(playerData.getVisitTime() + 1);
+                }
             }
         }
     }
