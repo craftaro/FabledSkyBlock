@@ -918,7 +918,7 @@ public class Island {
 
         for (Entry<IslandRole, List<IslandPermission>> entry : this.islandPermissions.entrySet()) {
             for (IslandPermission permission : entry.getValue()) {
-                configLoad.set("Settings." + entry.getKey() + "." + permission.getPermission().getName(), permission.getStatus());
+                configLoad.set("Settings." + entry.getKey().getFriendlyName() + "." + permission.getPermission().getName(), permission.getStatus());
             }
         }
 
