@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -203,13 +204,13 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
                     }
                 }
 
