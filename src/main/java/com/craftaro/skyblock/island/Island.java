@@ -204,13 +204,14 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.name() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName()) == null) {
+                        //save default value if not exist
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName(), permission.getDefaultValues().get(roleList))));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.name() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName(), true)));
                     }
                 }
 
