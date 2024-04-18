@@ -12,17 +12,37 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BasicPermission {
     private final String name;
     private final XMaterial icon;
     private final PermissionType type;
 
+    //It used to write the permission's value
+    //to the global settings.yml which will be defaulted on all islands
+    private final Map<IslandRole, Boolean> defaultValues;
+
     protected BasicPermission(@Nonnull String name, @Nonnull XMaterial icon, @Nonnull PermissionType type) {
+        this(name, icon, type, new HashMap<>());
+    }
+
+    protected BasicPermission(@Nonnull String name, @Nonnull XMaterial icon, @Nonnull PermissionType type, Map<IslandRole, Boolean> defaultValues) {
         this.name = name;
         this.icon = icon;
         this.type = type;
+        if (defaultValues.isEmpty()) {
+            this.defaultValues = new HashMap<>();
+            this.defaultValues.put(IslandRole.VISITOR, false);
+            this.defaultValues.put(IslandRole.MEMBER, true);
+            this.defaultValues.put(IslandRole.OPERATOR, true);
+            this.defaultValues.put(IslandRole.COOP, true);
+            this.defaultValues.put(IslandRole.OWNER, true);
+        } else {
+            this.defaultValues = defaultValues;
+        }
     }
 
     public ItemStack getItem(Island island, IslandRole role) {
@@ -71,5 +91,9 @@ public abstract class BasicPermission {
 
     public PermissionType getType() {
         return this.type;
+    }
+
+    public Map<IslandRole, Boolean> getDefaultValues() {
+        return defaultValues;
     }
 }
