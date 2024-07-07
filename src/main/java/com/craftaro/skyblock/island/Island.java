@@ -61,6 +61,7 @@ public class Island {
     private final List<IslandLocation> islandLocations = new ArrayList<>();
     private final Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
     private final Set<UUID> whitelistedPlayers = new HashSet<>();
+    private final Map<IslandRole, Set<UUID>> roleCache = new HashMap<>();
 
     private UUID islandUUID;
     private UUID ownerUUID;
@@ -599,6 +600,11 @@ public class Island {
     }
 
     public Set<UUID> getRole(IslandRole role) {
+
+        if (roleCache.containsKey(role)) {
+            return new HashSet<>(roleCache.get(role)); // Return a copy to avoid external modification
+        }
+
         Set<UUID> islandRoles = new HashSet<>();
 
         if (role == IslandRole.OWNER) {
@@ -614,6 +620,8 @@ public class Island {
                 }
             }
         }
+
+        roleCache.put(role, islandRoles);
 
         return islandRoles;
     }
@@ -673,6 +681,9 @@ public class Island {
 
                 getVisit().setMembers(getRole(IslandRole.MEMBER).size() + getRole(IslandRole.OPERATOR).size() + 1);
 
+                //Update role cache
+                roleCache.remove(role);
+
                 return true;
             }
         }
@@ -698,6 +709,9 @@ public class Island {
                 }
 
                 getVisit().setMembers(getRole(IslandRole.MEMBER).size() + getRole(IslandRole.OPERATOR).size() + 1);
+
+                //Update role cache
+                roleCache.remove(role);
 
                 return true;
             }
