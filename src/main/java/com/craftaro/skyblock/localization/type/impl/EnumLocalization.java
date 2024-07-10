@@ -37,6 +37,6 @@ public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
     }
 
     protected T parseEnum(String input) {
-        return Enum.valueOf(getType(), input.toUpperCase());
+        return Enum.valueOf(getType(), input.toUpperCase(Locale.ENGLISH));
     }
 }
