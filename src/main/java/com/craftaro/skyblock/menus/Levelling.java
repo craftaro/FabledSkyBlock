@@ -2,6 +2,7 @@ package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.ItemUtils;
@@ -22,9 +23,6 @@ import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.NumberUtil;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,7 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -227,13 +224,13 @@ public class Levelling {
         nInv.addItem(nInv.createItem(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem(), configLoad.getString("Menu.Levelling.Item.Barrier.Displayname"), null, null, null, null), 9, 10, 11, 12, 13, 14, 15, 16, 17);
 
         if (playerMenuPage != 1) {
-            ItemStack Lhead = XSkull.createItem().profile(new Profileable.StringProfileable("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23", ProfileInputType.TEXTURE_HASH)).apply();
+            ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
             nInv.addItem(nInv.createItem(Lhead,
                     configLoad.getString("Menu.Levelling.Item.Previous.Displayname"), null, null, null, null), 1);
         }
 
         if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-            ItemStack Rhead = XSkull.createItem().profile(new Profileable.StringProfileable("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b", ProfileInputType.TEXTURE_HASH)).apply();
+            ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
             nInv.addItem(nInv.createItem(Rhead,
                     configLoad.getString("Menu.Levelling.Item.Next.Displayname"), null, null, null, null), 7);
         }

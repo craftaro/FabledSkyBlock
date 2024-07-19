@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.utils.NumberUtils;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.placeholder.Placeholder;
 import com.craftaro.skyblock.playerdata.PlayerDataManager;
@@ -10,9 +11,6 @@ import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.visit.Visit;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -289,7 +287,14 @@ public class Leaderboard {
                         }
                     }
 
-                    ItemStack phead = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+
+                    ItemStack phead;
+                    if (playerTexture.length >= 1 && playerTexture[0] != null) {
+                        phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+                    } else {
+                        phead = SkullItemCreator.byUuid(visit.getOwnerUUID());
+                    }
+
                     nInv.addItem(
                             nInv.createItem(phead,
                                     configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Island.Displayname")
@@ -312,7 +317,7 @@ public class Leaderboard {
 
                 for (int i = 0; i < itemSlots.length; i++) {
                     if (!nInv.getItems().containsKey(itemSlots[i])) {
-                        ItemStack qhead = XSkull.createItem().profile(new Profileable.StringProfileable("d34e063cafb467a5c8de43ec78619399f369f4a52434da8017a983cdd92516a0", ProfileInputType.TEXTURE_HASH)).apply();
+                        ItemStack qhead = SkullItemCreator.byTextureHash("d34e063cafb467a5c8de43ec78619399f369f4a52434da8017a983cdd92516a0");
                         nInv.addItem(nInv.createItem(qhead,
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Empty.Displayname")
                                                 .replace("%position", "" + (i + 1)),

@@ -3,6 +3,7 @@ package com.craftaro.skyblock.gui.coop;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
@@ -15,8 +16,6 @@ import com.craftaro.skyblock.permission.PermissionManager;
 import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -154,7 +153,14 @@ public class GuiCoop extends Gui {
                                 targetPlayerTexture = new String[]{null, null};
                             }
                         }
-                        ItemStack phead = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+
+                        ItemStack phead;
+                        if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
+                            phead = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
+                        } else {
+                            phead = SkullItemCreator.byUuid(uuid);
+                        }
+
                         ItemMeta pheadmeta = phead.getItemMeta();
                         if (pheadmeta != null) {
                             pheadmeta.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Coop.Displayname")

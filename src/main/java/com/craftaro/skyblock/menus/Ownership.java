@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
@@ -14,8 +15,6 @@ import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -215,7 +214,7 @@ public class Ownership {
             String originalOwnerName, ownershipPassword = island.getPassword();
             String[] playerTexture;
 
-            org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getPlayer(island.getOriginalOwnerUUID());
+            org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getPlayer(originalOwnerUUID);
 
             if (targetPlayer == null) {
                 OfflinePlayer offlinePlayer = new OfflinePlayer(originalOwnerUUID);
@@ -225,7 +224,15 @@ public class Ownership {
                 originalOwnerName = targetPlayer.getName();
                 playerTexture = playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
             }
-            ItemStack phead = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+
+
+            ItemStack phead;
+            if (playerTexture.length >= 1 && playerTexture[0] != null) {
+                phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+            } else {
+                phead = SkullItemCreator.byUuid(originalOwnerUUID);
+            }
+
             nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
             nInv.addItem(nInv.createItem(phead,

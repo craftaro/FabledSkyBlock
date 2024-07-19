@@ -3,6 +3,7 @@ package com.craftaro.skyblock.menus.admin;
 import com.craftaro.core.compatibility.CompatibleMaterial;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.gui.AnvilGui;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.NumberUtils;
@@ -17,9 +18,6 @@ import com.craftaro.skyblock.placeholder.Placeholder;
 import com.craftaro.skyblock.playerdata.PlayerData;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,7 +30,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,13 +103,13 @@ public class Levelling implements Listener {
         int playerMenuPage = playerData.getPage(MenuType.ADMIN_LEVELLING), nextEndIndex = levellingMaterials.size() - playerMenuPage * 36;
 
         if (playerMenuPage != 1) {
-            ItemStack Lhead = XSkull.createItem().profile(new Profileable.StringProfileable("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23", ProfileInputType.TEXTURE_HASH)).apply();
+            ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
             nInv.addItem(nInv.createItem(Lhead,
                     configLoad.getString("Menu.Admin.Levelling.Item.Previous.Displayname"), null, null, null, null), 1);
         }
 
         if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-            ItemStack Rhead = XSkull.createItem().profile(new Profileable.StringProfileable("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b", ProfileInputType.TEXTURE_HASH)).apply();
+            ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
             nInv.addItem(nInv.createItem(Rhead,
                     configLoad.getString("Menu.Admin.Levelling.Item.Next.Displayname"), null, null, null, null), 7);
         }

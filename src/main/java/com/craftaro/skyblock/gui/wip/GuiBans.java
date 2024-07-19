@@ -2,6 +2,7 @@ package com.craftaro.skyblock.gui.wip;
 
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
@@ -10,8 +11,6 @@ import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -118,7 +117,13 @@ public class GuiBans extends Gui {
                     }
                 }
 
-                ItemStack is = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+                ItemStack is;
+                if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
+                    is = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
+                } else {
+                    is = SkullItemCreator.byUuid(uuid);
+                }
+
                 ItemMeta im = is.getItemMeta();
                 if (im != null) {
                     im.setDisplayName(this.languageLoad.getString("Menu.Bans.Item.Ban.Displayname")

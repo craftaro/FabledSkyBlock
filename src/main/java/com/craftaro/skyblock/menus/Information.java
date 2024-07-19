@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.menus;
 
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
@@ -15,9 +16,6 @@ import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.visit.Visit;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.ProfileInputType;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +23,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -344,14 +341,14 @@ public class Information {
                             nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {
-                        ItemStack Lhead = XSkull.createItem().profile(new Profileable.StringProfileable("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23", ProfileInputType.TEXTURE_HASH)).apply();
+                        ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                         nInv.addItem(nInv.createItem(Lhead,
                                 configLoad.getString("Menu.Information.Members.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                        ItemStack Rhead = XSkull.createItem().profile(new Profileable.StringProfileable("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b", ProfileInputType.TEXTURE_HASH)).apply();
+                        ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                         nInv.addItem(nInv.createItem(Rhead,
                                 configLoad.getString("Menu.Information.Members.Item.Next.Displayname"), null, null,
                                 null, null), 7);
@@ -389,7 +386,14 @@ public class Information {
                             } else {
                                 islandRole = configLoad.getString("Menu.Information.Members.Item.Member.Word.Owner");
                             }
-                            ItemStack phead = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+
+                            ItemStack phead;
+                            if (playerTexture.length >= 1 && playerTexture[0] != null) {
+                                phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+                            } else {
+                                phead = SkullItemCreator.byUuid(playerUUID);
+                            }
+
                             nInv.addItem(
                                     nInv.createItem(phead,
                                             configLoad.getString("Menu.Information.Members.Item.Member.Displayname")
@@ -485,14 +489,14 @@ public class Information {
                             nextEndIndex = displayedVisitors.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {
-                        ItemStack Lhead = XSkull.createItem().profile(new Profileable.StringProfileable("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23", ProfileInputType.TEXTURE_HASH)).apply();
+                        ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                         nInv.addItem(nInv.createItem(Lhead,
                                 configLoad.getString("Menu.Information.Visitors.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                        ItemStack Rhead = XSkull.createItem().profile(new Profileable.StringProfileable("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b", ProfileInputType.TEXTURE_HASH)).apply();
+                        ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                         nInv.addItem(nInv.createItem(Rhead,
                                 configLoad.getString("Menu.Information.Visitors.Item.Next.Displayname"), null, null,
                                 null, null), 7);
@@ -522,7 +526,15 @@ public class Information {
                                 playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer.getUniqueId());
                                 playerTexture = playerData.getTexture();
                             }
-                            ItemStack phead = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+
+
+                            ItemStack phead;
+                            if (playerTexture.length >= 1 && playerTexture[0] != null) {
+                                phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+                            } else {
+                                phead = SkullItemCreator.byUuid(playerUUID);
+                            }
+
                             nInv.addItem(
                                     nInv.createItem(phead,
                                             configLoad.getString("Menu.Information.Visitors.Item.Visitor.Displayname")
