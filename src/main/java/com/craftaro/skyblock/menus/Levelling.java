@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -278,7 +279,7 @@ public class Levelling {
 
                 String name = plugin.getLocalizationManager().getLocalizationFor(XMaterial.class).getLocale(materials.get());
 
-                if (materials.get() == XMaterial.FARMLAND && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
+                if (materials.get() == XMaterial.FARMLAND && MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_9)) {
                     materials = Optional.of(XMaterial.DIRT);
                 }
 

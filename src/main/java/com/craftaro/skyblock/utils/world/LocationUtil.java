@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.utils.world;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -35,7 +36,7 @@ public final class LocationUtil {
         Location tempLoc = LocationUtil.getDefinitiveLocation(loc.clone());
         if (tempLoc.getBlock().getType() == Material.WATER) {
             tempLoc.getBlock().setType(Material.AIR);
-        } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        } else if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             LocationUtil113.removeWaterLoggedFromLocation(tempLoc);
         }
     }
@@ -72,7 +73,7 @@ public final class LocationUtil {
         for (locWorking.setY(locWorking.getBlockY()); locWorking.getBlockY() >= 0; locWorking.setY(locWorking.getBlockY() - 1)) {
             if (!locWorking.getBlock().isEmpty()) {
                 if (locWorking.getBlock().getType() == XMaterial.WATER.parseMaterial() ||
-                        (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                        (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13) &&
                                 locWorking.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
                     loc = locWorking;
                 }
@@ -90,7 +91,7 @@ public final class LocationUtil {
                 locChecked.getBlock().getType().isBlock() &&
                 locChecked.add(0d, 1d, 0d).getBlock().getType() == XMaterial.AIR.parseMaterial() &&
                 locChecked.add(0d, 2d, 0d).getBlock().getType() == XMaterial.AIR.parseMaterial() &&
-                !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
+                !(MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13) && locChecked.getBlock().getBlockData() instanceof org.bukkit.block.data.Waterlogged)) {
             safe = true;
             switch (CompatibleMaterial.getMaterial(locChecked.getBlock().getType()).orElse(XMaterial.AIR)) {
                 case ACACIA_DOOR: // <= 1.8.8

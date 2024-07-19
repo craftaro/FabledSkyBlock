@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.tasks;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.IslandWorld;
@@ -50,7 +51,7 @@ public class MobNetherWaterTask extends BukkitRunnable {
         if (ent instanceof Blaze || ent instanceof MagmaCube || ent instanceof Wither || ent instanceof Ghast)
             return true;
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
             return ent.getType() == EntityType.WITHER_SKELETON;
         } else {
             return ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType() == Skeleton.SkeletonType.WITHER;

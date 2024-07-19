@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.utils.item;
 
 import com.craftaro.core.compatibility.ClassMapping;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.MethodMapping;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -18,7 +19,7 @@ import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
 public class ItemStackUtil {
-    private static final boolean isAbove1_16_R1 = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)
+    private static final boolean isAbove1_16_R1 = MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)
             && !ServerVersion.getServerVersionString().equals("v1_16_R1");
 
     public static ItemStack deserializeItemStack(String data) {
@@ -37,9 +38,9 @@ public class ItemStackUtil {
             Object craftItemStack;
 
             assert NMSItemStackClass != null;
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                 craftItemStack = NMSItemStackClass.getMethod("a", NBTTagCompoundClass).invoke(null, NBTTagCompound);
-            } else if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+            } else if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                 craftItemStack = NMSItemStackClass.getConstructor(NBTTagCompoundClass).newInstance(NBTTagCompound);
             } else {
                 craftItemStack = NMSItemStackClass.getMethod("createStack", NBTTagCompoundClass).invoke(null,

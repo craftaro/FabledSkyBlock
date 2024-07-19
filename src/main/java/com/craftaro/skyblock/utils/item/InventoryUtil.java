@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.utils.item;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -20,7 +21,7 @@ public class InventoryUtil {
             ItemStack is = ammo.get(index);
             ItemMeta im = is.getItemMeta();
 
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+            if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
                 if (((Damageable) im).getDamage() != 0) {
                     continue;
                 }
@@ -56,7 +57,7 @@ public class InventoryUtil {
                 ItemMeta im = is.getItemMeta();
 
                 if (!im.hasDisplayName()) {
-                    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+                    if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
                         if (((Damageable) im).getDamage() != 0) {
                             continue;
                         }

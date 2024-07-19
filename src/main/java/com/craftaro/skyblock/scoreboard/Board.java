@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.scoreboard;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.placeholder.PlaceholderManager;
@@ -24,7 +25,7 @@ class Board {
         this.player = player;
         this.plugin = plugin;
         this.board = this.plugin.getServer().getScoreboardManager().getNewScoreboard();
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             this.objective = this.board.registerNewObjective("sb1", "sb2", "sb3");
         } else {
             this.objective = this.board.registerNewObjective("sb1", "sb2");
@@ -66,7 +67,7 @@ class Board {
             this.cache.put(line, string);
 
             ScoreboardLine parts;
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                 parts = convertIntoPieces(string, 64);
             } else {
                 parts = convertIntoPieces(string, 16);

@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.permission.permissions.listening;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -26,7 +27,7 @@ public class TradingPermission extends ListeningPermission {
         Player player = event.getPlayer();
 
         if (event.getRightClicked().getType() == EntityType.VILLAGER
-                || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)
+                || MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_14)
                 && event.getRightClicked().getType() == EntityType.WANDERING_TRADER) {
             cancelAndMessage(event, player, this.plugin, this.messageManager);
         }

@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.world.generator;
 
 import com.craftaro.core.compatibility.CompatibleBiome;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -56,7 +57,7 @@ public class VoidGenerator extends ChunkGenerator {
                 throw new IllegalStateException("Unexpected value: " + world.getEnvironment());
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) { // TODO Should be 1.15 but it works fine there
             setChunkBiome3D(biome, biomeGrid, world);
         } else {
             setChunkBiome2D(biome, biomeGrid);

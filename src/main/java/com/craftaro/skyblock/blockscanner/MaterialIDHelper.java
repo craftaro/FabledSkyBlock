@@ -1,6 +1,6 @@
 package com.craftaro.skyblock.blockscanner;
 
-import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public final class MaterialIDHelper {
     static {
         MATERIALS = new HashMap<>();
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             for (Material type : Material.values()) {
                 if (type.isLegacy()) {
                     MATERIALS.put(type.getId(), type);

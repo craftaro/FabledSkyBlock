@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.menus;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.economies.Economy;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -495,10 +496,10 @@ public class Upgrade {
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
                     com.craftaro.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
                         PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
+                        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_10)) {
                             pm.setBasePotionData(new PotionData(PotionType.SPEED));
                         } else {
                             pm.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 0), true);
@@ -547,11 +548,11 @@ public class Upgrade {
                 if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()) {
                     com.craftaro.skyblock.upgrade.Upgrade upgrade = upgrades.get(0);
 
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_8)) {
                         potion = new ItemStack(Material.POTION);
                         PotionMeta pm = (PotionMeta) potion.getItemMeta();
 
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
                             pm.setBasePotionData(new PotionData(PotionType.JUMP));
                         } else {
                             pm.addCustomEffect(new PotionEffect(PotionEffectType.JUMP, 1, 0), true);

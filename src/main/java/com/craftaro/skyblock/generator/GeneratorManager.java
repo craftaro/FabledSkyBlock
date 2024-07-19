@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.generator;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XBlock;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -109,7 +110,7 @@ public class GeneratorManager {
 
     @SuppressWarnings("deprecation")
     private int getLiquidLevel(Block block) {
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12) && block.getState().getBlockData() instanceof Levelled) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12) && block.getState().getBlockData() instanceof Levelled) {
             Levelled levelled = (Levelled) block.getState().getBlockData();
             return levelled.getLevel();
         } else {
@@ -131,7 +132,7 @@ public class GeneratorManager {
         this.plugin.getSoundManager().playSound(block.getLocation(), XSound.BLOCK_FIRE_EXTINGUISH, 1, 10);
 
 
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
             XBlock.setType(block, materials);
         } else {
             ItemStack is = materials.parseItem();

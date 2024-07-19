@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.menus.admin;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -240,7 +241,7 @@ public class Upgrade {
                 ItemStack jumpPotion = new ItemStack(Material.POTION);
                 com.craftaro.skyblock.upgrade.Upgrade upgrade;
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                     PotionMeta pm = (PotionMeta) speedPotion.getItemMeta();
                     pm.setBasePotionData(new PotionData(PotionType.SPEED));
                     speedPotion.setItemMeta(pm);
@@ -258,7 +259,7 @@ public class Upgrade {
                                 new Placeholder("%status", getStatus(upgrade))},
                         null, new ItemFlag[]{ItemFlag.HIDE_POTION_EFFECTS}), 0);
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                     PotionMeta pm = (PotionMeta) jumpPotion.getItemMeta();
                     pm.setBasePotionData(new PotionData(PotionType.JUMP));
                     jumpPotion.setItemMeta(pm);

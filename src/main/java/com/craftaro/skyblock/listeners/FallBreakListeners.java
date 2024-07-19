@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -46,7 +47,7 @@ public class FallBreakListeners implements Listener {
 
                             if (island != null) {
                                 Optional<XMaterial> material = Optional.empty();
-                                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                                     material = CompatibleMaterial.getMaterial(ent.getBlockData().getMaterial());
                                 } else {
                                     try {

@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XBlock;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -242,7 +243,7 @@ public class EntityListeners implements Listener {
             return;
         }
 
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             return;
         }
 
@@ -371,7 +372,7 @@ public class EntityListeners implements Listener {
                 && configLoad.getBoolean("Island.Spawn.Protection")) {
             FallingBlock fallingBlock = (FallingBlock) event.getEntity();
             if (fallingBlock.getDropItem()) {
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                     fallingBlock.getWorld().dropItemNaturally(fallingBlock.getLocation(),
                             new ItemStack(fallingBlock.getBlockData().getMaterial(), 1));
                 } else {
@@ -532,25 +533,25 @@ public class EntityListeners implements Listener {
             return;
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_10)) {
             if (livingEntity instanceof Donkey || livingEntity instanceof Mule || livingEntity instanceof ElderGuardian) {
                 return;
             }
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
             if (livingEntity instanceof Evoker) {
                 return;
             }
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_12)) {
             if (livingEntity instanceof Llama) {
                 return;
             }
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_14)) {
             if (livingEntity instanceof Ravager || livingEntity instanceof Illager) {
                 return;
             }
@@ -577,7 +578,7 @@ public class EntityListeners implements Listener {
         if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled() && island.isUpgrade(Upgrade.Type.DROPS)) {
             Set<ItemStack> dontMultiply = new HashSet<>();
 
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
+            if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_8)) {
                 EntityEquipment equipment = livingEntity.getEquipment();
                 if (equipment != null) {
                     for (ItemStack item : event.getDrops()) {
@@ -589,7 +590,7 @@ public class EntityListeners implements Listener {
                     }
                 }
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) {
                     if (livingEntity instanceof Steerable) {
                         Steerable steerable = (Steerable) livingEntity;
                         if (steerable.hasSaddle()) {
@@ -701,7 +702,7 @@ public class EntityListeners implements Listener {
             return;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) { // getPassengers() was added in 1.11
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) { // getPassengers() was added in 1.11
                 for (org.bukkit.entity.Entity passenger : entity.getPassengers()) {
                     passenger.remove();
                 }

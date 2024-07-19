@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.limit.impl;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -73,7 +74,7 @@ public final class BlockLimitation extends EnumLimitation<XMaterial> {
         }
 
         XMaterial material = null;
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (type.toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -111,7 +112,7 @@ public final class BlockLimitation extends EnumLimitation<XMaterial> {
             totalPlaced = island.getLevel().getMaterials().entrySet().stream().filter(x -> x.getKey().contains("SPAWNER")).mapToLong(Map.Entry::getValue).sum();
         } else {
             XMaterial material = null;
-            if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
                 switch (type.toString().toUpperCase()) {
                     case "DIODE_BLOCK_OFF":
                     case "DIODE_BLOCK_ON":

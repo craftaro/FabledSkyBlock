@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.menus.admin;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.utils.SkullItemCreator;
@@ -194,7 +195,7 @@ public class Generator implements Listener {
         FileConfiguration configLoad = plugin.getLanguage();
 
         String inventoryName = "";
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_13)) {
             inventoryName = event.getView().getTitle();
         } else {
             try {

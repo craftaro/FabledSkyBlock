@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.blockscanner;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.utils.world.WorldUtil;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -272,7 +273,7 @@ public final class BlockScanner extends BukkitRunnable {
             for (int z = initZ; z <= lastZ; z++) {
                 for (int y = scanY; y < world.getMaxHeight(); y++) {
                     final Optional<XMaterial> type = CompatibleMaterial.getMaterial(
-                            ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)
+                            MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)
                                     ? shot.getSnapshot().getBlockType(x, y, z) :
                                     MaterialIDHelper.getLegacyMaterial(getBlockTypeID(shot, x, y, z)));
 

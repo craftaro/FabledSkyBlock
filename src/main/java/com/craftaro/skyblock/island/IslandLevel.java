@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.island;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -104,7 +105,7 @@ public class IslandLevel {
     }
 
     public long getMaterialPoints(String material) {
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -216,7 +217,7 @@ public class IslandLevel {
     }
 
     public void setMaterialAmount(String material, long amount) {
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -232,7 +233,7 @@ public class IslandLevel {
     }
 
     public long getMaterialAmount(String material) {
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -244,7 +245,7 @@ public class IslandLevel {
     }
 
     public void removeMaterial(String material) {
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (material.toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":

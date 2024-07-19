@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.permission.permissions.listening;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -37,7 +38,7 @@ public class DamagePermission extends ListeningPermission {
                 return;
             }
         } else {
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_12)) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.valueOf("ENTITY_SWEEP_ATTACK")) {
                     EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) event;
 

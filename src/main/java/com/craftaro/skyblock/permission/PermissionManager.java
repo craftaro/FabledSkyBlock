@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.permission;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.config.FileManager;
@@ -142,7 +143,7 @@ public class PermissionManager {
             registerPermission(new HungerPermission(plugin));
         }
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_20)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_20)) {
             registerPermission(new SignEditPermission(plugin));
         }
 
