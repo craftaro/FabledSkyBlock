@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.config;
 
+import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.IslandWorld;
 import com.google.common.io.ByteStreams;
@@ -93,17 +94,28 @@ public class FileManager {
 
             if (fileName.equals("structures/default.structure")) {
                 configFile.delete();
-                try {
-                    configFile.createNewFile();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                try (InputStream is = this.plugin.getResource(fileName); OutputStream os = Files.newOutputStream(configFile.toPath())) {
-                    if (is != null) {
-                        ByteStreams.copy(is, os);
+                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_20_5)) {
+                    //Copy default_1_20_5.structure instead of default.structure
+                    try (InputStream is = this.plugin.getResource("structures/default_1_20_5.structure"); OutputStream os = Files.newOutputStream(configFile.toPath())) {
+                        if (is != null) {
+                            ByteStreams.copy(is, os);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                } else {
+                    try {
+                        configFile.createNewFile();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    try (InputStream is = this.plugin.getResource(fileName); OutputStream os = Files.newOutputStream(configFile.toPath())) {
+                        if (is != null) {
+                            ByteStreams.copy(is, os);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
                 continue;
             }
