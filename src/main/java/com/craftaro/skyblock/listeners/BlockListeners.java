@@ -335,12 +335,22 @@ public class BlockListeners implements Listener {
                 isObstructing = true;
             }
 
-            // Specific check for beds
-            if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
+            // Specific check for beds using getBlockData() for versions 1.13 and above
+            if (!isObstructing && event.getBlock().getBlockData() instanceof org.bukkit.block.data.type.Bed && MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
+                org.bukkit.block.data.type.Bed bedData = (org.bukkit.block.data.type.Bed) event.getBlock().getBlockData();
+                BlockFace bedDirection = bedData.getFacing();
+                org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
+                if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world)) {
+                    isObstructing = true;
+                }
+            } // Specific check for beds using getBlockData() for versions 1.12 and below
+            else if (MajorServerVersion.isServerVersionAtOrBelow(MajorServerVersion.V1_12)) {
+                if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed){
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
                 if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world)) {
                     isObstructing = true;
+                }
                 }
             }
 
