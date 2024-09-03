@@ -582,9 +582,9 @@ public class EntityListeners implements Listener {
                 EntityEquipment equipment = livingEntity.getEquipment();
                 if (equipment != null) {
                     for (ItemStack item : event.getDrops()) {
-                        if (item.equals(equipment.getHelmet()) || item.equals(equipment.getChestplate())
-                                || item.equals(equipment.getLeggings()) || item.equals(equipment.getBoots())
-                                || item.equals(equipment.getItemInMainHand()) || item.equals(equipment.getItemInOffHand())) {
+                        if (item.isSimilar(equipment.getHelmet()) || item.isSimilar(equipment.getChestplate())
+                                || item.isSimilar(equipment.getLeggings()) || item.isSimilar(equipment.getBoots())
+                                || item.isSimilar(equipment.getItemInMainHand()) || item.isSimilar(equipment.getItemInOffHand())) {
                             dontMultiply.add(item);
                         }
                     }
@@ -607,11 +607,17 @@ public class EntityListeners implements Listener {
                 }
             }
 
-            for (ItemStack is : event.getDrops()) {
-                for (ItemStack is2 : dontMultiply) {
-                    if (!is2.isSimilar(is)) {
-                        livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), is);
+            // Only drop items that are not in the dontMultiply set
+            for (ItemStack item : event.getDrops()) {
+                boolean shouldDrop = true;
+                for (ItemStack dontMultiplyItem : dontMultiply) {
+                    if (item.isSimilar(dontMultiplyItem)) {
+                        shouldDrop = false;
+                        break;
                     }
+                }
+                if (shouldDrop) {
+                    livingEntity.getWorld().dropItemNaturally(livingEntity.getLocation(), item);
                 }
             }
         }
