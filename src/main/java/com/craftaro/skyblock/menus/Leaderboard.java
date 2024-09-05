@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.menus;
 
+import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.skyblock.SkyBlock;
@@ -11,9 +12,12 @@ import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.visit.Visit;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -290,9 +294,9 @@ public class Leaderboard {
 
                     ItemStack phead;
                     if (playerTexture.length >= 1 && playerTexture[0] != null) {
-                        phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+                        phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
                     } else {
-                        phead = SkullItemCreator.byUuid(visit.getOwnerUUID());
+                        phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
                     }
 
                     nInv.addItem(
