@@ -1,6 +1,5 @@
 package com.craftaro.skyblock.menus;
 
-import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.NumberUtils;
 import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.skyblock.SkyBlock;
@@ -12,12 +11,9 @@ import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import com.craftaro.skyblock.visit.Visit;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -25,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Leaderboard {
     private static Leaderboard instance;
@@ -294,9 +291,13 @@ public class Leaderboard {
 
                     ItemStack phead;
                     if (playerTexture.length >= 1 && playerTexture[0] != null) {
-                        phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
+                        phead = SkullItemCreator.byTextureValue(playerTexture[0]);
                     } else {
-                        phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
+                        try {
+                            phead = SkullItemCreator.byUuid(visit.getOwnerUUID()).get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
 
                     nInv.addItem(
@@ -321,7 +322,7 @@ public class Leaderboard {
 
                 for (int i = 0; i < itemSlots.length; i++) {
                     if (!nInv.getItems().containsKey(itemSlots[i])) {
-                        ItemStack qhead = SkullItemCreator.byTextureHash("d34e063cafb467a5c8de43ec78619399f369f4a52434da8017a983cdd92516a0");
+                        ItemStack qhead = SkullItemCreator.byTextureUrlHash("d34e063cafb467a5c8de43ec78619399f369f4a52434da8017a983cdd92516a0");
                         nInv.addItem(nInv.createItem(qhead,
                                         configLoad.getString("Menu.Leaderboard.Leaderboard.Item.Empty.Displayname")
                                                 .replace("%position", "" + (i + 1)),

@@ -1,8 +1,6 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.utils.SkullItemCreator;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.config.FileManager;
 import com.craftaro.skyblock.island.Island;
@@ -17,6 +15,8 @@ import com.craftaro.skyblock.utils.NumberUtil;
 import com.craftaro.skyblock.utils.StringUtil;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Members {
     private static Members instance;
@@ -351,13 +352,13 @@ public class Members {
                     9, 10, 11, 12, 13, 14, 15, 16, 17);
 
             if (playerMenuPage != 1) {
-                ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
+                ItemStack Lhead = SkullItemCreator.byTextureUrlHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                 nInv.addItem(nInv.createItem(Lhead,
                         configLoad.getString("Menu.Members.Item.Previous.Displayname"), null, null, null, null), 1);
             }
 
             if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
+                ItemStack Rhead = SkullItemCreator.byTextureUrlHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                 nInv.addItem(nInv.createItem(Rhead,
                         configLoad.getString("Menu.Members.Item.Next.Displayname"), null, null, null, null), 7);
             }
@@ -560,7 +561,12 @@ public class Members {
                             }
                         }
 
-                        ItemStack phead = SkullItemCreator.byUsername(playerName);
+                        ItemStack phead;
+                        try {
+                            phead = SkullItemCreator.byUuid(playerUUID).get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         nInv.addItem(
                                 nInv.createItem(phead,
                                         configLoad.getString("Menu.Members.Item.Member.Displayname").replace("%player",

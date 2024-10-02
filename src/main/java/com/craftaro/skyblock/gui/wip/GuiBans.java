@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class GuiBans extends Gui {
     private final PlayerDataManager playerDataManager;
@@ -121,7 +122,11 @@ public class GuiBans extends Gui {
                 if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
                     is = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
                 } else {
-                    is = SkullItemCreator.byUuid(uuid);
+                    try {
+                        is = SkullItemCreator.byUuid(uuid).get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
 
                 ItemMeta im = is.getItemMeta();

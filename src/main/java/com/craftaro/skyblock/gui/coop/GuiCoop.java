@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class GuiCoop extends Gui {
     private final SkyBlock plugin;
@@ -158,7 +159,11 @@ public class GuiCoop extends Gui {
                         if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
                             phead = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
                         } else {
-                            phead = SkullItemCreator.byUuid(uuid);
+                            try {
+                                phead = SkullItemCreator.byUuid(uuid).get();
+                            } catch (InterruptedException | ExecutionException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
 
                         ItemMeta pheadmeta = phead.getItemMeta();

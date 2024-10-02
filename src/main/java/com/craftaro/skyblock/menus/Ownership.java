@@ -15,8 +15,6 @@ import com.craftaro.skyblock.playerdata.PlayerDataManager;
 import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.item.nInventoryUtil;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Ownership {
     private static Ownership instance;
@@ -230,9 +229,13 @@ public class Ownership {
 
             ItemStack phead;
             if (playerTexture.length >= 1 && playerTexture[0] != null) {
-                phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
+                phead = SkullItemCreator.byTextureValue(playerTexture[0]);
             } else {
-                phead = XSkull.createItem().profile(new Profileable.PlayerProfileable(player)).apply();
+                try {
+                    phead = SkullItemCreator.byUuid(originalOwnerUUID).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
             nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),

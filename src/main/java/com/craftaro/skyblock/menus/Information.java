@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Information {
     private static Information instance;
@@ -341,14 +342,14 @@ public class Information {
                             nextEndIndex = displayedMembers.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {
-                        ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
+                        ItemStack Lhead = SkullItemCreator.byTextureUrlHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                         nInv.addItem(nInv.createItem(Lhead,
                                 configLoad.getString("Menu.Information.Members.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                        ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
+                        ItemStack Rhead = SkullItemCreator.byTextureUrlHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                         nInv.addItem(nInv.createItem(Rhead,
                                 configLoad.getString("Menu.Information.Members.Item.Next.Displayname"), null, null,
                                 null, null), 7);
@@ -391,7 +392,11 @@ public class Information {
                             if (playerTexture.length >= 1 && playerTexture[0] != null) {
                                 phead = SkullItemCreator.byTextureValue(playerTexture[0]);
                             } else {
-                                phead = SkullItemCreator.byUuid(playerUUID);
+                                try {
+                                    phead = SkullItemCreator.byUuid(playerUUID).get();
+                                } catch (InterruptedException | ExecutionException ex) {
+                                    throw new RuntimeException(ex);
+                                }
                             }
 
                             nInv.addItem(
@@ -489,14 +494,14 @@ public class Information {
                             nextEndIndex = displayedVisitors.size() - playerMenuPage * 36;
 
                     if (playerMenuPage != 1) {
-                        ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
+                        ItemStack Lhead = SkullItemCreator.byTextureUrlHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                         nInv.addItem(nInv.createItem(Lhead,
                                 configLoad.getString("Menu.Information.Visitors.Item.Previous.Displayname"), null, null,
                                 null, null), 1);
                     }
 
                     if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                        ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
+                        ItemStack Rhead = SkullItemCreator.byTextureUrlHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                         nInv.addItem(nInv.createItem(Rhead,
                                 configLoad.getString("Menu.Information.Visitors.Item.Next.Displayname"), null, null,
                                 null, null), 7);
@@ -532,7 +537,11 @@ public class Information {
                             if (playerTexture.length >= 1 && playerTexture[0] != null) {
                                 phead = SkullItemCreator.byTextureValue(playerTexture[0]);
                             } else {
-                                phead = SkullItemCreator.byUuid(playerUUID);
+                                try {
+                                    phead = SkullItemCreator.byUuid(playerUUID).get();
+                                } catch (InterruptedException | ExecutionException ex) {
+                                    throw new RuntimeException(ex);
+                                }
                             }
 
                             nInv.addItem(

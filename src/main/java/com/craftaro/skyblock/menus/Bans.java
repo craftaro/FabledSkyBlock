@@ -26,6 +26,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Bans {
     private static Bans instance;
@@ -164,13 +165,13 @@ public class Bans {
             int playerMenuPage = playerData.getPage(MenuType.BANS), nextEndIndex = islandBans.size() - playerMenuPage * 36;
 
             if (playerMenuPage != 1) {
-                ItemStack Lhead = SkullItemCreator.byTextureHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
+                ItemStack Lhead = SkullItemCreator.byTextureUrlHash("3ebf907494a935e955bfcadab81beafb90fb9be49c7026ba97d798d5f1a23");
                 nInv.addItem(nInv.createItem(Lhead,
                         configLoad.getString("Menu.Bans.Item.Previous.Displayname"), null, null, null, null), 1);
             }
 
             if (!(nextEndIndex == 0 || nextEndIndex < 0)) {
-                ItemStack Rhead = SkullItemCreator.byTextureHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
+                ItemStack Rhead = SkullItemCreator.byTextureUrlHash("1b6f1a25b6bc199946472aedb370522584ff6f4e83221e5946bd2e41b5ca13b");
                 nInv.addItem(nInv.createItem(Rhead,
                         configLoad.getString("Menu.Bans.Item.Next.Displayname"), null, null, null, null), 7);
             }
@@ -212,7 +213,11 @@ public class Bans {
                         if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
                             phead = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
                         } else {
-                            phead = SkullItemCreator.byUuid(targetPlayerUUID);
+                            try {
+                                phead = SkullItemCreator.byUuid(targetPlayerUUID).get();
+                            } catch (InterruptedException | ExecutionException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
 
                         nInv.addItem(
