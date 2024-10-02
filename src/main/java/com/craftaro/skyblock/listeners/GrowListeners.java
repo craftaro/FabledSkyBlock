@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -105,7 +106,7 @@ public class GrowListeners implements Listener {
             return;
         }
 
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
             try {
                 Object blockData = block.getClass().getMethod("getBlockData").invoke(block);
                 if (blockData instanceof org.bukkit.block.data.Ageable) {

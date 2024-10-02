@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.listeners;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
@@ -41,7 +42,7 @@ public class SpawnerListeners implements Listener {
 
         if (upgrades != null && !upgrades.isEmpty() && upgrades.get(0).isEnabled()
                 && island.isUpgrade(Upgrade.Type.SPAWNER)) {
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+            if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
                 if (spawner.getDelay() == 20) {
                     spawner.setDelay(10);
                 }

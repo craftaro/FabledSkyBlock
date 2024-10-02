@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.stackable;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
@@ -147,7 +148,7 @@ public class Stackable {
         as.setVisible(false);
         as.setGravity(false);
         as.setSmall(true);
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
             as.setMarker(true);
         }
         as.setBasePlate(true);

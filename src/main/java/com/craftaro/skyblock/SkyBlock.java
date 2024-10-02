@@ -2,13 +2,12 @@ package com.craftaro.skyblock;
 
 import com.craftaro.core.SongodaCore;
 import com.craftaro.core.SongodaPlugin;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerProject;
-import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.HologramManager;
 import com.craftaro.core.hooks.LogManager;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.api.SkyBlockAPI;
 import com.craftaro.skyblock.ban.BanManager;
 import com.craftaro.skyblock.bank.BankManager;
@@ -71,6 +70,7 @@ import com.craftaro.skyblock.usercache.UserCacheManager;
 import com.craftaro.skyblock.visit.VisitManager;
 import com.craftaro.skyblock.visit.VisitTask;
 import com.craftaro.skyblock.world.WorldManager;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,9 +81,7 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SkyBlock extends SongodaPlugin {
     private FileManager fileManager;
@@ -154,17 +152,18 @@ public class SkyBlock extends SongodaPlugin {
 
     @Override
     public void onPluginEnable() {
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_20) || ServerVersion.isServerVersionBelow(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_20) || MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_8)) {
             this.getLogger().warning("This Minecraft version is not officially supported.");
         }
 
-        if (this.paper = ServerProject.isServer(ServerProject.PAPER)) {
+        this.paper = ServerProject.isServer(ServerProject.PAPER);
+        if (this.paper) {
             try {
                 Bukkit.spigot().getClass().getMethod("getPaperConfig");
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) {
                     this.paperAsync = true;
                 } else {
-                    this.paperAsync = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) &&
+                    this.paperAsync = MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13) &&
                             Bukkit.spigot().getPaperConfig().getBoolean("settings.async-chunks.enable", false);
                 }
             } catch (NoSuchMethodException ignored) {
@@ -266,7 +265,7 @@ public class SkyBlock extends SongodaPlugin {
         pluginManager.registerEvents(new FallBreakListeners(this), this);
         pluginManager.registerEvents(new WorldListeners(this), this);
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             pluginManager.registerEvents(new SpongeListeners(this), this);
         }
 

@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.listeners;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.LogManager;
 import com.craftaro.third_party.com.cryptomorin.xseries.XBlock;
@@ -115,7 +116,7 @@ public class BlockListeners implements Listener {
             Stackable stackable = stackableManager.getStack(block.getLocation(), CompatibleMaterial.getMaterial(block.getType()).get());
             if (stackable != null) {
                 XMaterial material = null;
-                if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+                if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
                     switch (block.getType().toString().toUpperCase()) {
                         case "DIODE_BLOCK_OFF":
                         case "DIODE_BLOCK_ON":
@@ -194,7 +195,7 @@ public class BlockListeners implements Listener {
         }
 
         XMaterial material = null;
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (block.getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -271,7 +272,7 @@ public class BlockListeners implements Listener {
             return;
         }
 
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_8)) {
             if (event instanceof BlockMultiPlaceEvent) {
                 for (BlockState blockState : ((BlockMultiPlaceEvent) event).getReplacedBlockStates()) {
                     if (!island.equals(islandManager.getIslandAtLocation(blockState.getLocation()))) {
@@ -334,12 +335,22 @@ public class BlockListeners implements Listener {
                 isObstructing = true;
             }
 
-            // Specific check for beds
-            if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed) {
+            // Specific check for beds using getBlockData() for versions 1.13 and above
+            if (!isObstructing && event.getBlock().getBlockData() instanceof org.bukkit.block.data.type.Bed && MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
+                org.bukkit.block.data.type.Bed bedData = (org.bukkit.block.data.type.Bed) event.getBlock().getBlockData();
+                BlockFace bedDirection = bedData.getFacing();
+                org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
+                if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world)) {
+                    isObstructing = true;
+                }
+            } // Specific check for beds using getBlockData() for versions 1.12 and below
+            else if (MajorServerVersion.isServerVersionAtOrBelow(MajorServerVersion.V1_12)) {
+                if (!isObstructing && event.getBlock().getState().getData() instanceof org.bukkit.material.Bed){
                 BlockFace bedDirection = ((org.bukkit.material.Bed) event.getBlock().getState().getData()).getFacing();
                 org.bukkit.block.Block bedBlock = block.getRelative(bedDirection);
                 if (LocationUtil.isLocationAffectingIslandSpawn(bedBlock.getLocation(), island, world)) {
                     isObstructing = true;
+                }
                 }
             }
 
@@ -360,7 +371,7 @@ public class BlockListeners implements Listener {
 
         if (limits.isBlockLimitExceeded(block, limit) && !XMaterial.ENDER_EYE.isSimilar(item)) {
             XMaterial material = null;
-            if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+            if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
                 switch (block.getType().toString().toUpperCase()) {
                     case "DIODE_BLOCK_OFF":
                     case "DIODE_BLOCK_ON":
@@ -391,7 +402,7 @@ public class BlockListeners implements Listener {
 
         // Not util used 2 islandLevelManager if condition is true
         // Sponge level dupe fix
-        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13) &&
+        if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13) &&
                 block.getType() == XMaterial.SPONGE.parseMaterial()) {
             Bukkit.getScheduler().runTask(this.plugin, () -> {
                 if (blockLoc.getBlock().getType() == XMaterial.WET_SPONGE.parseMaterial()) {
@@ -454,7 +465,7 @@ public class BlockListeners implements Listener {
                 for (Entity ent : entities) {
 
                     boolean witherSkeleton;
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                         witherSkeleton = ent.getType().equals(EntityType.WITHER_SKELETON);
                     } else {
                         witherSkeleton = ent instanceof Skeleton && ((Skeleton) ent).getSkeletonType().equals(Skeleton.SkeletonType.WITHER);
@@ -464,7 +475,7 @@ public class BlockListeners implements Listener {
                         XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
                         event.getToBlock().getWorld().playEffect(block.getLocation(), Effect.SMOKE, 1);
                     } else {
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) {
                             if (((ent instanceof Piglin || ent instanceof Hoglin) || ent instanceof Strider) || ent instanceof Zoglin) {
                                 event.setCancelled(true);
                                 XSound.BLOCK_FIRE_EXTINGUISH.play(block.getLocation());
@@ -488,7 +499,7 @@ public class BlockListeners implements Listener {
             return;
         }
 
-        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_12)) {
+        if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_12)) {
             Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
                 handleGeneration(block, island, event.getToBlock().getState());
             }, 1L);
@@ -719,7 +730,7 @@ public class BlockListeners implements Listener {
         IslandManager islandManager = this.plugin.getIslandManager();
         // PortalCreateEvent.getBlocks() changed from ArrayList<Block> to
         // ArrayList<BlockState> in 1.14.1
-        if (ServerVersion.isServerVersionAbove(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_13)) {
             List<BlockState> blocks = event.getBlocks(); // TODO 1.8
             if (event.getBlocks().isEmpty()) {
                 return;
@@ -828,7 +839,7 @@ public class BlockListeners implements Listener {
         if (CompatibleMaterial.isAir(destmaterial)) {
             return;
         }
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (event.getToBlock().getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":
@@ -868,7 +879,7 @@ public class BlockListeners implements Listener {
 
         XMaterial material = CompatibleMaterial.getMaterial(block.getType()).orElse(null);
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_12)
                 && material != XMaterial.WATER
                 && material != XMaterial.LAVA) {
             return false;
@@ -952,7 +963,7 @@ public class BlockListeners implements Listener {
                                 BlockState genState = generatorManager.generateBlock(generator, block);
                                 block.setType(genState.getType());
 
-                                if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                                if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13)) {
                                     BlockState tempState = block.getState();
                                     tempState.setData(genState.getData());
                                     tempState.update(true, true);
@@ -989,7 +1000,7 @@ public class BlockListeners implements Listener {
             BlockState genState = generatorManager.generateBlock(generator, block);
             state.setType(genState.getType());
 
-            if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+            if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13)) {
                 state.setData(genState.getData());
             }
             islandLevelManager.updateLevel(island, genState.getLocation());

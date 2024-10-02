@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.utils.world.entity;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.nms.Nms;
 import com.craftaro.skyblock.utils.item.ItemStackUtil;
@@ -119,8 +120,8 @@ public final class EntityUtil {
             LivingEntity livingEntity = (LivingEntity) entity;
             EntityEquipment entityEquipment = livingEntity.getEquipment();
 
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_10)) {
                     livingEntity.setAI(entityData.hasAI());
                 }
 
@@ -175,7 +176,7 @@ public final class EntityUtil {
                     Material material = CompatibleMaterial.getMaterial(materialData[0].toUpperCase()).get().parseMaterial();
 
                     if (material != null) {
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                             ((Enderman) entity).setCarriedBlock(Bukkit.getServer().createBlockData(material));
                         } else {
                             ((Enderman) entity).setCarriedMaterial(new MaterialData(material, data));
@@ -229,7 +230,7 @@ public final class EntityUtil {
                 villager.getInventory().setContents(items.toArray(new ItemStack[0]));
             }
 
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                 if (entity instanceof Llama) {
                     Llama llama = ((Llama) entity);
                     llama.setColor(Llama.Color.valueOf(entityData.getLlamaColor().toUpperCase()));
@@ -244,7 +245,7 @@ public final class EntityUtil {
                     llama.getInventory().setContents(items.toArray(new ItemStack[0]));
                 }
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                     if (entity instanceof Parrot) {
                         ((Parrot) entity)
                                 .setVariant(Parrot.Variant.valueOf(entityData.getParrotVariant().toUpperCase()));

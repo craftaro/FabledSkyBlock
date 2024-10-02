@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.utils.structure;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import org.bukkit.Bukkit;
@@ -20,7 +21,7 @@ public class SchematicUtil {
         }
 
         Runnable pasteTask = () -> {
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) { // WorldEdit 7
+            if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) { // WorldEdit 7
                 com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat format = com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats.findByFile(schematicFile);
                 try (com.sk89q.worldedit.extent.clipboard.io.ClipboardReader reader = format.getReader(Files.newInputStream(schematicFile.toPath()))) {
                     com.sk89q.worldedit.extent.clipboard.Clipboard clipboard = reader.read();

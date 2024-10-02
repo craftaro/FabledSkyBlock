@@ -3,10 +3,9 @@ package com.craftaro.skyblock.gui.coop;
 import com.craftaro.core.gui.AnvilGui;
 import com.craftaro.core.gui.Gui;
 import com.craftaro.core.gui.GuiUtils;
-import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
@@ -19,7 +18,6 @@ import com.craftaro.skyblock.sound.SoundManager;
 import com.craftaro.skyblock.utils.player.OfflinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class GuiCoop extends Gui {
     private final SkyBlock plugin;
@@ -155,7 +154,18 @@ public class GuiCoop extends Gui {
                                 targetPlayerTexture = new String[]{null, null};
                             }
                         }
-                        ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
+
+                        ItemStack phead;
+                        if (targetPlayerTexture.length >= 1 && targetPlayerTexture[0] != null) {
+                            phead = SkullItemCreator.byTextureValue(targetPlayerTexture[0]);
+                        } else {
+                            try {
+                                phead = SkullItemCreator.byUuid(uuid).get();
+                            } catch (InterruptedException | ExecutionException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+
                         ItemMeta pheadmeta = phead.getItemMeta();
                         if (pheadmeta != null) {
                             pheadmeta.setDisplayName(TextUtils.formatText(this.languageLoad.getString("Menu.Coop.Item.Coop.Displayname")

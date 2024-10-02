@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.permission.permissions.listening;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -59,7 +60,7 @@ public class PortalPermission extends ListeningPermission {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
-                || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)
+                || (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)
                 && event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY)) {
             /*event.getPlayer().teleport(getToLocation(event.getFrom(), event.getPlayer()));
             Location to = getToLocation(event.getFrom(), event.getPlayer());

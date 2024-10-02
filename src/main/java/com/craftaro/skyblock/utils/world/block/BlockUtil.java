@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.utils.world.block;
 
 import com.craftaro.core.compatibility.ClassMapping;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.MethodMapping;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
@@ -54,7 +55,7 @@ public final class BlockUtil extends BlockUtils {
 
         blockData.setVersion(Integer.parseInt(ServerVersion.getVersionReleaseNumber()));
 
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             blockData.setBlockData(block.getBlockData().getAsString());
         }
 
@@ -77,7 +78,7 @@ public final class BlockUtil extends BlockUtils {
 
             blockData.setPotionEffect(primaryEffectName + ":" + secondaryEffectName);
             blockData.setStateType(BlockStateType.BEACON.toString());
-        } else if (blockState instanceof BrewingStand && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+        } else if (blockState instanceof BrewingStand && MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) blockState;
             blockData.setBrewingTime(brewingStand.getBrewingTime());
             blockData.setFuelLevel(brewingStand.getFuelLevel());
@@ -191,7 +192,7 @@ public final class BlockUtil extends BlockUtils {
             blockData.setRotateFace(skull.getRotation().toString());
             blockData.setStateType(BlockStateType.SKULL.toString());
         } else {
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
                 if (blockState instanceof EndGateway) {
                     EndGateway endGateway = (EndGateway) blockState;
                     blockData.setExactTeleport(endGateway.isExactTeleport());
@@ -201,7 +202,7 @@ public final class BlockUtil extends BlockUtils {
                     blockData.setStateType(BlockStateType.ENDGATEWAY.toString());
                 }
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                     if (blockState instanceof ShulkerBox) {
                         ShulkerBox shulkerBox = (ShulkerBox) blockState;
 
@@ -217,7 +218,7 @@ public final class BlockUtil extends BlockUtils {
                     }
                 }
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_14)) {
                     if (blockState instanceof Barrel) {
                         Barrel barrel = (Barrel) blockState;
 
@@ -232,7 +233,7 @@ public final class BlockUtil extends BlockUtils {
                         blockData.setStateType(BlockStateType.BARREL.toString());
                     }
 
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) {
                         if (blockState instanceof RespawnAnchor) {
                             RespawnAnchor respawnAnchor = (RespawnAnchor) blockState;
                             blockData.setCharges(respawnAnchor.getCharges());
@@ -247,7 +248,7 @@ public final class BlockUtil extends BlockUtils {
             blockData.setFacing(((Stairs) materialData).getFacing().toString());
             blockData.setDataType(BlockDataType.STAIRS.toString());
         } else if (materialData instanceof org.bukkit.material.FlowerPot) {
-            if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
+            if (MajorServerVersion.isServerVersionAtOrBelow(MajorServerVersion.V1_12)) {
                 try {
                     World world = block.getWorld();
 
@@ -301,7 +302,7 @@ public final class BlockUtil extends BlockUtils {
             return;
         }
 
-        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
+        if (MajorServerVersion.isServerVersionAtOrBelow(MajorServerVersion.V1_12)) {
             setBlockFast(block.getWorld(), block.getX(), block.getY(), block.getZ(), material, blockData.getData());
         } else {
             block.setBlockData(Bukkit.getServer().createBlockData(blockData.getBlockData()));
@@ -334,7 +335,7 @@ public final class BlockUtil extends BlockUtils {
                 beacon.setSecondaryEffect(PotionEffectType.getByName(potionEffect[1].toUpperCase()));
             }
             state.update();
-        } else if (blockTypeState == BlockStateType.BREWINGSTAND && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+        } else if (blockTypeState == BlockStateType.BREWINGSTAND && MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_12)) {
             BrewingStand brewingStand = (BrewingStand) state;
             brewingStand.setBrewingTime(blockData.getBrewingTime());
             brewingStand.setFuelLevel(blockData.getFuelLevel());
@@ -422,14 +423,14 @@ public final class BlockUtil extends BlockUtils {
             skull.setRotation(BlockFace.valueOf(blockData.getRotateFace().toUpperCase()));
             skull.setSkullType(SkullType.valueOf(blockData.getSkullType().toUpperCase()));
 
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_10)) {
                 skull.setOwningPlayer(Bukkit.getServer().getOfflinePlayer(blockData.getSkullOwner()));
             } else {
                 skull.setOwner(blockData.getSkullOwner());
             }
             state.update();
         } else {
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
                 if (blockTypeState == BlockStateType.ENDGATEWAY) {
                     EndGateway endGateway = (EndGateway) state;
                     endGateway.setExactTeleport(blockData.isExactTeleport());
@@ -445,7 +446,7 @@ public final class BlockUtil extends BlockUtils {
                     state.update();
                 }
 
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_11)) {
                     if (blockTypeState == BlockStateType.SHULKERBOX) {
                         ShulkerBox shulkerBox = (ShulkerBox) state;
 
@@ -456,7 +457,7 @@ public final class BlockUtil extends BlockUtils {
                             }
                         }
                     }
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_14)) {
                         if (blockTypeState == BlockStateType.BARREL) {
                             Barrel barrel = (Barrel) state;
 
@@ -469,7 +470,7 @@ public final class BlockUtil extends BlockUtils {
                         }
                     }
 
-                    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+                    if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_16)) {
                         if (blockTypeState == BlockStateType.RESPAWN_ANCHOR) {
                             RespawnAnchor respawnAnchor = (RespawnAnchor) state;
                             respawnAnchor.setCharges(blockData.getCharges());
@@ -488,7 +489,7 @@ public final class BlockUtil extends BlockUtils {
             state.setData(stairs);
         } else if (blockDataType == BlockDataType.FLOWERPOT) {
             setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), XMaterial.STONE, (byte) 0);
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8) && ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) {
+            if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_8) && MajorServerVersion.isServerVersionAtOrBelow(MajorServerVersion.V1_12)) {
                 if (block.getLocation().clone().subtract(0.0D, 1.0D, 0.0D).getBlock().getType() == Material.AIR) {
                     setBlockFast(block.getWorld(), block.getX(), block.getY() - 1, block.getZ(), XMaterial.STONE, (byte) 0);
                 }
@@ -533,11 +534,11 @@ public final class BlockUtil extends BlockUtils {
                     materialStr = null;
 
                     if (blockData.getVersion() > 12) {
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                             materialStr = flower[0].toUpperCase();
                         }
                     } else {
-                        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                        if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13)) {
                             materialStr = flower[0].toUpperCase();
                         }
                     }
@@ -558,7 +559,7 @@ public final class BlockUtil extends BlockUtils {
             if (bottomBlock.getType() == Material.AIR && !topBlock.getType().name().equals("DOUBLE_PLANT")) {
                 bottomBlock.setType(XMaterial.LARGE_FERN.parseMaterial());
 
-                if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13)) {
                     try {
                         bottomBlock.getClass().getMethod("setData", byte.class).invoke(bottomBlock, (byte) 2);
                     } catch (Exception ex) {

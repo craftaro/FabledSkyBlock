@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.permission.permissions.listening;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -49,7 +50,7 @@ public class AnimalBreedingPermission extends ListeningPermission {
         } else if (entity.getType() == EntityType.CHICKEN) {
             if (!(XMaterial.WHEAT_SEEDS.isSimilar(is)
                     || XMaterial.PUMPKIN_SEEDS.isSimilar(is) || XMaterial.MELON_SEEDS.isSimilar(is))) {
-                if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+                if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
                     if (!(XMaterial.BEETROOT_SEEDS.isSimilar(is))) {
                         return;
                     }
@@ -86,12 +87,12 @@ public class AnimalBreedingPermission extends ListeningPermission {
                 return;
             }
         } else {
-            if (ServerVersion.isServerVersionAbove(ServerVersion.V1_10)) {
+            if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_10)) {
                 if (entity.getType() == EntityType.LLAMA) {
                     if (!(XMaterial.HAY_BLOCK.isSimilar(is))) {
                         return;
                     }
-                } else if (ServerVersion.isServerVersionAbove(ServerVersion.V1_12)) {
+                } else if (MajorServerVersion.isServerVersionAbove(MajorServerVersion.V1_12)) {
                     if (entity.getType() == EntityType.TURTLE) {
                         if (!(XMaterial.SEAGRASS.isSimilar(is))) {
                             return;

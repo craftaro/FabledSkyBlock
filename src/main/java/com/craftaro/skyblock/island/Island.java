@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -60,6 +61,7 @@ public class Island {
     private final List<IslandLocation> islandLocations = new ArrayList<>();
     private final Map<UUID, IslandCoop> coopPlayers = new HashMap<>();
     private final Set<UUID> whitelistedPlayers = new HashSet<>();
+    private final Map<IslandRole, Set<UUID>> roleCache = new HashMap<>();
 
     private UUID islandUUID;
     private UUID ownerUUID;
@@ -203,13 +205,14 @@ public class Island {
 
                 for (BasicPermission permission : allPermissions) {
                     if (settingsDataConfig == null || settingsDataConfig.getFileConfiguration()
-                            .getString("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName()) == null) {
+                            .getString("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName()) == null) {
+                        //save default value if not exist
                         permissions.add(
                                 new IslandPermission(permission, this.plugin.getSettings()
-                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
+                                        .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName(), permission.getDefaultValues().get(roleList))));
                     } else {
                         permissions.add(new IslandPermission(permission, settingsDataConfig.getFileConfiguration()
-                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase() + "." + permission.getName(), true)));
+                                .getBoolean("Settings." + roleList.getFriendlyName().toUpperCase(Locale.US) + "." + permission.getName(), true)));
                     }
                 }
 
@@ -597,6 +600,11 @@ public class Island {
     }
 
     public Set<UUID> getRole(IslandRole role) {
+
+        if (roleCache.containsKey(role)) {
+            return new HashSet<>(roleCache.get(role)); // Return a copy to avoid external modification
+        }
+
         Set<UUID> islandRoles = new HashSet<>();
 
         if (role == IslandRole.OWNER) {
@@ -612,6 +620,8 @@ public class Island {
                 }
             }
         }
+
+        roleCache.put(role, islandRoles);
 
         return islandRoles;
     }
@@ -671,6 +681,9 @@ public class Island {
 
                 getVisit().setMembers(getRole(IslandRole.MEMBER).size() + getRole(IslandRole.OPERATOR).size() + 1);
 
+                //Update role cache
+                roleCache.remove(role);
+
                 return true;
             }
         }
@@ -696,6 +709,9 @@ public class Island {
                 }
 
                 getVisit().setMembers(getRole(IslandRole.MEMBER).size() + getRole(IslandRole.OPERATOR).size() + 1);
+
+                //Update role cache
+                roleCache.remove(role);
 
                 return true;
             }
@@ -918,7 +934,7 @@ public class Island {
 
         for (Entry<IslandRole, List<IslandPermission>> entry : this.islandPermissions.entrySet()) {
             for (IslandPermission permission : entry.getValue()) {
-                configLoad.set("Settings." + entry.getKey() + "." + permission.getPermission().getName(), permission.getStatus());
+                configLoad.set("Settings." + entry.getKey().getFriendlyName().toUpperCase(Locale.US) + "." + permission.getPermission().getName(), permission.getStatus());
             }
         }
 

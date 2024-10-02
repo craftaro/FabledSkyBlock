@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.utils.version;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
@@ -197,7 +198,7 @@ public enum CompatibleSpawners {
     }
 
     public static CompatibleSpawners getMaterials(Material material, byte data) {
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
             return fromString(material.name());
         }
 

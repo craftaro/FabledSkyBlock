@@ -1,5 +1,7 @@
 package com.craftaro.skyblock.permission;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
+import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.config.FileManager;
 import com.craftaro.skyblock.island.Island;
@@ -141,6 +143,10 @@ public class PermissionManager {
             registerPermission(new HungerPermission(plugin));
         }
 
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_20)) {
+            registerPermission(new SignEditPermission(plugin));
+        }
+
         this.registeredHandlers = this.registeredHandlers.stream()
                 .sorted(Comparator.comparingInt(h -> h.getHandler().getAnnotation(PermissionHandler.class).priority().ordinal()))
                 .collect(Collectors.toList());
@@ -153,13 +159,16 @@ public class PermissionManager {
         switch (permission.getType()) {
             case GENERIC:
                 if (settingsConfigLoad.getString("Settings.Visitor." + permission.getName()) == null) {
-                    settingsConfigLoad.set("Settings.Visitor." + permission.getName(), true);
+                    settingsConfigLoad.set("Settings.Visitor." + permission.getName(), permission.getDefaultValues().get(IslandRole.VISITOR));
+                    if (permission.getName().equals("EditSign")) {
+                        System.err.println("Default EditSign Visitor permission set to: " + permission.getDefaultValues().get(IslandRole.VISITOR));
+                    }
                 }
                 if (settingsConfigLoad.getString("Settings.Member." + permission.getName()) == null) {
-                    settingsConfigLoad.set("Settings.Member." + permission.getName(), true);
+                    settingsConfigLoad.set("Settings.Member." + permission.getName(), permission.getDefaultValues().get(IslandRole.MEMBER));
                 }
                 if (settingsConfigLoad.getString("Settings.Coop." + permission.getName()) == null) {
-                    settingsConfigLoad.set("Settings.Coop." + permission.getName(), true);
+                    settingsConfigLoad.set("Settings.Coop." + permission.getName(), permission.getDefaultValues().get(IslandRole.COOP));
                 }
                 break;
             case OPERATOR:

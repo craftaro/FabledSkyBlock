@@ -170,12 +170,12 @@ public class InteractListeners implements Listener {
             return;
         }
 
-        Optional<XMaterial> material = block == null ? Optional.empty() : CompatibleMaterial.getMaterial(block.getType());
-
         // Check permissions.
         if (!this.plugin.getPermissionManager().processPermission(event, player, island)) {
             return;
         }
+
+        Optional<XMaterial> material = block == null ? Optional.empty() : CompatibleMaterial.getMaterial(block.getType());
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             final Optional<XMaterial> blockType = CompatibleMaterial.getMaterial(event.getClickedBlock().getType());

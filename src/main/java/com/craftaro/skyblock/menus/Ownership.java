@@ -1,10 +1,9 @@
 package com.craftaro.skyblock.menus;
 
 import com.craftaro.core.gui.AnvilGui;
-import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
-import com.craftaro.core.utils.ItemUtils;
 import com.craftaro.skyblock.SkyBlock;
 import com.craftaro.skyblock.island.Island;
 import com.craftaro.skyblock.island.IslandManager;
@@ -27,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Ownership {
     private static Ownership instance;
@@ -215,7 +215,7 @@ public class Ownership {
             String originalOwnerName, ownershipPassword = island.getPassword();
             String[] playerTexture;
 
-            org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getPlayer(island.getOriginalOwnerUUID());
+            org.bukkit.OfflinePlayer targetPlayer = Bukkit.getServer().getPlayer(originalOwnerUUID);
 
             if (targetPlayer == null) {
                 OfflinePlayer offlinePlayer = new OfflinePlayer(originalOwnerUUID);
@@ -225,7 +225,19 @@ public class Ownership {
                 originalOwnerName = targetPlayer.getName();
                 playerTexture = playerDataManager.getPlayerData(targetPlayer.getUniqueId()).getTexture();
             }
-            ItemStack phead = SkullUtils.getSkull(targetPlayer.getUniqueId());
+
+
+            ItemStack phead;
+            if (playerTexture.length >= 1 && playerTexture[0] != null) {
+                phead = SkullItemCreator.byTextureValue(playerTexture[0]);
+            } else {
+                try {
+                    phead = SkullItemCreator.byUuid(originalOwnerUUID).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
             nInv.addItem(nInv.createItem(XMaterial.OAK_FENCE_GATE.parseItem(),
                     configLoad.getString("Menu.Ownership.Item.Exit.Displayname"), null, null, null, null), 0);
             nInv.addItem(nInv.createItem(phead,

@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.permission;
 
+import com.craftaro.skyblock.island.IslandRole;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.skyblock.SkyBlock;
@@ -34,9 +35,15 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
+import java.util.Map;
+
 public abstract class ListeningPermission extends BasicPermission {
     protected ListeningPermission(String name, XMaterial icon, PermissionType type) {
         super(name, icon, type);
+    }
+
+    protected ListeningPermission(String name, XMaterial icon, PermissionType type, Map<IslandRole, Boolean> defaultValues) {
+        super(name, icon, type, defaultValues);
     }
 
     public void onInteract(PlayerInteractEvent event) {

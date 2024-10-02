@@ -6,11 +6,11 @@
 
     <groupId>com.craftaro</groupId>
     <artifactId>FabledSkyBlock</artifactId>
-    <version>3.0.6</version>
+    <version>3.1.0</version>
 
     <name>FabledSkyBlock</name>
     <description>Bring your server's SkyBlock experience to the next level with the ability to fine-tune island settings, create custom islands, view leaderboards, and much more</description>
-    <url>https://craftaro.com/marketplace/product/17</url>
+    <url>https://songoda.com/product/fabledskyblock-13</url>
 
     <properties>
         <maven.compiler.release>8</maven.compiler.release>
@@ -25,7 +25,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.6.0</version>
 
                 <executions>
                     <execution>
@@ -69,10 +69,10 @@
                                     <excludeDefaults>false</excludeDefaults>
                                     <includes>
                                         <include>**/nms/v*/**</include>
+                                        <include>**/third_party/net/kyori/**</include>
                                     </includes>
                                     <excludes>
                                         <exclude>**/third_party/org/apache/**</exclude>
-                                        <exclude>**/third_party/net/kyori/**</exclude>
                                         <exclude>**/third_party/com/zaxxer/**</exclude>
                                         <exclude>**/third_party/org/jooq/**</exclude>
                                         <exclude>**/third_party/org/mariadb/**</exclude>
@@ -139,7 +139,7 @@
         <dependency>
             <groupId>com.craftaro</groupId>
             <artifactId>CraftaroCore</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.5.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -174,7 +174,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.5</version>
+            <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
 

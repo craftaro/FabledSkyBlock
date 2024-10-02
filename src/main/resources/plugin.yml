@@ -19,7 +19,6 @@ softdepend:
   - WorldEdit
 loadbefore:
   - Multiverse-Core
-  - ProtocolLib
 
 author: Craftaro
 authors: [ Fabrimat ]

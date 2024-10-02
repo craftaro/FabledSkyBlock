@@ -1,6 +1,7 @@
 package com.craftaro.skyblock.levelling;
 
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.SkyBlock;
@@ -260,7 +261,7 @@ public final class IslandLevelManager {
         // placed.
         // This shouldn't cause any issues besides the task number being increased
         // insanely fast.
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             Bukkit.getScheduler().runTask(this.plugin, () -> {
                 updateLevelLocation(island, location);
             });
@@ -272,7 +273,7 @@ public final class IslandLevelManager {
     private void updateLevelLocation(Island island, Location location) {
         Block block = location.getBlock();
         XMaterial material = null;
-        if (ServerVersion.isServerVersion(ServerVersion.V1_8)) {
+        if (MajorServerVersion.isServerVersion(MajorServerVersion.V1_8)) {
             switch (block.getType().toString().toUpperCase()) {
                 case "DIODE_BLOCK_OFF":
                 case "DIODE_BLOCK_ON":

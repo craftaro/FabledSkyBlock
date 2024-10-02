@@ -4,6 +4,7 @@ import com.craftaro.skyblock.localization.type.Localization;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
@@ -37,6 +38,6 @@ public class EnumLocalization<T extends Enum<T>> extends Localization<T> {
     }
 
     protected T parseEnum(String input) {
-        return Enum.valueOf(getType(), input.toUpperCase());
+        return Enum.valueOf(getType(), input.toUpperCase(Locale.US));
     }
 }

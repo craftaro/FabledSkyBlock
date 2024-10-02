@@ -5,6 +5,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.craftaro.core.compatibility.CompatibleBiome;
 import com.craftaro.core.compatibility.CompatibleMaterial;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.nms.Nms;
 import com.craftaro.skyblock.SkyBlock;
@@ -1502,7 +1503,7 @@ public class IslandManager {
                     updateFlight(player);
 
                     if (world == IslandWorld.NETHER) {
-                        if (ServerVersion.isServerVersionBelow(ServerVersion.V1_13)) {
+                        if (MajorServerVersion.isServerVersionBelow(MajorServerVersion.V1_13)) {
                             return;
                         }
                     }
@@ -1665,7 +1666,7 @@ public class IslandManager {
                 double increment = island.getSize() % 2 != 0 ? 0.5d : 0.0d;
 
                 for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-                    if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                    if (worldList != IslandWorld.NETHER || MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                         Bukkit.getScheduler().runTask(this.plugin, () -> {
                             for (Player all : getPlayersAtIsland(island)) {
                                 Nms.getImplementations().getWorldBorder().send(all, island.getBorderColor(), island.getSize(), island.getLocation(worldManager.getIslandWorld(all.getWorld()), IslandEnvironment.ISLAND).clone().add(increment, 0, increment));
@@ -1677,7 +1678,7 @@ public class IslandManager {
             }
         } else {
             for (IslandWorld worldList : IslandWorld.getIslandWorlds()) {
-                if (worldList != IslandWorld.NETHER || ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+                if (worldList != IslandWorld.NETHER || MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13)) {
                     Bukkit.getScheduler().runTask(this.plugin, () -> {
                         for (Player all : getPlayersAtIsland(island)) {
                             Nms.getImplementations().getWorldBorder().send(all, null, 1.4999992E7D, new Location(all.getWorld(), 0, 0, 0));

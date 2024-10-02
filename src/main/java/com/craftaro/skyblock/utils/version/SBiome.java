@@ -1,5 +1,6 @@
 package com.craftaro.skyblock.utils.version;
 
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.skyblock.utils.StringUtil;
@@ -34,7 +35,7 @@ public enum SBiome {
     THE_VOID("SKY", XMaterial.OBSIDIAN),
     WARM_OCEAN(true, XMaterial.TROPICAL_FISH);
 
-    private static final boolean isPostVersion = ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13);
+    private static final boolean isPostVersion = MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_13);
 
     private final String legacyName;
     private final boolean isPost13;
